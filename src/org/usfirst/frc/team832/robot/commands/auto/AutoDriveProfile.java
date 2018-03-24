@@ -31,9 +31,9 @@ public class AutoDriveProfile extends Command {
         System.out.println("Filling talons...");
         Robot.westCoastDrive.startFillingLeft(Robot.pathfinderFormatToTalon(trajectory_left), trajectory_left.length());
         Robot.westCoastDrive.startFillingRight(Robot.pathfinderFormatToTalon(trajectory_right), trajectory_right.length());
-        while (Robot.westCoastDrive.getLeftMpStatus().btmBufferCnt < min_points || Robot.westCoastDrive.getRightMpStatus().btmBufferCnt < min_points) {
-            Robot.westCoastDrive.periodic();
-        }
+//        while (Robot.westCoastDrive.getLeftMpStatus().btmBufferCnt < min_points || Robot.westCoastDrive.getRightMpStatus().btmBufferCnt < min_points) {
+//            Robot.westCoastDrive.periodic();
+//        }
         System.out.println("Talons filled (enough)!");
    }
 
@@ -59,6 +59,7 @@ public class AutoDriveProfile extends Command {
         } else if (Robot.westCoastDrive.getRightMpStatus().activePointValid && Robot.westCoastDrive.getRightMpStatus().isLast) {
             finished = true;
         }
+        System.out.println("Finished: " + finished);
         return finished;
     }
 }

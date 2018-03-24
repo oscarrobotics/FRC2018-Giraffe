@@ -9,9 +9,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Trajectory;
-import org.usfirst.frc.team832.robot.commands.auto.AutoDriveDistance;
-import org.usfirst.frc.team832.robot.commands.auto.AutoDriveProfile;
-import org.usfirst.frc.team832.robot.commands.auto.DynamicAutoCommand;
+import org.usfirst.frc.team832.robot.commands.auto.*;
 import org.usfirst.frc.team832.robot.commands.automodes.*;
 import org.usfirst.frc.team832.robot.commands.defaults.RobotDrive;
 import org.usfirst.frc.team832.robot.commands.defaults.RobotDriveSpeed;
@@ -67,12 +65,11 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
-
+		initAutoFiles();
 		autoChooser.addDefault("Base Line", new AUTOMODE_BaseLine());
 		autoChooser.addObject("Do Nothing", new AUTOMODE_DoNothing());
-		autoChooser.addObject("Scale from Left", new AUTOMODE_PlaceOnScaleFromLeft());
-		autoChooser.addObject("Scale from Right", new AUTOMODE_PlaceOnScaleFromRight());
-		autoChooser.addObject("Switch from Right", new AUTOMODE_PlaceOnSwitchFromRight());
+		autoChooser.addObject("Test", new AUTOMODE_TestProfile(autoFiles.get("LL")));
+		autoChooser.addObject("SuperMegaAuto", null);
 		SmartDashboard.putData("Auto mode", autoChooser);
 
 		teleDriveChooser.addDefault("Percent Output", new RobotDrive());
@@ -89,7 +86,7 @@ public class Robot extends IterativeRobot {
 		autoOrderChooser.addObject("Scale-Switch", "scsw"); // SWSC will end the profile facing the Switch, then use normal commands to do Scale. Vice Versa for SCSW
 	}
 
-	private static void sendData() {
+	private static void sendData(boolean isDisabled) {
 		SmartDashboard.putNumber("Stage1Pos",
 				RobotMap.elevatorMotor1.getSelectedSensorPosition(RobotMap.ElevatorStage1PIDID));
 		SmartDashboard.putNumber("Stage2Pos",
@@ -101,13 +98,14 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Intake Elbow Target", IntakeElbow.intakeElbowTargetPos);
 		SmartDashboard.putNumber("Intake Elbow Pos", RobotMap.intakeElbow.getSelectedSensorPosition(RobotMap.IntakeElbowPIDID));
 
+		if (!isDisabled) {
 //		SmartDashboard.putNumber("Left Actual Speed", -RobotMap.left1.getSelectedSensorVelocity(RobotMap.DrivePIDID));
 //		SmartDashboard.putNumber("Right Actual Speed",-1*RobotMap.right1.getSelectedSensorVelocity(RobotMap.DrivePIDID));
-		SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError(RobotMap.DrivePIDID));
-		SmartDashboard.putNumber("Right Error",-1*RobotMap.right1.getClosedLoopError(RobotMap.DrivePIDID));
-		SmartDashboard.putNumber("Left Target Speed",-1*RobotMap.left1.getClosedLoopTarget(RobotMap.DrivePIDID));
-		SmartDashboard.putNumber("Right Target Speed", -1*RobotMap.right1.getClosedLoopTarget(RobotMap.DrivePIDID));
-
+			SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError(RobotMap.DrivePIDID));
+			SmartDashboard.putNumber("Right Error",-1*RobotMap.right1.getClosedLoopError(RobotMap.DrivePIDID));
+			SmartDashboard.putNumber("Left Target Speed",-1*RobotMap.left1.getClosedLoopTarget(RobotMap.DrivePIDID));
+			SmartDashboard.putNumber("Right Target Speed", -1*RobotMap.right1.getClosedLoopTarget(RobotMap.DrivePIDID));
+		}
 		// SmartDashboard.putNumber("IntakeStickY", intake.intakeStickY);
 		// SmartDashboard.putNumber("IntakeElbowPot", IntakeElbow.rv);
 		// SmartDashboard.putNumber("IntakeElbowPotMapped",
@@ -175,7 +173,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
-		sendData();
+		sendData(true);
 	}
 
 	/**
@@ -202,6 +200,7 @@ public class Robot extends IterativeRobot {
 			Command[] cmdList;
 
 			String switchSide = String.valueOf(fieldData.charAt(0));
+			String scaleSide = String.valueOf(fieldData.charAt(1));
 			String startSide = robotSideChooser.getSelected();
 			if (autoCmd == null) {
 				System.out.println("Defaulting to fully automatic auto");
@@ -209,8 +208,11 @@ public class Robot extends IterativeRobot {
 				String[] autoFiles = Robot.autoFiles.get(startSide + switchSide);
 				if (startSide.equals(switchSide)) {
 					cmdList = new Command[]{
+							//new AutoMoveIntakeElbow(1),
 							new AutoDriveProfile(autoFiles[0], autoFiles[1]),
-							// new RemoveCube()
+							new AutoMoveElevatorStage2(0.5),
+							new AutoMoveIntakeElbow(0),
+							new AutoIntakeLinear(-1, 2000)
 					};
 				} else if (startSide.equals("C")) {
 					cmdList = new Command[]{
@@ -274,7 +276,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		sendData();
+		sendData(false);
 	}
 
 	@Override
@@ -320,7 +322,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		sendData();
+		sendData(false);
 		doRumble();
 		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
 		 	intakeElbow.setAtBottom();
@@ -343,6 +345,12 @@ public class Robot extends IterativeRobot {
 		autoFiles = new HashMap<>();
 		// format: STARTSIDE, SWITCHSIDE, SCALESIDE
 
+        // test paths
+        autoFiles.put("TEST1", new String[] {
+                "/home/lvuser/paths/2FT90_2FT_left_detailed.csv",
+                "/home/lvuser/paths/2FT90_2FT_right_detailed.csv"
+        });
+
 		// switch paths
 		autoFiles.put("CL", new String[]{
 				"/home/lvuser/paths_finder/center/center2left_left.csv",
@@ -354,8 +362,8 @@ public class Robot extends IterativeRobot {
 		});
 
 		autoFiles.put("LL", new String[]{
-				"/home/lvuser/paths_finder/left/left2left_left.csv",
-				"/home/lvuser/paths_finder/left/left2left_right.csv"
+				"/home/lvuser/paths/LeftSwitch_left_detailed.csv",
+				"/home/lvuser/paths/LeftSwitch_right_detailed.csv",
 		});
 		autoFiles.put("LR", new String[]{
 				"/home/lvuser/paths_finder/left/left2right_left.csv",
@@ -372,6 +380,7 @@ public class Robot extends IterativeRobot {
 		});
 
 		// scale paths
+
 	}
 
 	public static double[][] pathfinderFormatToTalon(Trajectory t) {

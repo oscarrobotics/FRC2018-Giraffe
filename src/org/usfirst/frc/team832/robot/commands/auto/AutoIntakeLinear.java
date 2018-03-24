@@ -8,13 +8,18 @@ public class AutoIntakeLinear extends Command {
 
 
 	double pow;
+	double time;
+	long currentMillis;
+	long startMillis;
 
-    public AutoIntakeLinear(double powInput) {
+    public AutoIntakeLinear(double powInput, double time) {
     	requires(Robot.intake);
     	pow = powInput;
+    	this.time = time;
     }
 
-    protected void initialize() {    	
+    protected void initialize() {
+        startMillis = System.currentTimeMillis();
     }
 
     protected void execute() {
@@ -22,10 +27,14 @@ public class AutoIntakeLinear extends Command {
     }
 
     protected boolean isFinished() {
-        return true;
+        currentMillis = System.currentTimeMillis();
+        if (currentMillis - startMillis > time) {
+            return true;
+        } else return false;
     }
     
     protected void end() {
+        Robot.intake.stop();
     }
 
     protected void interrupted() {

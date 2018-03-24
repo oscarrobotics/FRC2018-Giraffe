@@ -51,7 +51,7 @@ public class IntakeElbow extends Subsystem {
 	}
 	
 	public void setAutoPos(int targetPos) {
-		RobotMap.intakeElbow.set(ControlMode.Position, targetPos);
+		setPos(targetPos);
 	}
 	
 	public boolean getIsFinished() {

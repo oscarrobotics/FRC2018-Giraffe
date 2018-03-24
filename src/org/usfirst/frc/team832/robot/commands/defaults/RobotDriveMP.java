@@ -2,6 +2,7 @@ package org.usfirst.frc.team832.robot.commands.defaults;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team832.robot.Robot;
+import org.usfirst.frc.team832.robot.commands.auto.AutoDriveProfile;
 
 
 public class RobotDriveMP extends Command {
@@ -26,19 +27,6 @@ public class RobotDriveMP extends Command {
      */
     @Override
     protected void execute() {
-        if (Robot.oi.driverPad.getAButton()) {
-            Robot.westCoastDrive.goStraight(-5000);
-        }
-
-        if(Robot.oi.driverPad.getXButton()) {
-            Robot.westCoastDrive.goStraight(5000);
-        }
-
-        if(Robot.oi.driverPad.getBButton()){
-            Robot.westCoastDrive.turnAngle(45);
-        }
-
-
     }
 
 

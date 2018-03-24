@@ -1,7 +1,7 @@
 package org.usfirst.frc.team832.robot;
 
 public class Constants {
-    public static final double kWheelTurnsPerEncoderTurn = 1.0 / 2.975;
+    public static final double kWheelTurnsPerEncoderTurn = 1.0;
     public static final double kEncoderPulsesPerRevolution = 256.0D;
     public static final double kInchesPerWheelTurn = 6.0 * Math.PI;
 

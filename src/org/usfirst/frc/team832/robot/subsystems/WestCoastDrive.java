@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import org.usfirst.frc.team832.robot.Constants;
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
+import org.usfirst.frc.team832.robot.commands.auto.AutoDriveProfile;
 import org.usfirst.frc.team832.robot.commands.defaults.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -26,10 +27,11 @@ public class WestCoastDrive extends Subsystem {
 	VictorSPX right3 = RobotMap.right3;
 	int highSpeedRatio = 2*1200;
 	int lowSpeedRatio = 2*590;
+	double highSpeedkF = 0.8;
+	double lowSpeedkF = 1.7;
+	MotionProfileStatus leftMpStatus= new MotionProfileStatus();
+	MotionProfileStatus rightMpStatus = new MotionProfileStatus();
 
-	MotionProfileStatus leftMpStatus;
-	MotionProfileStatus rightMpStatus;
-		
 //	public enum Gear {
 //    	HIGH,
 //    	LOW;
@@ -89,12 +91,14 @@ public class WestCoastDrive extends Subsystem {
 		if(RobotMap.gearShiftSol.get() == Value.kReverse){
 			power = power*highSpeedRatio;
 			rot = rot*highSpeedRatio;
-			
+			left1.config_kF(0, highSpeedkF, 0);
+			right1.config_kF(0, highSpeedkF, 0);
 		}
 		else {
 			power = power*lowSpeedRatio;
 			rot = rot*lowSpeedRatio;
-			
+			left1.config_kF(0, lowSpeedkF, 0);
+			right1.config_kF(0, lowSpeedkF, 0);
 		}
 		ArcadeDrive(power, rot, ControlMode.Velocity );
 	}
@@ -102,6 +106,15 @@ public class WestCoastDrive extends Subsystem {
 	public void ArcadeDriveSpeedStraight(double speed){
 	    ArcadeDrive(speed, 0, ControlMode.Velocity);
     }
+
+    @Override
+	public void periodic() {
+		this.left1.processMotionProfileBuffer();
+		this.right1.processMotionProfileBuffer();
+
+		this.left1.getMotionProfileStatus(this.leftMpStatus);
+		this.right1.getMotionProfileStatus(this.rightMpStatus);
+	}
 
     public void resetEncoders() {
 		left1.setSelectedSensorPosition(0, 0, 0);
@@ -147,14 +160,14 @@ public class WestCoastDrive extends Subsystem {
 			double positionRot = profile[i][0] * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
 			double velocityRPM = profile[i][1] * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
 			/* for each point, fill our structure and pass it to API */
-			point.position = positionRot * (256.0 * 4.0); // Convert Revolutions to Units
-			point.velocity = velocityRPM * (256.0 * 4.0) / 10.0; // Convert RPS to Units/100ms
+			point.position = -positionRot * (256.0 * 4.0); // Convert Revolutions to Units TODO: Was *4
+			point.velocity = velocityRPM * (256.0 * 4) / 10.0; // Convert RPS to Units/100ms
 			point.headingDeg = 0; /* future feature - not used in this example*/
 			point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
 			point.profileSlotSelect1 = 0; /* future feature  - not used in this example - cascaded PID [0,1], leave zero */
 			point.timeDur = GetTrajectoryDuration((int) profile[i][2]);
 			point.zeroPos = i == 0;
-			point.isLastPoint = false; // HACK: isLastPoint points seem to not play nice with MP
+			point.isLastPoint = (i == size); // HACK: isLastPoint points seem to not play nice with MP
 
 			this.left1.pushMotionProfileTrajectory(point);
 		}
@@ -171,14 +184,14 @@ public class WestCoastDrive extends Subsystem {
 			double positionRot = profile[i][0] * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
 			double velocityRPM = profile[i][1] * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
 			/* for each point, fill our structure and pass it to API */
-			point.position = positionRot * (256.0 * 4.0); // Convert Revolutions to Units
+			point.position = -positionRot * (256.0 * 4.0); // Convert Revolutions to Units
 			point.velocity = velocityRPM * (256.0 * 4.0) / 10.0; // Convert RPS to Units/100ms
 			point.headingDeg = 0; /* future feature - not used in this example*/
 			point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
 			point.profileSlotSelect1 = 0; /* future feature  - not used in this example - cascaded PID [0,1], leave zero */
 			point.timeDur = GetTrajectoryDuration((int) profile[i][2]);
 			point.zeroPos = i == 0;
-			point.isLastPoint = false; // HACK: isLastPoint points seem to not play nice with MP
+			point.isLastPoint = (i == size); // HACK: isLastPoint points seem to not play nice with MP
 
 			this.right1.pushMotionProfileTrajectory(point);
 		}
@@ -226,7 +239,9 @@ public class WestCoastDrive extends Subsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new RobotDriveMP());
+//		setDefaultCommand(new RobotDriveMP());
+		setDefaultCommand(new RobotDriveSpeed());
+		//setDefaultCommand(new AutoDriveProfile( "/home/lvuser/paths/2FT90_2FT_right_detailed.csv", "/home/lvuser/paths/2FT90_2FT_left_detailed.csv"));
 	}
 	
 	public double getMin()

@@ -44,8 +44,7 @@ public class ElevatorStage2 extends Subsystem {
 	}
 	
 	public void setAutoPos(double targetPos) {
-		targetPosition = targetPos;
-		RobotMap.elevatorMotorStage2.set(ControlMode.Position, targetPosition);
+		setPos(targetPos);
 	}
 	
 	public boolean isFinished() {
