@@ -11,7 +11,7 @@ import java.awt.*;
 import java.io.File;
 
 public class AutoDriveProfile extends Command {
-    private static final int min_points = 60;
+    private static final int min_points = 60; // minimum points to stream to talon before starting. TODO: Can this be lower?
     private Trajectory trajectory_left;
     private Trajectory trajectory_right;
 
@@ -31,9 +31,9 @@ public class AutoDriveProfile extends Command {
         System.out.println("Filling talons...");
         Robot.westCoastDrive.startFillingLeft(Robot.pathfinderFormatToTalon(trajectory_left), trajectory_left.length());
         Robot.westCoastDrive.startFillingRight(Robot.pathfinderFormatToTalon(trajectory_right), trajectory_right.length());
-//        while (Robot.westCoastDrive.getLeftMpStatus().btmBufferCnt < min_points || Robot.westCoastDrive.getRightMpStatus().btmBufferCnt < min_points) {
-//            Robot.westCoastDrive.periodic();
-//        }
+        while (Robot.westCoastDrive.getLeftMpStatus().btmBufferCnt < min_points || Robot.westCoastDrive.getRightMpStatus().btmBufferCnt < min_points) {
+            Robot.westCoastDrive.periodic();
+        }
         System.out.println("Talons filled (enough)!");
    }
 
@@ -53,13 +53,12 @@ public class AutoDriveProfile extends Command {
 
     @Override
     protected boolean isFinished() {
-        boolean finished = false;
-        if (Robot.westCoastDrive.getLeftMpStatus().activePointValid && Robot.westCoastDrive.getLeftMpStatus().isLast) {
-            finished = true;
-        } else if (Robot.westCoastDrive.getRightMpStatus().activePointValid && Robot.westCoastDrive.getRightMpStatus().isLast) {
-            finished = true;
+        boolean leftComplete = Robot.westCoastDrive.getLeftMpStatus().activePointValid && Robot.westCoastDrive.getLeftMpStatus().isLast;
+        boolean rightComplete = Robot.westCoastDrive.getRightMpStatus().activePointValid && Robot.westCoastDrive.getRightMpStatus().isLast;
+        boolean trajectoryComplete = leftComplete && rightComplete;
+        if (trajectoryComplete) {
+            System.out.println("Finished Trajectory");
         }
-        System.out.println("Finished: " + finished);
-        return finished;
+        return trajectoryComplete;
     }
 }

@@ -194,7 +194,7 @@ public class Robot extends IterativeRobot {
 
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
 		autoCmd = autoChooser.getSelected();
-		if (autoCmd != null && !(autoCmd instanceof AUTOMODE_BaseLine) && !(autoCmd instanceof AUTOMODE_DoNothing)) {
+		if (autoCmd != null && !(autoCmd instanceof AUTOMODE_PlaceOnSwitch)) {
 			autoCmd.start();
 		} else {
 			Command[] cmdList;
@@ -206,25 +206,27 @@ public class Robot extends IterativeRobot {
 				System.out.println("Defaulting to fully automatic auto");
 				// generate appropriate command
 				String[] autoFiles = Robot.autoFiles.get(startSide + switchSide);
-				if (startSide.equals(switchSide)) {
-					cmdList = new Command[]{
-							//new AutoMoveIntakeElbow(1),
-							new AutoDriveProfile(autoFiles[0], autoFiles[1]),
-							new AutoMoveElevatorStage2(0.5),
-							new AutoMoveIntakeElbow(0),
-							new AutoIntakeLinear(-1, 2000)
-					};
-				} else if (startSide.equals("C")) {
-					cmdList = new Command[]{
-							new AutoDriveProfile(autoFiles[0], autoFiles[1]),
-							//new RemoveCube()
-					};
-				} else {
-					cmdList = new Command[]{
-							new AutoDriveDistance(0.5, 0.0, 9000, 0) // cross base
-					};
+				if (autoOrderChooser.getSelected().equals("sw")) { // switch only
+					if (startSide.equals(switchSide)) {
+						cmdList = new Command[]{
+								//new AutoMoveIntakeElbow(1),
+								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
+								new AutoMoveElevatorStage2(0.5),
+								new AutoMoveIntakeElbow(0),
+								new AutoIntakeLinear(-1, 2000)
+						};
+					} else if (startSide.equals("C")) {
+						cmdList = new Command[]{
+								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
+								//new RemoveCube()
+						};
+					} else {
+						cmdList = new Command[]{
+								new AutoDriveDistance(0.5, 0.0, 9000, 0) // cross base
+						};
+					}
+					autoCmd = new DynamicAutoCommand(cmdList);
 				}
-				autoCmd = new DynamicAutoCommand(cmdList);
 			} else if (autoCmd instanceof AUTOMODE_PlaceOnSwitch) {
 				if (switchSide.equals(startSide)) {
 					cmdList = new Command[]{
@@ -340,6 +342,7 @@ public class Robot extends IterativeRobot {
 		previousRobotMode = currentRobotMode;
 		currentRobotMode = mode;
 	}
+
 //TODO: MAKE THIS RIGHT!!!! We need paths generated for all possible modes
 	private static void initAutoFiles() {
 		autoFiles = new HashMap<>();
@@ -352,11 +355,11 @@ public class Robot extends IterativeRobot {
         });
 
 		// switch paths
-		autoFiles.put("CL", new String[]{
+		autoFiles.put("CL", new String[]{ // TODO: Generate this path
 				"/home/lvuser/paths_finder/center/center2left_left.csv",
 				"/home/lvuser/paths_finder/center/center2left_right.csv"
 		});
-		autoFiles.put("CR", new String[]{
+		autoFiles.put("CR", new String[]{ // TODO: Generate this path
 				"/home/lvuser/paths_finder/center/center2right_left.csv",
 				"/home/lvuser/paths_finder/center/center2right_right.csv"
 		});
@@ -365,22 +368,22 @@ public class Robot extends IterativeRobot {
 				"/home/lvuser/paths/LeftSwitch_left_detailed.csv",
 				"/home/lvuser/paths/LeftSwitch_right_detailed.csv",
 		});
-		autoFiles.put("LR", new String[]{
+		autoFiles.put("LR", new String[]{ // TODO: Generate this path
 				"/home/lvuser/paths_finder/left/left2right_left.csv",
 				"/home/lvuser/paths_finder/left/left2right_right.csv"
 		});
 
-		autoFiles.put("RL", new String[]{
+		autoFiles.put("RL", new String[]{ // TODO: Generate this path
 				"/home/lvuser/paths_finder/right/right2left_left.csv",
 				"/home/lvuser/paths_finder/right/right2left_right.csv"
 		});
-		autoFiles.put("RR", new String[]{
+		autoFiles.put("RR", new String[]{ // TODO: Generate this path
 				"/home/lvuser/paths_finder/right/right2right_left.csv",
 				"/home/lvuser/paths_finder/right/right2right_right.csv"
 		});
 
 		// scale paths
-
+		// TODO: Generate these paths
 	}
 
 	public static double[][] pathfinderFormatToTalon(Trajectory t) {
