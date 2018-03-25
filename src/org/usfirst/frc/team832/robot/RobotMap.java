@@ -198,9 +198,9 @@ public class RobotMap {
 		
 		//intakeElbow
 		intakeElbow = new TalonSRX(intakeElbowID);
-		intakeElbow.configContinuousCurrentLimit(2, 0);
+		intakeElbow.configContinuousCurrentLimit(6, 0);
 		intakeElbow.configPeakCurrentLimit(0, 0);
-		intakeElbow.enableCurrentLimit(false);
+		intakeElbow.enableCurrentLimit(true);
 		intakeElbow.configSelectedFeedbackSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.CTRE_MagEncoder_Relative,IntakeElbowPIDID,0);
 		
 		// pneumatics

@@ -1,12 +1,12 @@
-package org.usfirst.frc.team832.robot.commands.defaults;
+package org.usfirst.frc.team832.robot.commands.auto.elbow;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team832.robot.Robot;
 
 
-public class RobotDriveMM extends Command {
-    public RobotDriveMM() {
-        requires(Robot.westCoastDrive);
+public class MoveElbowToBottom extends Command {
+    public MoveElbowToBottom() {
+        requires(Robot.intakeElbow);
     }
 
 
@@ -26,18 +26,6 @@ public class RobotDriveMM extends Command {
      */
     @Override
     protected void execute() {
-        if (Robot.oi.driverPad.getAButton()) {
-            Robot.westCoastDrive.goStraight(-5000);
-        }
-
-        if(Robot.oi.driverPad.getXButton()) {
-            Robot.westCoastDrive.goStraight(5000);
-        }
-
-        if(Robot.oi.driverPad.getBButton()){
-            Robot.westCoastDrive.turnAngle(45);
-        }
-
 
     }
 

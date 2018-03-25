@@ -54,5 +54,5 @@ public class ElevatorStage1 extends Subsystem {
 	}
 	
 	@Override
-	protected void initDefaultCommand() { setDefaultCommand(new RunElevatorStage1());	}
+	protected void initDefaultCommand() {}
 }

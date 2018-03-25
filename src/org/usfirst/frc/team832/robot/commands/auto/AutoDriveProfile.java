@@ -6,6 +6,7 @@ import org.usfirst.frc.team832.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
+import org.usfirst.frc.team832.robot.RobotMap;
 
 import java.awt.*;
 import java.io.File;
@@ -17,6 +18,7 @@ public class AutoDriveProfile extends Command {
 
     public AutoDriveProfile(String leftFile, String rightFile) {
         this(Pathfinder.readFromCSV(new File(leftFile)), Pathfinder.readFromCSV(new File(rightFile)));
+        System.out.println(String.format("Running profile, L: %s, R: %s", leftFile, rightFile));
     }
 
     public AutoDriveProfile(Trajectory traj_l, Trajectory traj_r) {
@@ -27,6 +29,7 @@ public class AutoDriveProfile extends Command {
 
    @Override
    protected void initialize() {
+        System.out.println("Resetting encoders");
         Robot.westCoastDrive.resetEncoders();
         System.out.println("Filling talons...");
         Robot.westCoastDrive.startFillingLeft(Robot.pathfinderFormatToTalon(trajectory_left), trajectory_left.length());
@@ -39,6 +42,7 @@ public class AutoDriveProfile extends Command {
 
     @Override
     protected void execute() {
+        System.out.println("Running profile");
         Robot.westCoastDrive.leftMpControl(SetValueMotionProfile.Enable);
         Robot.westCoastDrive.rightMpControl(SetValueMotionProfile.Enable);
     }
@@ -53,12 +57,14 @@ public class AutoDriveProfile extends Command {
 
     @Override
     protected boolean isFinished() {
-        boolean leftComplete = Robot.westCoastDrive.getLeftMpStatus().activePointValid && Robot.westCoastDrive.getLeftMpStatus().isLast;
-        boolean rightComplete = Robot.westCoastDrive.getRightMpStatus().activePointValid && Robot.westCoastDrive.getRightMpStatus().isLast;
-        boolean trajectoryComplete = leftComplete && rightComplete;
-        if (trajectoryComplete) {
-            System.out.println("Finished Trajectory");
-        }
-        return trajectoryComplete;
+        return Robot.westCoastDrive.getLeftMpStatus().btmBufferCnt == 0 && Robot.westCoastDrive.getRightMpStatus().btmBufferCnt == 0;
+//        boolean leftComplete = Robot.westCoastDrive.getLeftMpStatus().activePointValid && Robot.westCoastDrive.getLeftMpStatus().isLast;
+//        boolean rightComplete = Robot.westCoastDrive.getRightMpStatus().activePointValid && Robot.westCoastDrive.getRightMpStatus().isLast;
+//        //System.out.println(String.format("LeftStatus: %s, RightStatus: %s", Robot.westCoastDrive.getLeftMpStatus(), Robot.westCoastDrive.getRightMpStatus()));
+//        boolean trajectoryComplete = leftComplete && rightComplete;
+//        if (trajectoryComplete) {
+//            System.out.println("Finished Trajectory");
+//        }
+//        return trajectoryComplete;
     }
 }

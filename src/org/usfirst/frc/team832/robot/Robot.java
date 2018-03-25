@@ -10,9 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Trajectory;
 import org.usfirst.frc.team832.robot.commands.auto.*;
+import org.usfirst.frc.team832.robot.commands.auto.elbow.MoveElbowAbsolute;
+import org.usfirst.frc.team832.robot.commands.auto.elbow.MoveElbowFromStart;
 import org.usfirst.frc.team832.robot.commands.automodes.*;
-import org.usfirst.frc.team832.robot.commands.defaults.RobotDrive;
-import org.usfirst.frc.team832.robot.commands.defaults.RobotDriveSpeed;
+import org.usfirst.frc.team832.robot.commands.defaults.*;
 import org.usfirst.frc.team832.robot.func.Calcs;
 import org.usfirst.frc.team832.robot.subsystems.*;
 
@@ -36,7 +37,8 @@ public class Robot extends IterativeRobot {
 	public static GyroPID gyroPID;
 	public static OI oi;
 
-	private static RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode;
+	public static RobotMode currentRobotMode = RobotMode.INIT;
+	private static RobotMode previousRobotMode;
 
 	private String fieldData;
 	private static HashMap<String, String[]> autoFiles;
@@ -98,7 +100,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Intake Elbow Target", IntakeElbow.intakeElbowTargetPos);
 		SmartDashboard.putNumber("Intake Elbow Pos", RobotMap.intakeElbow.getSelectedSensorPosition(RobotMap.IntakeElbowPIDID));
 
-		if (!isDisabled) {
+		if (currentRobotMode.equals(RobotMode.TELEOP)) {
 //		SmartDashboard.putNumber("Left Actual Speed", -RobotMap.left1.getSelectedSensorVelocity(RobotMap.DrivePIDID));
 //		SmartDashboard.putNumber("Right Actual Speed",-1*RobotMap.right1.getSelectedSensorVelocity(RobotMap.DrivePIDID));
 			SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError(RobotMap.DrivePIDID));
@@ -149,13 +151,17 @@ public class Robot extends IterativeRobot {
 	}
 
 	private static void globalInit() {
+		RobotMap.navx.reset();
 		Robot.pneumatics.shiftToLow();
 		Robot.pneumatics.closeIntake();
 		Robot.westCoastDrive.resetEncoders();
 		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
 		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
-		intakeElbow.setAtTop();
-		RobotMap.navx.reset();
+		RobotMap.intakeElbow.setSelectedSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
+		RobotMap.intakeElbow.setIntegralAccumulator(0,0,0);
+
+
+
 	}
 
 	/**
@@ -192,9 +198,14 @@ public class Robot extends IterativeRobot {
 		setRobotMode(RobotMode.AUTONOMOUS);
 		globalInit();
 
+		//int currentIntakeElbowPos = RobotMap.intakeElbow.getSelectedSensorPosition(0);
+		//RobotMap.intakeElbow.set(ControlMode.Position, currentIntakeElbowPos-100);
+
+
+
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
 		autoCmd = autoChooser.getSelected();
-		if (autoCmd != null && !(autoCmd instanceof AUTOMODE_PlaceOnSwitch)) {
+		if (autoCmd != null && !(autoCmd instanceof AUTOMODE_BaseLine) && !(autoCmd instanceof AUTOMODE_DoNothing)) {
 			autoCmd.start();
 		} else {
 			Command[] cmdList;
@@ -208,21 +219,23 @@ public class Robot extends IterativeRobot {
 				String[] autoFiles = Robot.autoFiles.get(startSide + switchSide);
 				if (autoOrderChooser.getSelected().equals("sw")) { // switch only
 					if (startSide.equals(switchSide)) {
+						System.out.println(String.format("Running %s switch auto from %s position", switchSide, startSide));
 						cmdList = new Command[]{
-								//new AutoMoveIntakeElbow(1),
-								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
+								new MoveElbowAbsolute(RobotMap.intakeElbow.getSelectedSensorPosition(0)),
+								//new AutoDriveProfile(autoFiles[0], autoFiles[1]),
 								new AutoMoveElevatorStage2(0.5),
-								new AutoMoveIntakeElbow(0),
-								new AutoIntakeLinear(-1, 2000)
+								new MoveElbowAbsolute(400),
+								new AutoIntakeLinear(.5, 500)
 						};
 					} else if (startSide.equals("C")) {
+						System.out.println(String.format("Running %s switch auto from C position", switchSide));
 						cmdList = new Command[]{
 								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
 								//new RemoveCube()
 						};
 					} else {
 						cmdList = new Command[]{
-								new AutoDriveDistance(0.5, 0.0, 9000, 0) // cross base
+								//new AutoDriveDistance(0.5, 0.0, 9000, 0) // cross base
 						};
 					}
 					autoCmd = new DynamicAutoCommand(cmdList);
@@ -284,6 +297,26 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		setRobotMode(RobotMode.TELEOP);
+
+		elevatorStage2.stop();
+		elevatorStage2.setAtBottom();
+
+//		elevatorStage2.setPos(-.7);
+//
+//		if (!intakeElbow.getAtBottom()) {
+//			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
+//			while (true) {
+//				if (intakeElbow.getAtBottom())
+//					break;
+//			}
+//		}
+//		intakeElbow.stop();
+//		intakeElbow.setAtBottom();
+
+		int absolutePosition = RobotMap.intakeElbow.getSensorCollection().getPulseWidthPosition();
+		absolutePosition &= 0xFFF;
+		RobotMap.intakeElbow.setSelectedSensorPosition(absolutePosition, 0, 0);
+
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -291,31 +324,13 @@ public class Robot extends IterativeRobot {
 		if (autoCmd != null)
 			autoCmd.cancel();
 
+		Scheduler.getInstance().add(new RobotDriveSpeed());
+		Scheduler.getInstance().add(new RunIntake());
+		Scheduler.getInstance().add(new RunIntakeElbow());
+		Scheduler.getInstance().add(new RunElevatorStage1());
+		Scheduler.getInstance().add(new RunElevatorStage2());
 		globalInit();
-		RobotMap.intakeElbow.setSelectedSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
 
-		if (!elevatorStage1.getAtBottom()) {
-			RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.08);
-			while (true) {
-				if (elevatorStage1.getAtBottom())
-					break;
-			}
-		}
-		elevatorStage1.stop();
-		elevatorStage1.setAtBottom();
-
-		// Auto homing stage 2 shouldn't ever be necessary
-		/*
-		if (!elevatorStage2.getAtBottom()) {
-			RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.01);
-			while (true) {
-				if (elevatorStage1.getAtBottom())
-					break;
-			}
-		}
-		*/
-		elevatorStage2.stop();
-		elevatorStage2.setAtBottom();
 	}
 
 	/**
@@ -326,9 +341,9 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		sendData(false);
 		doRumble();
-		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
-		 	intakeElbow.setAtBottom();
-		 }
+//		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
+//		 	intakeElbow.setAtBottom();
+//		 }
 	}
 
 	/**
@@ -354,32 +369,14 @@ public class Robot extends IterativeRobot {
                 "/home/lvuser/paths/2FT90_2FT_right_detailed.csv"
         });
 
-		// switch paths
-		autoFiles.put("CL", new String[]{ // TODO: Generate this path
-				"/home/lvuser/paths_finder/center/center2left_left.csv",
-				"/home/lvuser/paths_finder/center/center2left_right.csv"
-		});
-		autoFiles.put("CR", new String[]{ // TODO: Generate this path
-				"/home/lvuser/paths_finder/center/center2right_left.csv",
-				"/home/lvuser/paths_finder/center/center2right_right.csv"
-		});
-
 		autoFiles.put("LL", new String[]{
 				"/home/lvuser/paths/LeftSwitch_left_detailed.csv",
 				"/home/lvuser/paths/LeftSwitch_right_detailed.csv",
 		});
-		autoFiles.put("LR", new String[]{ // TODO: Generate this path
-				"/home/lvuser/paths_finder/left/left2right_left.csv",
-				"/home/lvuser/paths_finder/left/left2right_right.csv"
-		});
 
-		autoFiles.put("RL", new String[]{ // TODO: Generate this path
-				"/home/lvuser/paths_finder/right/right2left_left.csv",
-				"/home/lvuser/paths_finder/right/right2left_right.csv"
-		});
-		autoFiles.put("RR", new String[]{ // TODO: Generate this path
-				"/home/lvuser/paths_finder/right/right2right_left.csv",
-				"/home/lvuser/paths_finder/right/right2right_right.csv"
+		autoFiles.put("RR", new String[]{
+				"/home/lvuser/paths/RightSwitch_left_detailed.csv",
+				"/home/lvuser/paths/Rightswitch_right_detailed.csv"
 		});
 
 		// scale paths

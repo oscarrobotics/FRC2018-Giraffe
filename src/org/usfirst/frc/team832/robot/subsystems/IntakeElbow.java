@@ -1,6 +1,8 @@
 package org.usfirst.frc.team832.robot.subsystems;
 
+import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
+import org.usfirst.frc.team832.robot.RobotMode;
 import org.usfirst.frc.team832.robot.commands.defaults.RunIntakeElbow;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -10,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class IntakeElbow extends Subsystem {
 	
 	private static final int maxEncPos = 2200;
-	private static final int acceptableError = 5;
+	private static final int acceptableError = 90;
 	private static final double minPotVal = 0;
 	private static final double maxPotVal = 0.65;
 	public static double intakeElbowTargetPos;
@@ -24,10 +26,11 @@ public class IntakeElbow extends Subsystem {
 	
 	public void start() 
 	{ 
-		RobotMap.intakeElbow.set(ControlMode.Position, 1600); 
+		RobotMap.intakeElbow.set(ControlMode.Position, 1600);
 	}
 	
-	
+	public boolean getAtBottom() { return RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed(); }
+
 	public void setAtBottom() 
 	{	
 		RobotMap.intakeElbow.setSelectedSensorPosition(0, RobotMap.IntakeElbowPIDID, 0); 
@@ -46,22 +49,23 @@ public class IntakeElbow extends Subsystem {
 		rv = rotationVal;
 		
 		//intakeElbowTargetPos = maxEncPos - maxEncPos * rotationVal * (1 / maxPotVal);
-		intakeElbowTargetPos = 2200 - (2200 * rv/.65);
+		//intakeElbowTargetPos = 2200 - (2200 * rv/.65);
+		intakeElbowTargetPos = ((2250 - (2250 * rv/.65)) +350);
 		RobotMap.intakeElbow.set(ControlMode.Position, intakeElbowTargetPos);
 	}
 	
 	public void setAutoPos(int targetPos) {
-		setPos(targetPos);
+		intakeElbowTargetPos = targetPos;
+		RobotMap.intakeElbow.set(ControlMode.Position, intakeElbowTargetPos);
+
 	}
 	
 	public boolean getIsFinished() {
-		int currentError = RobotMap.intakeElbow.getClosedLoopError(RobotMap.IntakeElbowPIDID);
-		//return (Math.abs(currentError) > acceptableError);
-		return false;
+		int currentError = RobotMap.intakeElbow.getSelectedSensorPosition(RobotMap.IntakeElbowPIDID)-RobotMap.intakeElbow.getClosedLoopTarget(0);
+		return (Math.abs(currentError) <= acceptableError);
+		//return false; Testing only
 	}
 	
 	@Override
-	protected void initDefaultCommand() { 
-		setDefaultCommand(new RunIntakeElbow());
-	}
+	protected void initDefaultCommand() {}
 }
