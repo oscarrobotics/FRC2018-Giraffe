@@ -3,6 +3,7 @@ package org.usfirst.frc.team832.robot.subsystems;
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
 import org.usfirst.frc.team832.robot.RobotMode;
+import org.usfirst.frc.team832.robot.commands.defaults.RunIntake;
 import org.usfirst.frc.team832.robot.commands.defaults.RunIntakeElbow;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -42,16 +43,20 @@ public class IntakeElbow extends Subsystem {
 	}
 	
 	public void setPos(double rotationVal) {
+		System.out.println("Potentiometer in: " + rotationVal);
 		if (rotationVal >= maxPotVal)
 			rotationVal = maxPotVal;
 		if(rotationVal <= minPotVal)
 			rotationVal = minPotVal;
 		rv = rotationVal;
-		
+		//System.out.println("Potentiometer out: " +rv);
 		//intakeElbowTargetPos = maxEncPos - maxEncPos * rotationVal * (1 / maxPotVal);
-		//intakeElbowTargetPos = 2200 - (2200 * rv/.65);
-		intakeElbowTargetPos = ((2250 - (2250 * rv/.65)) +350);
+		intakeElbowTargetPos = 2200 - (2200 * (rv/.65));
+		//System.out.println("Intake Target Pos: " + intakeElbowTargetPos);
+		//intakeElbowTargetPos = ((2250 - (2250 * rv/.65)) +350);
 		RobotMap.intakeElbow.set(ControlMode.Position, intakeElbowTargetPos);
+		//System.out.println("Intake Elbow Error: " + RobotMap.intakeElbow.getClosedLoopError(0));
+		//System.out.println("Intake Elbow Enc Pos: " + RobotMap.intakeElbow.getSelectedSensorPosition(0));
 	}
 	
 	public void setAutoPos(int targetPos) {
@@ -67,5 +72,7 @@ public class IntakeElbow extends Subsystem {
 	}
 	
 	@Override
-	protected void initDefaultCommand() {}
+	protected void initDefaultCommand() {
+		//setDefaultCommand(new RunIntakeElbow());
+	}
 }

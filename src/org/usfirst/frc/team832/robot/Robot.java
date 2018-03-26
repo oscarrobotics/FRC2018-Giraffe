@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Trajectory;
 import org.usfirst.frc.team832.robot.commands.auto.*;
+import org.usfirst.frc.team832.robot.commands.auto.elbow.AutoMoveIntakeElbowPos;
 import org.usfirst.frc.team832.robot.commands.auto.elbow.MoveElbowAbsolute;
 import org.usfirst.frc.team832.robot.commands.auto.elbow.MoveElbowFromStart;
+import org.usfirst.frc.team832.robot.commands.auto.elbow.MoveElbowToBottom;
 import org.usfirst.frc.team832.robot.commands.automodes.*;
 import org.usfirst.frc.team832.robot.commands.defaults.*;
 import org.usfirst.frc.team832.robot.func.Calcs;
@@ -108,6 +110,7 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putNumber("Left Target Speed",-1*RobotMap.left1.getClosedLoopTarget(RobotMap.DrivePIDID));
 			SmartDashboard.putNumber("Right Target Speed", -1*RobotMap.right1.getClosedLoopTarget(RobotMap.DrivePIDID));
 		}
+
 		// SmartDashboard.putNumber("IntakeStickY", intake.intakeStickY);
 		// SmartDashboard.putNumber("IntakeElbowPot", IntakeElbow.rv);
 		// SmartDashboard.putNumber("IntakeElbowPotMapped",
@@ -157,8 +160,7 @@ public class Robot extends IterativeRobot {
 		Robot.westCoastDrive.resetEncoders();
 		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
 		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
-		RobotMap.intakeElbow.setSelectedSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
-		RobotMap.intakeElbow.setIntegralAccumulator(0,0,0);
+		RobotMap.intakeElbow.setIntegralAccumulator(0,RobotMap.IntakeElbowPIDID,0);
 
 
 
@@ -201,6 +203,9 @@ public class Robot extends IterativeRobot {
 		//int currentIntakeElbowPos = RobotMap.intakeElbow.getSelectedSensorPosition(0);
 		//RobotMap.intakeElbow.set(ControlMode.Position, currentIntakeElbowPos-100);
 
+		RobotMap.intakeElbow.setSelectedSensorPosition(2220, RobotMap.IntakeElbowPIDID, 0);
+
+
 
 
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
@@ -221,10 +226,10 @@ public class Robot extends IterativeRobot {
 					if (startSide.equals(switchSide)) {
 						System.out.println(String.format("Running %s switch auto from %s position", switchSide, startSide));
 						cmdList = new Command[]{
-								new MoveElbowAbsolute(RobotMap.intakeElbow.getSelectedSensorPosition(0)),
+								new AutoMoveIntakeElbowPos(2100),
 								//new AutoDriveProfile(autoFiles[0], autoFiles[1]),
 								new AutoMoveElevatorStage2(0.5),
-								new MoveElbowAbsolute(400),
+								new AutoMoveIntakeElbowPos(0),
 								new AutoIntakeLinear(.5, 500)
 						};
 					} else if (startSide.equals("C")) {
@@ -301,21 +306,19 @@ public class Robot extends IterativeRobot {
 		elevatorStage2.stop();
 		elevatorStage2.setAtBottom();
 
-//		elevatorStage2.setPos(-.7);
-//
-//		if (!intakeElbow.getAtBottom()) {
-//			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
-//			while (true) {
-//				if (intakeElbow.getAtBottom())
-//					break;
-//			}
-//		}
-//		intakeElbow.stop();
-//		intakeElbow.setAtBottom();
+		//RobotMap.intakeElbow.setSelectedSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
 
-		int absolutePosition = RobotMap.intakeElbow.getSensorCollection().getPulseWidthPosition();
-		absolutePosition &= 0xFFF;
-		RobotMap.intakeElbow.setSelectedSensorPosition(absolutePosition, 0, 0);
+		elevatorStage2.setPos(-.8);
+
+		if (!intakeElbow.getAtBottom()) {
+			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
+			while (true) {
+				if (intakeElbow.getAtBottom())
+					break;
+			}
+		}
+		intakeElbow.stop();
+		intakeElbow.setAtBottom();
 
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
@@ -341,9 +344,9 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		sendData(false);
 		doRumble();
-//		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
-//		 	intakeElbow.setAtBottom();
-//		 }
+		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
+		 	intakeElbow.setAtBottom();
+		 }
 	}
 
 	/**

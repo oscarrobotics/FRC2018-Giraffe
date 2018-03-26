@@ -27,7 +27,7 @@ public class RobotDriveSpeed extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double leftStick = 1 * Math.pow(OI.driverPad.getRawAxis(1),5); // linear
-    	double rightStick = .4 * OI.driverPad.getRawAxis(4); // rotation
+    	double rightStick = .7 * OI.driverPad.getRawAxis(4); // rotation
 
         if(OI.driverPad.getRawButton(1))
             westCoastDrive.ArcadeDriveSpeedStraight(-250);

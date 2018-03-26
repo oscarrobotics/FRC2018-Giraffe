@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ElevatorStage2 extends Subsystem {
 
-	private static final double minEncPos = 1400;
+	private static final double minEncPos = 750;
 	private static final double maxEncPos = 26000 - minEncPos ;
 	private static final double lowerposthres = 5000;
 	private static final int acceptableError = 425;

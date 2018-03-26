@@ -30,14 +30,14 @@ public class ElevatorStage1 extends Subsystem {
 	
 	public void setPos(double sliderVal) {
 		RobotMap.elevatorMotor1.configPeakOutputReverse(-100,0);
-//		RobotMap.elevatorMotor1.configNominalOutputReverse(0, 0);
-		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0)>lowerposthres){
-
-			RobotMap.elevatorMotor1.configPeakOutputReverse(-100,0);
-		}
-		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0)<lowerposthres){
-			RobotMap.elevatorMotor1.configPeakOutputReverse(-0.1,0);
-		}
+		RobotMap.elevatorMotor1.configNominalOutputReverse(0, 0);
+//		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0)>lowerposthres){
+//
+//			RobotMap.elevatorMotor1.configPeakOutputReverse(-100,0);
+//		}
+//		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0)<lowerposthres){
+//			RobotMap.elevatorMotor1.configPeakOutputReverse(-0.1,0);
+//		}
 
 		targetPosition = Math.round( Calcs.map(sliderVal, -1.0, 1.0, 0.0, 1.0) * maxEncPos);
 		RobotMap.elevatorMotor1.set(ControlMode.Position, targetPosition);

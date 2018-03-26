@@ -11,6 +11,7 @@ import java.net.SocketPermission;
 public class AutoMoveIntakeElbowPos extends Command {
 
 	int target;
+	boolean wasAtBottom;
 	
     public AutoMoveIntakeElbowPos(int targetInput) {
     	requires(Robot.intakeElbow);
@@ -24,7 +25,8 @@ public class AutoMoveIntakeElbowPos extends Command {
     }
 
     protected boolean isFinished() {
-       return Robot.intakeElbow.getIsFinished();
+
+        return Robot.intakeElbow.getIsFinished();
     }
 
     protected void end() {
