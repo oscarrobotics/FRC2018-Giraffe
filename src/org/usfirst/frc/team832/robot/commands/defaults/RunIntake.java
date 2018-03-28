@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class RunIntake extends Command {
 	
-	Intake intake = Robot.intake;
+	final Intake intake = Robot.intake;
 	
 	public RunIntake() {
 		requires(Robot.intake);

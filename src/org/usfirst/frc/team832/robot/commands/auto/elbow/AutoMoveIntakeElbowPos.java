@@ -10,7 +10,7 @@ import java.net.SocketPermission;
 
 public class AutoMoveIntakeElbowPos extends Command {
 
-	int target;
+	final int target;
 	boolean wasAtBottom;
 	
     public AutoMoveIntakeElbowPos(int targetInput) {

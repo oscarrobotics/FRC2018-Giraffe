@@ -68,7 +68,7 @@ public class OI {
 		kStart(8);
 
 		@SuppressWarnings("MemberName")
-		private int value;
+		private final int value;
 
 		XButton(int value) {
 			this.value = value;

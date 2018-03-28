@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class AutoMoveElevatorStage1 extends Command {
 
-	int target;
+	final int target;
 	
     public AutoMoveElevatorStage1(int targetInput) {
     	requires(Robot.elevatorStage1);

@@ -14,14 +14,14 @@ import org.usfirst.frc.team832.robot.commands.defaults.RobotDriveSpeed;
 
 public class WestCoastDrive extends Subsystem {
 
-	private TalonSRX left1 = RobotMap.left1;
-	private TalonSRX right1 = RobotMap.right1;
-	private int highSpeedRatio = 2*1200;
-	private int lowSpeedRatio = 2*590;
-	private double highSpeedkF = 0.8;
-	private double lowSpeedkF = 1.7;
-	private MotionProfileStatus leftMpStatus= new MotionProfileStatus();
-	private MotionProfileStatus rightMpStatus = new MotionProfileStatus();
+	private final TalonSRX left1 = RobotMap.left1;
+	private final TalonSRX right1 = RobotMap.right1;
+	private final int highSpeedRatio = 2*1200;
+	private final int lowSpeedRatio = 2*590;
+	private final double highSpeedkF = 0.8;
+	private final double lowSpeedkF = 1.7;
+	private final MotionProfileStatus leftMpStatus= new MotionProfileStatus();
+	private final MotionProfileStatus rightMpStatus = new MotionProfileStatus();
 
 	public void ArcadeDrive(double pow, double rot, ControlMode ctrlMode) {
 		double leftMotorSpeed, rightMotorSpeed;

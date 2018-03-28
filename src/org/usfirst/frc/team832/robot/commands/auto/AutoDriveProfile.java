@@ -13,8 +13,8 @@ import java.io.File;
 
 public class AutoDriveProfile extends Command {
     private static final int min_points = 60; // minimum points to stream to talon before starting. TODO: Can this be lower?
-    private Trajectory trajectory_left;
-    private Trajectory trajectory_right;
+    private final Trajectory trajectory_left;
+    private final Trajectory trajectory_right;
 
     public AutoDriveProfile(String leftFile, String rightFile) {
         this(Pathfinder.readFromCSV(new File(leftFile)), Pathfinder.readFromCSV(new File(rightFile)));

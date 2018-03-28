@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class AutoDriveDistance extends Command {
 
 	protected final double power, delay, distance;
-	protected double angle;
+	protected final double angle;
 	protected double leftD, rightD;
 
 	public AutoDriveDistance(double power, double delay, double distance, double angleIn) {
@@ -29,15 +29,15 @@ public class AutoDriveDistance extends Command {
 		Timer.delay(delay);
 		
 		//TODO: Look into this
-		Robot.gyroPID.setSetpoint(this.angle);
-		Robot.gyroPID.enable();
+		//Robot.gyroPID.setSetpoint(this.angle);
+		//Robot.gyroPID.enable();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		
 		// Update motors
-		Robot.westCoastDrive.ArcadeDrive(power, Robot.gyroPID.pidOut, ControlMode.PercentOutput);
+		//Robot.westCoastDrive.ArcadeDrive(power, Robot.gyroPID.pidOut, ControlMode.PercentOutput);
 		//Robot.westCoastDrive.ArcadeDriveSpeed(power, angle);
 		//Robot.westCoastDrive.TankDrive(power, power);
 	}

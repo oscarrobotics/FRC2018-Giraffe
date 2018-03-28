@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class RobotDrive extends Command {
 
-	WestCoastDrive westCoastDrive = Robot.westCoastDrive;
+	final WestCoastDrive westCoastDrive = Robot.westCoastDrive;
     public RobotDrive() {
         requires(Robot.westCoastDrive);
     }

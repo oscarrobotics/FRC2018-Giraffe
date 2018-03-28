@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends Subsystem {
-	public static VictorSPX intakeMotorLeft = RobotMap.leftIntake;
-	public static VictorSPX intakeMotorRight = RobotMap.rightIntake;
+	public static final VictorSPX intakeMotorLeft = RobotMap.leftIntake;
+	public static final VictorSPX intakeMotorRight = RobotMap.rightIntake;
 	public double intakeStickX, intakeStickY;
 	private final double maxSpeed = 1.0;
 	
@@ -49,7 +49,11 @@ public class Intake extends Subsystem {
 			y = -.5;
 		else if (y < -.5)
 			y = -1.0;
-		y = -y;
+
+		//TODO: THIS IS ONLY NEEDED ON THE PRACTICE BOT
+		//TODO: THIS SHOULD BE COMMENTED ON THE ACTUAL BOT
+		//y = -y;
+
 		SmartDashboard.putNumber("spin", x);
 		SmartDashboard.putNumber("linear", y);
 //		// limit switch

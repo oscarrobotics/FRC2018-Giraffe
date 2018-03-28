@@ -7,7 +7,7 @@ import org.usfirst.frc.team832.robot.RobotMap;
 
 
 public class MoveElbowAbsolute extends Command {
-    private int pos;
+    private final int pos;
     private int absolutePosition;
 
     public MoveElbowAbsolute(int pos) {

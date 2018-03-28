@@ -30,7 +30,7 @@ public class IntakeElbow extends Subsystem {
 		RobotMap.intakeElbow.set(ControlMode.Position, 1600);
 	}
 	
-	public boolean getAtBottom() { return RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed(); }
+	public boolean getAtBottom() { return RobotMap.intakeElbow.getSensorCollection().isFwdLimitSwitchClosed(); }
 
 	public void setAtBottom() 
 	{	
@@ -43,7 +43,7 @@ public class IntakeElbow extends Subsystem {
 	}
 	
 	public void setPos(double rotationVal) {
-		System.out.println("Potentiometer in: " + rotationVal);
+		//System.out.println("Potentiometer in: " + rotationVal);
 		if (rotationVal >= maxPotVal)
 			rotationVal = maxPotVal;
 		if(rotationVal <= minPotVal)

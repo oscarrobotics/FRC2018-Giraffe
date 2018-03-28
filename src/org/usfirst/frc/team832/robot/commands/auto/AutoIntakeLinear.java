@@ -9,14 +9,16 @@ import org.usfirst.frc.team832.robot.RobotMap;
 public class AutoIntakeLinear extends Command {
 
 
-	private double pow;
-	private double time;
+	private final double pow;
+	private final double time;
 	private long currentMillis;
 	private long startMillis;
 
     public AutoIntakeLinear(double powInput, double time) {
-    	requires(Robot.intake);
-    	this.pow = powInput;
+        requires(Robot.intake);
+        //TODO: THIS IS POSITIVE NEEDED ON THE PRACTICE BOT
+        //TODO: THIS SHOULD BE NEGATIVE ON THE ACTUAL BOT
+        this.pow = powInput;
     	this.time = time;
     }
 

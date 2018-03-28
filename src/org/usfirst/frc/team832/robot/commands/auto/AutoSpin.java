@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class AutoSpin extends Command {
-	protected double angle;
+	protected final double angle;
     public AutoSpin(double angle) {
         this.angle = angle;
     	requires(Robot.westCoastDrive);
@@ -17,13 +17,13 @@ public class AutoSpin extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		Robot.gyroPID.setSetpoint(angle);
-		Robot.gyroPID.enable();
+		//Robot.gyroPID.setSetpoint(angle);
+		//Robot.gyroPID.enable();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.westCoastDrive.AutoRotateSpeed(Robot.gyroPID.pidOut);
+    	//Robot.westCoastDrive.AutoRotateSpeed(Robot.gyroPID.pidOut);
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -7,8 +7,8 @@ import org.usfirst.frc.team832.robot.RobotMap;
 
 
 public class MoveElbowFromStart extends Command {
-    private int pos;
-    private boolean zeroes;
+    private final int pos;
+    private final boolean zeroes;
     private boolean finished = false;
 
     private int startPos;

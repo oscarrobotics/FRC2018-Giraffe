@@ -75,9 +75,9 @@ public class RobotMap {
 	public static final double ElevatorStage1kF = 0.0;
 	
 	public static final int ElevatorStage2PIDID = 0;
-	public static final double ElevatorStage2kP = 0.45;
-	public static final double ElevatorStage2kI = 0.004;
-	public static final double ElevatorStage2kD = 0.0;
+	public static final double ElevatorStage2kP = 0.6;
+	public static final double ElevatorStage2kI = 0.0;
+	public static final double ElevatorStage2kD = 7.0;
 	public static final double ElevatorStage2kF = 0.0;
 	
 	public static final int IntakeElbowPIDID = 0;
@@ -90,7 +90,8 @@ public class RobotMap {
 		// navx
 		try {
 			//navx = new AHRS(SerialPort.Port.kUSB);
-			navx = new AHRS(Port.kOnboard);
+			//TODO: UNCOMMENT ME
+//			navx = new AHRS(Port.kOnboard);
 		} catch (RuntimeException ex) {
 			//DriverStation.reportError("Error instantiating navX-Micro:  " + ex.getMessage(), true);
 		}
@@ -137,6 +138,9 @@ public class RobotMap {
 		left1.configSelectedFeedbackSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder,DrivePIDID,0);
 		right1.configSelectedFeedbackSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder,DrivePIDID,0);
 
+		//TODO: THIS IS DIFFERENT FOR THE TWO ROBOTS
+		//TODO: REMEMBER TO CHANGE THIS
+		//TODO: THIS IS FALSE ON ACTUAL AND IS TRUE ON PRACTICE
 		left1.setSensorPhase(true);
 
 		left1.configClosedloopRamp(1,0);
@@ -227,6 +231,6 @@ public class RobotMap {
 		elevatorMotorStage2.config_kP(RobotMap.ElevatorStage2PIDID, ElevatorStage2kP, 0);
 		elevatorMotorStage2.config_kI(RobotMap.ElevatorStage2PIDID, ElevatorStage2kI, 0);
 		elevatorMotorStage2.config_kD(RobotMap.ElevatorStage2PIDID, ElevatorStage2kD, 0);
-		elevatorMotorStage2.configAllowableClosedloopError(0, 50, 0);
+		elevatorMotorStage2.configAllowableClosedloopError(0, 200, 0);
 	}
 }

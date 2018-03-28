@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team832.robot.Robot;
 
 public class AutoMoveElevatorStage2 extends Command {
-	private double target;
+	private final double target;
 	
     public AutoMoveElevatorStage2(double targetInput) {
     	requires(Robot.elevatorStage2);
