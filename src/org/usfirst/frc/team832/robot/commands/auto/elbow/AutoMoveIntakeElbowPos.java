@@ -18,11 +18,11 @@ public class AutoMoveIntakeElbowPos extends Command {
     	target = targetInput;
     }
 
-    protected void initialize() { }
-    
-    protected void execute() {
+    protected void initialize() {
         Robot.intakeElbow.setAutoPos(target);
     }
+    
+    protected void execute() { }
 
     protected boolean isFinished() {
 

@@ -57,6 +57,7 @@ public class AutoDriveProfile extends Command {
 
     @Override
     protected boolean isFinished() {
+
         return Robot.westCoastDrive.getLeftMpStatus().btmBufferCnt == 0 && Robot.westCoastDrive.getRightMpStatus().btmBufferCnt == 0;
 //        boolean leftComplete = Robot.westCoastDrive.getLeftMpStatus().activePointValid && Robot.westCoastDrive.getLeftMpStatus().isLast;
 //        boolean rightComplete = Robot.westCoastDrive.getRightMpStatus().activePointValid && Robot.westCoastDrive.getRightMpStatus().isLast;

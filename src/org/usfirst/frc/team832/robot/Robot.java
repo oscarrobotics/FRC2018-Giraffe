@@ -36,7 +36,7 @@ public class Robot extends IterativeRobot {
 	public static ElevatorStage1 elevatorStage1;
 	public static ElevatorStage2 elevatorStage2;
 	public static Pneumatics pneumatics;
-	//public static GyroPID gyroPID;
+	public static GyroPID gyroPID;
 	public static OI oi;
 
 	public static RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode;
@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot {
 		elevatorStage1 = new ElevatorStage1();
 		elevatorStage2 = new ElevatorStage2();
 		pneumatics = new Pneumatics();
-		//gyroPID = new GyroPID();
+		gyroPID = new GyroPID();
 		oi = new OI();
 
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
@@ -118,12 +118,12 @@ public class Robot extends IterativeRobot {
 
 		//TODO:
 		//TODO: UNCOMMENT THESE
-		//SmartDashboard.putData("GyroPID", Robot.gyroPID.getPIDController());
-//		SmartDashboard.putNumber("GyroYaw", RobotMap.navx.getYaw());
-//		SmartDashboard.putNumber("GyroPitch", RobotMap.navx.getPitch());
-//		SmartDashboard.putNumber("GyroRoll", RobotMap.navx.getRoll());
+		SmartDashboard.putData("GyroPID", Robot.gyroPID.getPIDController());
+		SmartDashboard.putNumber("GyroYaw", RobotMap.navx.getYaw());
+		SmartDashboard.putNumber("GyroPitch", RobotMap.navx.getPitch());
+		SmartDashboard.putNumber("GyroRoll", RobotMap.navx.getRoll());
 	}
-/*
+
 	private static void doRumble() {
 		double minPitchAmount = 5, minRollAmount = 5;
 		double maxPitchAmount = 25, maxRollAmount = 25;
@@ -155,11 +155,9 @@ public class Robot extends IterativeRobot {
 			OI.rumbleDriverPad(0, 0);
 		}
 	}
-*/
+
 	private static void globalInit() {
-		//TODO: UNCOMMENT NAVX
-		//TODO: UNCOMMENT NAVX
-		//RobotMap.navx.reset();
+		RobotMap.navx.reset();
 		Robot.pneumatics.shiftToLow();
 		Robot.pneumatics.closeIntake();
 		Robot.westCoastDrive.resetEncoders();
@@ -176,9 +174,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 		setRobotMode(RobotMode.DISABLED);
-		//TODO: UNCOMMENT NAVX
-		//TODO: UNCOMMENT NAVX
-		//RobotMap.navx.reset();
+		RobotMap.navx.reset();
 		Robot.westCoastDrive.resetEncoders();
 		OI.rumbleDriverPad(0, 0);
 	}
@@ -228,9 +224,10 @@ public class Robot extends IterativeRobot {
 				// generate appropriate command
 				String[] autoFiles;
 				if (autoOrderChooser.getSelected().equals("sw")) { // switch only
+					System.out.print(String.format("Running %s switch auto ", switchSide));
 					autoFiles =  Robot.autoFiles.get(startSide + switchSide);
 					if (startSide.equals(switchSide)) {
-						System.out.println(String.format("Running %s switch auto from %s position", switchSide, startSide));
+						System.out.println(String.format("from %s position", startSide));
 						cmdList = new Command[]{
 								new AutoMoveIntakeElbowPos(2100),
 								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
@@ -239,7 +236,7 @@ public class Robot extends IterativeRobot {
 								new AutoIntakeLinear(.4, 500)
 						};
 					} else if (startSide.equals("C")) {
-						System.out.println(String.format("Running %s switch auto from C position", switchSide));
+						System.out.println(" from C position");
 						cmdList = new Command[]{
 								new AutoMoveIntakeElbowPos(2100),
 								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
@@ -253,19 +250,33 @@ public class Robot extends IterativeRobot {
 						};
 					}
 					autoCmd = new DynamicAutoCommand(cmdList);
-				} else if (autoOrderChooser.equals("sc")) {
+				} else if (autoOrderChooser.getSelected().equals("sc")) {
 					autoFiles =  Robot.autoFiles.get(startSide + switchSide + scaleSide);
+					System.out.println(String.format("AutoData: %s, %s, %s", startSide, switchSide, scaleSide));
 					if (startSide.equals(scaleSide)) {
 						System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
 						cmdList = new Command[]{
-								//new AutoMoveIntakeElbowPos(2100),
+								new AutoMoveIntakeElbowPos(2100),
 								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
-								//new AutoMoveElevatorStage2(1),
-								//new AutoMoveElevatorStage1(1),
-								//new AutoMoveIntakeElbowPos(0),
-								//new AutoIntakeLinear(.4, 500)
+								new AutoMoveElevatorStage2(1),
+								new AutoMoveElevatorStage1(1),
+								new MoveElbowToBottom(),
+								new AutoIntakeLinear(-.5, 1000)
 
 						};
+						autoCmd = new DynamicAutoCommand(cmdList);
+					}else {
+						System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
+						cmdList = new Command[]{
+								new AutoMoveIntakeElbowPos(2100),
+								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
+								new AutoMoveElevatorStage2(1),
+								new AutoMoveElevatorStage1(1),
+								new MoveElbowToBottom(),
+								new AutoIntakeLinear(-.5, 1000)
+
+						};
+						autoCmd = new DynamicAutoCommand(cmdList);
 					}
 				} else if (autoCmd instanceof AUTOMODE_PlaceOnSwitch) {
 					if (switchSide.equals(startSide)) {
@@ -328,6 +339,8 @@ public class Robot extends IterativeRobot {
 		if (autoCmd != null)
 			autoCmd.cancel();
 
+		System.out.println("Begin Scheduler");
+
 		Scheduler.getInstance().add(new RobotDriveSpeed());
 		Scheduler.getInstance().add(new RunIntake());
 		Scheduler.getInstance().add(new RunIntakeElbow());
@@ -338,6 +351,8 @@ public class Robot extends IterativeRobot {
 
 		elevatorStage2.stop();
 		elevatorStage2.setAtBottom();
+
+		System.out.println("Stage 2 INITed");
 
 		//RobotMap.intakeElbow.setSelectedSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
 
@@ -365,6 +380,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		System.out.println("Begin Tele");
 		Scheduler.getInstance().run();
 		sendData(false);
 		//doRumble();
@@ -435,6 +451,25 @@ public class Robot extends IterativeRobot {
 		autoFiles.put("RLR", new String[]{
 				"/home/lvuser/paths/RightToRightScale_left_detailed.csv",
 				"/home/lvuser/paths/RightToRightScale_right_detailed.csv",
+		});
+		autoFiles.put("LLR", new String[]{
+				"/home/lvuser/paths/LeftToRightScale_left_detailed.csv",
+				"/home/lvuser/paths/LeftToRightScale_right_detailed.csv",
+		});
+
+		autoFiles.put("LRR", new String[]{
+				"/home/lvuser/paths/LeftToRightScale_left_detailed.csv",
+				"/home/lvuser/paths/LeftToRightScale_right_detailed.csv",
+		});
+
+		autoFiles.put("RRL", new String[]{
+				"/home/lvuser/paths/RightToLeftScale_left_detailed.csv",
+				"/home/lvuser/paths/RightToLeftScale_right_detailed.csv",
+		});
+
+		autoFiles.put("RLL", new String[]{
+				"/home/lvuser/paths/RightToLeftScale_left_detailed.csv",
+				"/home/lvuser/paths/RightToLeftScale_right_detailed.csv",
 		});
 	}
 
