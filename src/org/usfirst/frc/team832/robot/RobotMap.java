@@ -69,9 +69,9 @@ public class RobotMap {
 	public static final int DrivePIDID = 0;
 	
 	public static final int ElevatorStage1PIDID = 0;
-	public static final double ElevatorStage1kP = 0.7;
+	public static final double ElevatorStage1kP = 0.5;
 	public static final double ElevatorStage1kI = 0.0;
-	public static final double ElevatorStage1kD = 0.08;
+	public static final double ElevatorStage1kD = 0.0;
 	public static final double ElevatorStage1kF = 0.0;
 	
 	public static final int ElevatorStage2PIDID = 0;
@@ -192,12 +192,12 @@ public class RobotMap {
 		//intake
 		leftIntake = new VictorSPX(leftIntakeID);
 		//leftIntake.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, intakeElbowID, 0);
-		leftIntake.setNeutralMode(NeutralMode.Brake);
+		leftIntake.setNeutralMode(NeutralMode.Coast);
 
 		
 		rightIntake = new VictorSPX(rightIntakeID);				
 		rightIntake.follow(leftIntake);
-		rightIntake.setNeutralMode(NeutralMode.Brake);
+		rightIntake.setNeutralMode(NeutralMode.Coast);
 		rightIntake.setInverted(true);
 
 		
@@ -223,14 +223,14 @@ public class RobotMap {
 //		left1.config_kI(RobotMap.DrivePIDID, 1, 0);
 //		left1.config_kD(RobotMap.DrivePIDID, 1, 0);
 		                                                                     
-		elevatorMotor1.config_kP(RobotMap.ElevatorStage1PIDID, ElevatorStage1kP, 0);
-		elevatorMotor1.config_kI(RobotMap.ElevatorStage1PIDID, ElevatorStage1kI, 0);
-		elevatorMotor1.config_kD(RobotMap.ElevatorStage1PIDID, ElevatorStage1kD, 0);
-		elevatorMotor1.configAllowableClosedloopError(0, 250, 0);
-		                                                                     
-		elevatorMotorStage2.config_kP(RobotMap.ElevatorStage2PIDID, ElevatorStage2kP, 0);
-		elevatorMotorStage2.config_kI(RobotMap.ElevatorStage2PIDID, ElevatorStage2kI, 0);
-		elevatorMotorStage2.config_kD(RobotMap.ElevatorStage2PIDID, ElevatorStage2kD, 0);
-		elevatorMotorStage2.configAllowableClosedloopError(0, 200, 0);
+//		elevatorMotor1.config_kP(RobotMap.ElevatorStage1PIDID, ElevatorStage1kP, 0);
+//		elevatorMotor1.config_kI(RobotMap.ElevatorStage1PIDID, ElevatorStage1kI, 0);
+//		elevatorMotor1.config_kD(RobotMap.ElevatorStage1PIDID, ElevatorStage1kD, 0);
+	elevatorMotor1.configAllowableClosedloopError(0, 0, 0);
+//
+//		elevatorMotorStage2.config_kP(RobotMap.ElevatorStage2PIDID, ElevatorStage2kP, 0);
+//		elevatorMotorStage2.config_kI(RobotMap.ElevatorStage2PIDID, ElevatorStage2kI, 0);
+//		elevatorMotorStage2.config_kD(RobotMap.ElevatorStage2PIDID, ElevatorStage2kD, 0);
+		elevatorMotorStage2.configAllowableClosedloopError(0, 0, 0);
 	}
 }

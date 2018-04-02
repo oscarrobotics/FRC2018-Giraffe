@@ -33,22 +33,22 @@ public class Intake extends Subsystem {
 		else if(x > .2 && x <= .5)
 			x = .5;
 		else if (x > .5)
-			x = 1.0;
+			x = 0.7;
 		else if(x <-.2 && x >= -.5)
 			x = -.5;
 		else if (x < -.5)
-			x = -1.0;
+			x = -0.7;
 		
 		if(Math.abs(y) < .2)
 			y = 0;
 		else if(y > .2 && y <= .5)
 			y = .5;
 		else if (y > .5)
-			y = 1.0;
+			y = .7;
 		else if(y <-.2 && y >= -.5)
 			y = -.5;
 		else if (y < -.5)
-			y = -1.0;
+			y = -.7;
 
 		//TODO: THIS IS ONLY NEEDED ON THE PRACTICE BOT
 		//TODO: THIS SHOULD BE COMMENTED ON THE ACTUAL BOT

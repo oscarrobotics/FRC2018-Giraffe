@@ -30,7 +30,7 @@ public class IntakeElbow extends Subsystem {
 		RobotMap.intakeElbow.set(ControlMode.Position, 1600);
 	}
 	
-	public boolean getAtBottom() { return RobotMap.intakeElbow.getSensorCollection().isFwdLimitSwitchClosed(); } //TODO: Was forward, set to reverse for practice bot
+	public boolean getAtBottom() { return RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed(); } //TODO: Was forward, set to reverse for practice bot
 
 	public void setAtBottom() 
 	{	

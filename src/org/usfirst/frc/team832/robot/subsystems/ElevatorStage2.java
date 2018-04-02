@@ -1,5 +1,6 @@
 package org.usfirst.frc.team832.robot.subsystems;
 
+import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
 import org.usfirst.frc.team832.robot.commands.defaults.RunElevatorStage2;
 import org.usfirst.frc.team832.robot.func.Calcs;
@@ -10,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ElevatorStage2 extends Subsystem {
 
-	private static final double minEncPos = 750;
+	private static double minEncPos = 1900;
 	private static final double maxEncPos = 26000 - minEncPos ;
 	private static final double lowerposthres = 5000;
 	private static final int acceptableError = 425;
@@ -29,6 +30,11 @@ public class ElevatorStage2 extends Subsystem {
 	public void stop() { RobotMap.elevatorMotorStage2.set(ControlMode.PercentOutput, 0); }
 	
 	public void setPos(double sliderVal) {
+		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0) >= 1900)
+			minEncPos = 0;
+		else
+			minEncPos = 1900;
+
 		if(RobotMap.elevatorMotorStage2.getSelectedSensorPosition(0)>lowerposthres){
 			RobotMap.elevatorMotorStage2.configPeakOutputReverse(-100,0);
 		}

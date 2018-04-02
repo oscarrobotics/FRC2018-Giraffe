@@ -13,7 +13,7 @@ public class ElevatorStage1 extends Subsystem {
 	
 	private static final double maxEncPos = 26500;
 	private static final double lowerposthres = 5000;
-	private static final int acceptableError = 150;
+	private static final int acceptableError = 350;
 	public static double targetPosition;
 	
 	public boolean getAtBottom() {
@@ -49,7 +49,8 @@ public class ElevatorStage1 extends Subsystem {
 	}
 	
 	public boolean isFinished() {
-		int currentError = RobotMap.elevatorMotor1.getClosedLoopError(RobotMap.ElevatorStage1PIDID);
+//		int currentError = RobotMap.elevatorMotor1.getClosedLoopError(RobotMap.ElevatorStage1PIDID);
+		int currentError = RobotMap.elevatorMotor1.getClosedLoopTarget(0) - RobotMap.elevatorMotor1.getSelectedSensorPosition(0);
 		return (Math.abs(currentError) <= acceptableError);
 	}
 	

@@ -26,19 +26,19 @@ public class AutoDriveDistance extends Command {
 	protected void initialize() {
 		RobotMap.left1.setSelectedSensorPosition(0, RobotMap.DrivePIDID, 0);
 		RobotMap.right1.setSelectedSensorPosition(0, RobotMap.DrivePIDID, 0);
-		Timer.delay(delay);
+		//Timer.delay(delay);
 		
 		//TODO: Look into this
-		Robot.gyroPID.setSetpoint(this.angle);
-		Robot.gyroPID.enable();
+		//Robot.gyroPID.setSetpoint(this.angle);
+		//Robot.gyroPID.enable();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		
+
 		// Update motors
-		Robot.westCoastDrive.ArcadeDrive(power, Robot.gyroPID.pidOut, ControlMode.PercentOutput);
-		//Robot.westCoastDrive.ArcadeDriveSpeed(power, angle);
+		//Robot.westCoastDrive.ArcadeDrive(power, Robot.gyroPID.pidOut, ControlMode.PercentOutput);
+		Robot.westCoastDrive.ArcadeDriveSpeed(power, angle);
 		//Robot.westCoastDrive.TankDrive(power, power);
 	}
 

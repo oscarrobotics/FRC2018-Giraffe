@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot {
 	public static GyroPID gyroPID;
 	public static OI oi;
 
-	public static RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode;
+	public static RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode, doubpre;
 
 	private String fieldData;
 	private static HashMap<String, String[]> autoFiles;
@@ -157,13 +157,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	private static void globalInit() {
-		RobotMap.navx.reset();
+		//RobotMap.navx.reset();
 		Robot.pneumatics.shiftToLow();
 		Robot.pneumatics.closeIntake();
 		Robot.westCoastDrive.resetEncoders();
 		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
 		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
-		RobotMap.intakeElbow.setIntegralAccumulator(0,RobotMap.IntakeElbowPIDID,0);
+		RobotMap.intakeElbow.setIntegralAccumulator(0.0,RobotMap.IntakeElbowPIDID,0);
 	}
 
 	/**
@@ -201,17 +201,24 @@ public class Robot extends IterativeRobot {
 		setRobotMode(RobotMode.AUTONOMOUS);
 		globalInit();
 
+		if (!Robot.elevatorStage1.getAtBottom()) {
+			RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.08);
+			while (true) {
+				if (Robot.elevatorStage1.getAtBottom())
+					break;
+			}
+		}
+
+		Robot.elevatorStage1.setAtBottom();
+
 		//int currentIntakeElbowPos = RobotMap.intakeElbow.getSelectedSensorPosition(0);
 		//RobotMap.intakeElbow.set(ControlMode.Position, currentIntakeElbowPos-100);
 
 		RobotMap.intakeElbow.setSelectedSensorPosition(2220, RobotMap.IntakeElbowPIDID, 0);
 
-
-
-
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
 		autoCmd = autoChooser.getSelected();
-		if (autoCmd != null && !(autoCmd instanceof AUTOMODE_BaseLine) && !(autoCmd instanceof AUTOMODE_DoNothing)) {
+		if (autoCmd != null && ((autoCmd instanceof AUTOMODE_BaseLine) || (autoCmd instanceof AUTOMODE_DoNothing))) {
 			autoCmd.start();
 		} else {
 			Command[] cmdList;
@@ -233,7 +240,7 @@ public class Robot extends IterativeRobot {
 								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
 								new AutoMoveElevatorStage2(0.5),
 								new AutoMoveIntakeElbowPos(0),
-								new AutoIntakeLinear(.4, 500)
+								new AutoIntakeLinear(-.4, 500)
 						};
 					} else if (startSide.equals("C")) {
 						System.out.println(" from C position");
@@ -242,7 +249,8 @@ public class Robot extends IterativeRobot {
 								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
 								new AutoMoveElevatorStage2(0.5),
 								new AutoMoveIntakeElbowPos(0),
-								new AutoIntakeLinear(.4, 500)
+								new AutoIntakeLinear(-.4, 500),
+								new AutoMoveIntakeElbowPos(2200)
 						};
 					} else {
 						cmdList = new Command[]{
@@ -260,20 +268,25 @@ public class Robot extends IterativeRobot {
 								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
 								new AutoMoveElevatorStage2(1),
 								new AutoMoveElevatorStage1(1),
-								new MoveElbowToBottom(),
-								new AutoIntakeLinear(-.5, 1000)
+								new AutoMoveIntakeElbowPos(0),
+								new AutoIntakeLinear(-.5, 1000),
+								new AutoMoveIntakeElbowPos(2200)
 
 						};
 						autoCmd = new DynamicAutoCommand(cmdList);
 					}else {
 						System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
 						cmdList = new Command[]{
-								new AutoMoveIntakeElbowPos(2100),
+							/*
+
+									new AutoMoveIntakeElbowPos(2100),
 								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
 								new AutoMoveElevatorStage2(1),
 								new AutoMoveElevatorStage1(1),
 								new MoveElbowToBottom(),
-								new AutoIntakeLinear(-.5, 1000)
+								new AutoIntakeLinear(-.5, 1000),
+							*/
+								new AutoDriveDistance(0.5, 0.0, 9000, 0)
 
 						};
 						autoCmd = new DynamicAutoCommand(cmdList);
@@ -316,7 +329,7 @@ public class Robot extends IterativeRobot {
 							autoCmd = new DynamicAutoCommand(cmdList);
 						}
 					} else {
-						autoCmd = new AutoDriveDistance(0.5, 0.0, 3000, 0); // test me!!!!!!!!!!!!!!!!!!!!!!
+						autoCmd = new AutoDriveDistance(0.5, 0.0, 6000, 0); // test me!!!!!!!!!!!!!!!!!!!!!!
 					}
 				}
 				autoCmd.start();
@@ -350,7 +363,10 @@ public class Robot extends IterativeRobot {
 		System.out.println("Finished Scheduler");
 
 		elevatorStage2.stop();
-		elevatorStage2.setAtBottom();
+
+		if(doubpre.equals(RobotMode.AUTONOMOUS));
+		else
+			elevatorStage2.setAtBottom();
 
 		System.out.println("Stage 2 INITed");
 
@@ -358,16 +374,22 @@ public class Robot extends IterativeRobot {
 
 		elevatorStage2.setPos(-.8);
 
-		if (!intakeElbow.getAtBottom()) {
-			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
-			while (true) {
-				if (intakeElbow.getAtBottom())
-					break;
-			}
-		}
-		intakeElbow.stop();
-		intakeElbow.setAtBottom();
-		System.out.println("Elbow Finished");
+//		if (!intakeElbow.getAtBottom()) {
+//			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
+//			while (true) {
+//				if (intakeElbow.getAtBottom())
+//					break;
+//				else if(OI.driverPad.getStartButton());
+//					RobotMap.intakeElbow.setSelectedSensorPosition(2200, 0, 0);
+//					break;
+//			}
+//		}
+//		intakeElbow.stop();
+//		intakeElbow.setAtBottom();
+//		System.out.println("Elbow Finished");
+
+		RobotMap.intakeElbow.setSelectedSensorPosition(2300, 0, 0);
+
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -397,6 +419,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	private static void setRobotMode(RobotMode mode) {
+		doubpre = previousRobotMode;
 		previousRobotMode = currentRobotMode;
 		currentRobotMode = mode;
 	}
@@ -452,6 +475,7 @@ public class Robot extends IterativeRobot {
 				"/home/lvuser/paths/RightToRightScale_left_detailed.csv",
 				"/home/lvuser/paths/RightToRightScale_right_detailed.csv",
 		});
+/*
 		autoFiles.put("LLR", new String[]{
 				"/home/lvuser/paths/LeftToRightScale_left_detailed.csv",
 				"/home/lvuser/paths/LeftToRightScale_right_detailed.csv",
@@ -471,6 +495,7 @@ public class Robot extends IterativeRobot {
 				"/home/lvuser/paths/RightToLeftScale_left_detailed.csv",
 				"/home/lvuser/paths/RightToLeftScale_right_detailed.csv",
 		});
+*/
 	}
 
 	public static double[][] pathfinderFormatToTalon(Trajectory t) {

@@ -12,7 +12,7 @@ import java.awt.*;
 import java.io.File;
 
 public class AutoDriveProfile extends Command {
-    private static final int min_points = 60; // minimum points to stream to talon before starting. TODO: Can this be lower?
+    private static final int min_points = 85; // minimum points to stream to talon before starting. TODO: Can this be lower?
     private final Trajectory trajectory_left;
     private final Trajectory trajectory_right;
 

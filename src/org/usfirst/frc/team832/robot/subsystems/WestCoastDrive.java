@@ -81,10 +81,10 @@ public class WestCoastDrive extends Subsystem {
 
 		this.left1.getMotionProfileStatus(this.leftMpStatus);
 		this.right1.getMotionProfileStatus(this.rightMpStatus);
-		if (leftMpStatus.isUnderrun) {
+		if (leftMpStatus.isUnderrun && leftMpStatus.btmBufferCnt !=0) {
 			System.out.println("LEFT UNDERRUN");
 		}
-		if (rightMpStatus.isUnderrun) {
+		if (rightMpStatus.isUnderrun && rightMpStatus.btmBufferCnt !=0) {
 			System.out.println("RIGHT UNDERRUN");
 		}
 	}
@@ -127,7 +127,7 @@ public class WestCoastDrive extends Subsystem {
 		this.left1.clearMotionProfileTrajectories();
 		TrajectoryPoint point = new TrajectoryPoint();
 
-		this.left1.configMotionProfileTrajectoryPeriod(50, 10);
+		this.left1.configMotionProfileTrajectoryPeriod(25, 10);
 
 		for (int i = 0; i < size; i++) {
 			double positionRot = profile[i][0] * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
@@ -152,7 +152,7 @@ public class WestCoastDrive extends Subsystem {
 		this.right1.clearMotionProfileTrajectories();
 		TrajectoryPoint point = new TrajectoryPoint();
 
-		this.right1.configMotionProfileTrajectoryPeriod(50, 10);
+		this.right1.configMotionProfileTrajectoryPeriod(25, 10);
 
 		for (int i = 0; i < size; i++) {
 			double positionRot = profile[i][0] * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
