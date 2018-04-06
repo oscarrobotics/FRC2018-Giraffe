@@ -7,9 +7,9 @@ import org.usfirst.frc.team832.robot.subsystems.ElevatorStage1;
 
 public class AutoMoveElevatorStage1 extends Command {
 
-	final int target;
+	final double target;
 	
-    public AutoMoveElevatorStage1(int targetInput) {
+    public AutoMoveElevatorStage1(double targetInput) {
     	requires(Robot.elevatorStage1);
     	target = targetInput;
     }

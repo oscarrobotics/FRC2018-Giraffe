@@ -127,6 +127,7 @@ public class WestCoastDrive extends Subsystem {
 		this.left1.clearMotionProfileTrajectories();
 		TrajectoryPoint point = new TrajectoryPoint();
 
+		this.left1.changeMotionControlFramePeriod(25);
 		this.left1.configMotionProfileTrajectoryPeriod(25, 10);
 
 		for (int i = 0; i < size; i++) {
@@ -152,6 +153,7 @@ public class WestCoastDrive extends Subsystem {
 		this.right1.clearMotionProfileTrajectories();
 		TrajectoryPoint point = new TrajectoryPoint();
 
+		this.right1.changeMotionControlFramePeriod(25);
 		this.right1.configMotionProfileTrajectoryPeriod(25, 10);
 
 		for (int i = 0; i < size; i++) {

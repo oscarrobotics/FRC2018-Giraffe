@@ -43,22 +43,34 @@ public class IntakeElbow extends Subsystem {
 	}
 	
 	public void setPos(double rotationVal) {
-		//System.out.println("Potentiometer in: " + rotationVal);
-		if (rotationVal >= maxPotVal)
-			rotationVal = maxPotVal;
-		if(rotationVal <= minPotVal)
-			rotationVal = minPotVal;
-		rv = rotationVal;
-		//System.out.println("Potentiometer out: " +rv);
-		//intakeElbowTargetPos = maxEncPos - maxEncPos * rotationVal * (1 / maxPotVal);
-		intakeElbowTargetPos = 2200 - (2200 * (rv/.65));
-		//System.out.println("Intake Target Pos: " + intakeElbowTargetPos);
-		//intakeElbowTargetPos = ((2250 - (2250 * rv/.65)) +350);
-		RobotMap.intakeElbow.set(ControlMode.Position, intakeElbowTargetPos);
-		//System.out.println("Intake Elbow Error: " + RobotMap.intakeElbow.getClosedLoopError(0));
-		//System.out.println("Intake Elbow Enc Pos: " + RobotMap.intakeElbow.getSelectedSensorPosition(0));
+		if (rotationVal >= .95) {
+			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
+			if(RobotMap.intakeElbow.getSelectedSensorPosition(0) < 0)
+				this.setAtBottom();
+		}else if(rotationVal <= -.9) {
+			RobotMap.intakeElbow.set(ControlMode.PercentOutput, .3);
+			if(RobotMap.intakeElbow.getSelectedSensorPosition(0) < 0)
+				this.setAtTop();
+		}else {
+
+			//System.out.println("Potentiometer in: " + rotationVal);
+			if (rotationVal >= maxPotVal)
+				rotationVal = maxPotVal;
+			if (rotationVal <= minPotVal)
+				rotationVal = minPotVal;
+			rv = rotationVal;
+			//System.out.println("Potentiometer out: " +rv);
+			//intakeElbowTargetPos = maxEncPos - maxEncPos * rotationVal * (1 / maxPotVal);
+			intakeElbowTargetPos = 2300 - (2300 * (rv / .65));
+			//System.out.println("Intake Target Pos: " + intakeElbowTargetPos);
+			//intakeElbowTargetPos = ((2250 - (2250 * rv/.65)) +350);
+			RobotMap.intakeElbow.set(ControlMode.Position, intakeElbowTargetPos);
+			//System.out.println("Intake Elbow Error: " + RobotMap.intakeElbow.getClosedLoopError(0));
+			//System.out.println("Intake Elbow Enc Pos: " + RobotMap.intakeElbow.getSelectedSensorPosition(0));
+
+		}
 	}
-	
+
 	public void setAutoPos(int targetPos) {
 		intakeElbowTargetPos = targetPos;
 		RobotMap.intakeElbow.set(ControlMode.Position, intakeElbowTargetPos);

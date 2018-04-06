@@ -16,15 +16,12 @@ public class AutoDriveProfile extends Command {
     private final Trajectory trajectory_left;
     private final Trajectory trajectory_right;
 
-    public AutoDriveProfile(String leftFile, String rightFile) {
-        this(Pathfinder.readFromCSV(new File(leftFile)), Pathfinder.readFromCSV(new File(rightFile)));
-        System.out.println(String.format("Running profile, L: %s, R: %s", leftFile, rightFile));
-    }
-
-    public AutoDriveProfile(Trajectory traj_l, Trajectory traj_r) {
+    public AutoDriveProfile(String name) {
         requires(Robot.westCoastDrive);
-        this.trajectory_left = traj_l;
-        this.trajectory_right = traj_r;
+        String leftfile = "/home/lvuser/paths/" + name + "_left_detailed.csv";
+        String rightfile = "/home/lvuser/paths/" + name + "_right_detailed.csv";
+        this.trajectory_left = Pathfinder.readFromCSV(new File(leftfile));
+        this.trajectory_right = Pathfinder.readFromCSV(new File(rightfile));
     }
 
    @Override
