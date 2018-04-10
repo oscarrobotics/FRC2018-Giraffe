@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AUTOMODE_BaseLine extends CommandGroup {
 
     public AUTOMODE_BaseLine() {
-        addSequential(new AutoDriveDistance(0.5, 0.0, 9000, 0));
+        addSequential(new AutoDriveDistance(0.5, 0.0, 7000, 0));
 
     }
 }

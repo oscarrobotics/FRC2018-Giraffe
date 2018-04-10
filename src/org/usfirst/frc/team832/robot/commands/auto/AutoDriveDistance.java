@@ -44,8 +44,8 @@ public class AutoDriveDistance extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return (distance <= Math.abs(Robot.westCoastDrive.getMin()));
-		// return (distance <= RobotMap.left1.getSelectedSensorPosition(RobotMap.DrivePIDID));
+//		return (distance <= Math.abs(Robot.westCoastDrive.getMin()));
+		 return (distance <= RobotMap.left1.getSelectedSensorPosition(RobotMap.DrivePIDID));
 		//return false; // for testing purposes only
 	}
 

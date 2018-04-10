@@ -187,12 +187,14 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		setRobotMode(RobotMode.AUTONOMOUS);
 		globalInit();
+		elevatorStage2.setAtBottom();
 
 		if (!Robot.elevatorStage1.getAtBottom()) {
 			RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.08);
 			while (true) {
-				if (Robot.elevatorStage1.getAtBottom())
+				if (Robot.elevatorStage1.getAtBottom()) {
 					break;
+				}
 			}
 		}
 
@@ -254,7 +256,7 @@ public class Robot extends IterativeRobot {
 //								new MoveOnPath(autoFiles),
 								new AutoDriveProfile(autoFiles),
 								new AutoMoveFullElevator(1.0),
-								new AutoMoveIntakeElbowPos(0),
+								new AutoMoveIntakeElbowPos(1000),
 								new AutoIntakeLinear(-.5, 1000),
 								new AutoMoveIntakeElbowPos(2200),
 								new AutoMoveFullElevator(-1)
@@ -281,7 +283,7 @@ public class Robot extends IterativeRobot {
 					autoFiles =  Robot.autoFiles.get(startSide + switchSide + scaleSide);
 					System.out.println(String.format("AutoData: %s, %s, %s", startSide, switchSide, scaleSide));
 					if (startSide.equals(scaleSide)) {
-						System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
+						System.out.println(String.format("Running %s Scale auto from %s position, path: %s", scaleSide, startSide, autoFiles));
 						cmdList = new Command[]{
 								//Normal Switch
 								new AutoMoveIntakeElbowPos(2100),
@@ -375,7 +377,7 @@ public class Robot extends IterativeRobot {
 
 		System.out.println("Begin Scheduler");
 
-		Scheduler.getInstance().add(new RobotDriveSpeed());
+		Scheduler.getInstance().add(new RobotDrive());
 		Scheduler.getInstance().add(new RunIntake());
 		Scheduler.getInstance().add(new RunIntakeElbow());
 		Scheduler.getInstance().add(new RunElevatorStage1());
@@ -426,7 +428,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		System.out.println("Begin Tele");
 		Scheduler.getInstance().run();
-		sendData(false);
+		//sendData(false);
 		doRumble();
 //		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
 //		 	intakeElbow.setAtBottom();

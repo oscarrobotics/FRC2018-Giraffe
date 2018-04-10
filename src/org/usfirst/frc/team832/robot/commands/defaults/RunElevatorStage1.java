@@ -39,7 +39,7 @@ public class RunElevatorStage1 extends Command {
 		else if (Robot.oi.operatorPad.getRawButton(6))
 			Robot.elevatorStage1.setPos(0.5);
 		else if (Robot.oi.operatorPad.getRawButton(7))
-			Robot.elevatorStage1.setPos(-1.0);
+			Robot.elevatorStage1.setPos(0.5);
 		else
 			Robot.elevatorStage1.setPos(sliderVal);
 	}

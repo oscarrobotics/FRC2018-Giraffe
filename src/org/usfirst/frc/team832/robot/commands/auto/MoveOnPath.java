@@ -67,9 +67,8 @@ public class MoveOnPath extends Command {
 
 //        trajectoryL = Pathfinder.readFromFile(new File("/home/lvuser/trajectories/" + name + "_left_detailed.traj"));
 //        trajectoryR = Pathfinder.readFromFile(new File("/home/lvuser/trajectories/" + name + "_right_detailed.traj"));
-        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/paths/" + name +  "New_left_detailed.csv"));
-        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/paths/" + name + "New_right_detailed.csv"));
-
+        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/paths/" + name +  "_left_detailed.csv"));
+        trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/paths/" + name + "_right_detailed.csv"));
         if (trajectoryProcessor == null) {
             trajectoryProcessor = new Notifier(() -> {
                 left.processMotionProfileBuffer();
@@ -160,21 +159,21 @@ public class MoveOnPath extends Command {
             TrajectoryPoint trajPointL = new TrajectoryPoint();
             TrajectoryPoint trajPointR = new TrajectoryPoint();
 
-            double currentPosL = trajectoryL.segments[i].position * dir;
-            double currentPosR = trajectoryR.segments[i].position * dir;
+            double currentPosL = trajectoryL.segments[i].position * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
+            double currentPosR = trajectoryR.segments[i].position * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
 
-            double velocityL = trajectoryL.segments[i].velocity;
-            double velocityR = trajectoryR.segments[i].velocity;
+            double velocityL = trajectoryL.segments[i].velocity * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
+            double velocityR = trajectoryR.segments[i].velocity * 12.0 * (1 / Constants.kInchesPerWheelTurn) * (1 / Constants.kWheelTurnsPerEncoderTurn);
 
             boolean isLastPointL = TRAJECTORY_SIZE == i + 1;
             boolean isLastPointR = TRAJECTORY_SIZE == i + 1;
             boolean isZero = i == 0;
 
             // For each point, fill our structure and pass it to API
-            trajPointL.position = Calcs.feetToEncoderTicks(currentPosL);
-            trajPointR.position = Calcs.feetToEncoderTicks(currentPosR);
-            trajPointL.velocity = Calcs.rpmToTicksPerTenth(velocityL);
-            trajPointR.velocity = Calcs.rpmToTicksPerTenth(velocityR);
+            trajPointL.position = -currentPosL * (256.0 * 4.0);
+            trajPointR.position = -currentPosR * (256.0 * 4.0);
+            trajPointL.velocity = velocityL * (256.0 * 4.0) / 5.0;
+            trajPointR.velocity = velocityR * (256.0 * 4.0) / 5.0;
             trajPointL.profileSlotSelect0 = RobotMap.DrivePIDID;
             trajPointR.profileSlotSelect0 = RobotMap.DrivePIDID;
 
