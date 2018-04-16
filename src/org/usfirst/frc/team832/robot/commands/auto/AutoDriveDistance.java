@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class AutoDriveDistance extends Command {
 
 	protected final double power, delay, distance;
-	protected double angle;
+	protected final double angle;
 	protected double leftD, rightD;
 
 	public AutoDriveDistance(double power, double delay, double distance, double angleIn) {
@@ -26,26 +26,26 @@ public class AutoDriveDistance extends Command {
 	protected void initialize() {
 		RobotMap.left1.setSelectedSensorPosition(0, RobotMap.DrivePIDID, 0);
 		RobotMap.right1.setSelectedSensorPosition(0, RobotMap.DrivePIDID, 0);
-		Timer.delay(delay);
+		//Timer.delay(delay);
 		
 		//TODO: Look into this
-		Robot.gyroPID.setSetpoint(this.angle);
-		Robot.gyroPID.enable();
+		//Robot.gyroPID.setSetpoint(this.angle);
+		//Robot.gyroPID.enable();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		
+
 		// Update motors
-		Robot.westCoastDrive.ArcadeDrive(power, Robot.gyroPID.pidOut, ControlMode.PercentOutput);
-		//Robot.westCoastDrive.ArcadeDriveSpeed(power, angle);
+		//Robot.westCoastDrive.ArcadeDrive(power, Robot.gyroPID.pidOut, ControlMode.PercentOutput);
+		Robot.westCoastDrive.ArcadeDriveSpeed(power, angle);
 		//Robot.westCoastDrive.TankDrive(power, power);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return (distance <= Math.abs(Robot.westCoastDrive.getMin()));
-		// return (distance <= RobotMap.left1.getSelectedSensorPosition(RobotMap.DrivePIDID));
+//		return (distance <= Math.abs(Robot.westCoastDrive.getMin()));
+		 return (distance <= RobotMap.left1.getSelectedSensorPosition(RobotMap.DrivePIDID));
 		//return false; // for testing purposes only
 	}
 

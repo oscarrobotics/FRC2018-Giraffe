@@ -1,12 +1,14 @@
-package org.usfirst.frc.team832.robot.commands.defaults;
+package org.usfirst.frc.team832.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team832.robot.Robot;
 
 
-public class RobotDriveMM extends Command {
-    public RobotDriveMM() {
-        requires(Robot.westCoastDrive);
+public class AutoDriveTime extends Command {
+    private long time, startTime;
+
+    public AutoDriveTime(int millis) {
+        this.time = millis;
+        this.startTime = System.currentTimeMillis();
     }
 
 
@@ -16,7 +18,7 @@ public class RobotDriveMM extends Command {
      */
     @Override
     protected void initialize() {
-
+        //Drive Forward code
     }
 
 
@@ -26,18 +28,6 @@ public class RobotDriveMM extends Command {
      */
     @Override
     protected void execute() {
-        if (Robot.oi.driverPad.getAButton()) {
-            Robot.westCoastDrive.goStraight(-5000);
-        }
-
-        if(Robot.oi.driverPad.getXButton()) {
-            Robot.westCoastDrive.goStraight(5000);
-        }
-
-        if(Robot.oi.driverPad.getBButton()){
-            Robot.westCoastDrive.turnAngle(45);
-        }
-
 
     }
 
@@ -61,8 +51,8 @@ public class RobotDriveMM extends Command {
      */
     @Override
     protected boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return false;
+
+        return (startTime + time)<= System.currentTimeMillis();
     }
 
 
@@ -74,7 +64,7 @@ public class RobotDriveMM extends Command {
      */
     @Override
     protected void end() {
-
+        //Stop Drive code
     }
 
 

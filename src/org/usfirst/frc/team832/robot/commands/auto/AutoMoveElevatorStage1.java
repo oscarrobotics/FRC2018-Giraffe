@@ -3,12 +3,13 @@ package org.usfirst.frc.team832.robot.commands.auto;
 import org.usfirst.frc.team832.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team832.robot.subsystems.ElevatorStage1;
 
 public class AutoMoveElevatorStage1 extends Command {
 
-	int target;
+	final double target;
 	
-    public AutoMoveElevatorStage1(int targetInput) {
+    public AutoMoveElevatorStage1(double targetInput) {
     	requires(Robot.elevatorStage1);
     	target = targetInput;
     }
@@ -23,7 +24,7 @@ public class AutoMoveElevatorStage1 extends Command {
 
     protected boolean isFinished() {
         
-    	return true;
+    	return Robot.elevatorStage1.isFinished();
     }
 
     protected void end() {

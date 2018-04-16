@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Pneumatics extends Subsystem {
 
-	public static DoubleSolenoid gearShift = RobotMap.gearShiftSol;
-	public static DoubleSolenoid intakeExpand = RobotMap.intakeArmSol;
+	public static final DoubleSolenoid gearShift = RobotMap.gearShiftSol;
+	public static final DoubleSolenoid intakeExpand = RobotMap.intakeArmSol;
 	public static boolean lowGear;
 
 	

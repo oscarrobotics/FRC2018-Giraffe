@@ -1,8 +1,11 @@
 package org.usfirst.frc.team832.robot.commands.defaults;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team832.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team832.robot.RobotMap;
+import org.usfirst.frc.team832.robot.RobotMode;
 
 public class RunElevatorStage1 extends Command {
 		
@@ -12,18 +15,31 @@ public class RunElevatorStage1 extends Command {
 	
 	protected void initialize() {
 		//while(Robot.currentRobotMode != RobotMode.AUTONOMOUS)
-			Robot.elevatorStage1.start();
+
+		Robot.elevatorStage1.stop();
+
+		Robot.elevatorStage1.start();
 	}
 	
 	protected void execute() {
-		
+//		if (Robot.oi.operatorPad.getRawButton(5))
+//			Robot.elevatorStage1.setPos(1.0);
+//		else if (Robot.oi.operatorPad.getRawButton(6))
+//			Robot.elevatorStage1.setPos(0.5);
+//		else if (Robot.oi.operatorPad.getRawButton(7))
+//			Robot.elevatorStage1.setPos(-1.0);
+//		else
+//			Robot.elevatorStage1.setPos(sliderVal);
+
+
+
 		double sliderVal = Robot.oi.operatorPad.getRawAxis(2);
-		if(Robot.oi.operatorPad.getRawButton(5))
+		if (Robot.oi.operatorPad.getRawButton(5))
 			Robot.elevatorStage1.setPos(1.0);
-		else if(Robot.oi.operatorPad.getRawButton(6))
+		else if (Robot.oi.operatorPad.getRawButton(6))
 			Robot.elevatorStage1.setPos(0.5);
-		else if(Robot.oi.operatorPad.getRawButton(7))
-			Robot.elevatorStage1.setPos(-1.0);
+		else if (Robot.oi.operatorPad.getRawButton(7))
+			Robot.elevatorStage1.setPos(0.5);
 		else
 			Robot.elevatorStage1.setPos(sliderVal);
 	}

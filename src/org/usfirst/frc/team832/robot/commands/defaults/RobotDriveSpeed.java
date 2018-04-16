@@ -1,7 +1,9 @@
 package org.usfirst.frc.team832.robot.commands.defaults;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team832.robot.OI;
 import org.usfirst.frc.team832.robot.Robot;
+import org.usfirst.frc.team832.robot.RobotMap;
 import org.usfirst.frc.team832.robot.subsystems.WestCoastDrive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -14,8 +16,10 @@ import edu.wpi.first.wpilibj.command.Command;
 public class RobotDriveSpeed extends Command {
 	
 	public final int brakingHeightThreshold = 15000; // change to adjust coast/brake switch height
+    public final double highSpeedTurnPow = 1;
+    public final double lowSpeedTurnPow = .7;
 
-	WestCoastDrive westCoastDrive = Robot.westCoastDrive;
+	final WestCoastDrive westCoastDrive = Robot.westCoastDrive;
     public RobotDriveSpeed() {
         requires(Robot.westCoastDrive);
     }
@@ -26,8 +30,15 @@ public class RobotDriveSpeed extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double leftStick = 1 * Math.pow(OI.driverPad.getRawAxis(1),5); // linear
-    	double rightStick = .4 * OI.driverPad.getRawAxis(4); // rotation
+    	double turnPow;
+        double leftStick = 1 * Math.pow(OI.driverPad.getRawAxis(1),5); // linear
+
+        if(RobotMap.gearShiftSol.get().equals(DoubleSolenoid.Value.kReverse))
+            turnPow = highSpeedTurnPow;
+        else
+            turnPow = lowSpeedTurnPow;
+
+        double rightStick = turnPow * Math.pow(OI.driverPad.getRawAxis(4), 3); // rotation
 
         if(OI.driverPad.getRawButton(1))
             westCoastDrive.ArcadeDriveSpeedStraight(-250);

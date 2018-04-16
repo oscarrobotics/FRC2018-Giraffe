@@ -1,6 +1,7 @@
 package org.usfirst.frc.team832.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.kauailabs.navx.frc.AHRS;
@@ -68,15 +69,15 @@ public class RobotMap {
 	public static final int DrivePIDID = 0;
 	
 	public static final int ElevatorStage1PIDID = 0;
-	public static final double ElevatorStage1kP = 0.45;
+	public static final double ElevatorStage1kP = 0.5;
 	public static final double ElevatorStage1kI = 0.0;
 	public static final double ElevatorStage1kD = 0.0;
 	public static final double ElevatorStage1kF = 0.0;
 	
 	public static final int ElevatorStage2PIDID = 0;
-	public static final double ElevatorStage2kP = 0.45;
+	public static final double ElevatorStage2kP = 0.9;
 	public static final double ElevatorStage2kI = 0.0;
-	public static final double ElevatorStage2kD = 0.0;
+	public static final double ElevatorStage2kD = 7.0;
 	public static final double ElevatorStage2kF = 0.0;
 	
 	public static final int IntakeElbowPIDID = 0;
@@ -89,9 +90,10 @@ public class RobotMap {
 		// navx
 		try {
 			//navx = new AHRS(SerialPort.Port.kUSB);
+			//TODO: UNCOMMENT ME
 			navx = new AHRS(Port.kOnboard);
 		} catch (RuntimeException ex) {
-			//DriverStation.reportError("Error instantiating navX-Micro:  " + ex.getMessage(), true);
+			System.out.println("NAVX FAILURE");
 		}
 		
 		// vision
@@ -108,7 +110,7 @@ public class RobotMap {
 		elevatorMotor1.setSensorPhase(true);
 		elevatorMotor1.setInverted(true);
 		elevatorMotor1.setNeutralMode(NeutralMode.Brake);
-		elevatorMotor1.configPeakCurrentLimit(25, 0);
+		elevatorMotor1.configPeakCurrentLimit(40, 0);
 		elevatorMotor1.configPeakCurrentDuration(250, 0);
 		elevatorMotor1.enableCurrentLimit(true);
 
@@ -136,7 +138,10 @@ public class RobotMap {
 		left1.configSelectedFeedbackSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder,DrivePIDID,0);
 		right1.configSelectedFeedbackSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder,DrivePIDID,0);
 
-		left1.setSensorPhase(true);
+		//TODO: THIS IS DIFFERENT FOR THE TWO ROBOTS
+		//TODO: REMEMBER TO CHANGE THIS
+		//TODO: THIS IS FALSE ON ACTUAL AND IS TRUE ON PRACTICE
+		left1.setSensorPhase(false);
 
 		left1.configClosedloopRamp(1,0);
 		right1.configClosedloopRamp(1,0);
@@ -187,21 +192,21 @@ public class RobotMap {
 		//intake
 		leftIntake = new VictorSPX(leftIntakeID);
 		//leftIntake.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, intakeElbowID, 0);
-		leftIntake.setNeutralMode(NeutralMode.Brake);
+		leftIntake.setNeutralMode(NeutralMode.Coast);
 
 		
 		rightIntake = new VictorSPX(rightIntakeID);				
 		rightIntake.follow(leftIntake);
-		rightIntake.setNeutralMode(NeutralMode.Brake);
+		rightIntake.setNeutralMode(NeutralMode.Coast);
 		rightIntake.setInverted(true);
 
 		
 		//intakeElbow
 		intakeElbow = new TalonSRX(intakeElbowID);
-		intakeElbow.configContinuousCurrentLimit(2, 0);
-		intakeElbow.configPeakCurrentLimit(0, 0);
-		intakeElbow.enableCurrentLimit(false);
-		intakeElbow.configSelectedFeedbackSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.CTRE_MagEncoder_Relative,IntakeElbowPIDID,0);
+//		intakeElbow.configContinuousCurrentLimit(6, 0);
+//		intakeElbow.configPeakCurrentLimit(0, 0);
+//		intakeElbow.enableCurrentLimit(true);
+		intakeElbow.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,IntakeElbowPIDID,0);
 		
 		// pneumatics
 		compressor = new Compressor(pcmID);
@@ -218,14 +223,14 @@ public class RobotMap {
 //		left1.config_kI(RobotMap.DrivePIDID, 1, 0);
 //		left1.config_kD(RobotMap.DrivePIDID, 1, 0);
 		                                                                     
-		elevatorMotor1.config_kP(RobotMap.ElevatorStage1PIDID, .45, 0);      
-		elevatorMotor1.config_kI(RobotMap.ElevatorStage1PIDID, 0, 0);        
-		elevatorMotor1.config_kD(RobotMap.ElevatorStage1PIDID, 0, 0);
-		elevatorMotor1.configAllowableClosedloopError(0, 100, 0);
-		                                                                     
-		elevatorMotorStage2.config_kP(RobotMap.ElevatorStage2PIDID, .45, 0); 
-		elevatorMotorStage2.config_kI(RobotMap.ElevatorStage2PIDID, 0, 0);   
-		elevatorMotorStage2.config_kD(RobotMap.ElevatorStage2PIDID, 0, 0);
-		elevatorMotorStage2.configAllowableClosedloopError(0, 50, 0);
+//		elevatorMotor1.config_kP(RobotMap.ElevatorStage1PIDID, ElevatorStage1kP, 0);
+//		elevatorMotor1.config_kI(RobotMap.ElevatorStage1PIDID, ElevatorStage1kI, 0);
+//		elevatorMotor1.config_kD(RobotMap.ElevatorStage1PIDID, ElevatorStage1kD, 0);
+	elevatorMotor1.configAllowableClosedloopError(0, 0, 0);
+//
+//		elevatorMotorStage2.config_kP(RobotMap.ElevatorStage2PIDID, ElevatorStage2kP, 0);
+//		elevatorMotorStage2.config_kI(RobotMap.ElevatorStage2PIDID, ElevatorStage2kI, 0);
+//		elevatorMotorStage2.config_kD(RobotMap.ElevatorStage2PIDID, ElevatorStage2kD, 0);
+		elevatorMotorStage2.configAllowableClosedloopError(0, 0, 0);
 	}
 }

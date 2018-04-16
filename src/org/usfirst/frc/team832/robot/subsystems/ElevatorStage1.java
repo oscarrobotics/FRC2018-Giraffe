@@ -13,7 +13,7 @@ public class ElevatorStage1 extends Subsystem {
 	
 	private static final double maxEncPos = 26500;
 	private static final double lowerposthres = 5000;
-	private static final int acceptableError = 100;
+	private static final int acceptableError = 350;
 	public static double targetPosition;
 	
 	public boolean getAtBottom() {
@@ -30,14 +30,14 @@ public class ElevatorStage1 extends Subsystem {
 	
 	public void setPos(double sliderVal) {
 		RobotMap.elevatorMotor1.configPeakOutputReverse(-100,0);
-//		RobotMap.elevatorMotor1.configNominalOutputReverse(0, 0);
-		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0)>lowerposthres){
-
-			RobotMap.elevatorMotor1.configPeakOutputReverse(-100,0);
-		}
-		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0)<lowerposthres){
-			RobotMap.elevatorMotor1.configPeakOutputReverse(-0.1,0);
-		}
+		RobotMap.elevatorMotor1.configNominalOutputReverse(0, 0);
+//		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0)>lowerposthres){
+//
+//			RobotMap.elevatorMotor1.configPeakOutputReverse(-100,0);
+//		}
+//		if(RobotMap.elevatorMotor1.getSelectedSensorPosition(0)<lowerposthres){
+//			RobotMap.elevatorMotor1.configPeakOutputReverse(-0.1,0);
+//		}
 
 		targetPosition = Math.round( Calcs.map(sliderVal, -1.0, 1.0, 0.0, 1.0) * maxEncPos);
 		RobotMap.elevatorMotor1.set(ControlMode.Position, targetPosition);
@@ -49,10 +49,11 @@ public class ElevatorStage1 extends Subsystem {
 	}
 	
 	public boolean isFinished() {
-		int currentError = RobotMap.elevatorMotor1.getClosedLoopError(RobotMap.ElevatorStage1PIDID);
-		return (Math.abs(currentError) > acceptableError);
+//		int currentError = RobotMap.elevatorMotor1.getClosedLoopError(RobotMap.ElevatorStage1PIDID);
+		int currentError = RobotMap.elevatorMotor1.getClosedLoopTarget(0) - RobotMap.elevatorMotor1.getSelectedSensorPosition(0);
+		return (Math.abs(currentError) <= acceptableError);
 	}
 	
 	@Override
-	protected void initDefaultCommand() { setDefaultCommand(new RunElevatorStage1());	}
+	protected void initDefaultCommand() {}
 }
