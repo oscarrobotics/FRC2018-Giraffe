@@ -2,6 +2,7 @@
 package org.usfirst.frc.team832.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -18,6 +19,7 @@ import org.usfirst.frc.team832.robot.commands.automodes.*;
 import org.usfirst.frc.team832.robot.commands.defaults.*;
 import org.usfirst.frc.team832.robot.func.Calcs;
 import org.usfirst.frc.team832.robot.subsystems.*;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import java.util.HashMap;
 
@@ -151,6 +153,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
 		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
 		RobotMap.intakeElbow.setIntegralAccumulator(0.0,RobotMap.IntakeElbowPIDID,0);
+	    System.out.println("Global Init Done");
 	}
 
 	/**
@@ -188,7 +191,14 @@ public class Robot extends IterativeRobot {
 		setRobotMode(RobotMode.AUTONOMOUS);
 		globalInit();
 		elevatorStage2.setAtBottom();
-
+		RobotMap.left1.setNeutralMode(NeutralMode.Brake);
+		RobotMap.left2.setNeutralMode(NeutralMode.Brake);
+		RobotMap.left3.setNeutralMode(NeutralMode.Brake);
+		RobotMap.right1.setNeutralMode(NeutralMode.Brake);
+		RobotMap.right2.setNeutralMode(NeutralMode.Brake);
+		RobotMap.right3.setNeutralMode(NeutralMode.Brake);
+		System.out.println("Before Elevator 1");
+		/*
 		if (!Robot.elevatorStage1.getAtBottom()) {
 			RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.08);
 			while (true) {
@@ -197,10 +207,13 @@ public class Robot extends IterativeRobot {
 				}
 			}
 		}
-
+		*/
+		System.out.println("After Elevator 1");
 		Robot.elevatorStage1.setAtBottom();
 
 		RobotMap.intakeElbow.setSelectedSensorPosition(2220, RobotMap.IntakeElbowPIDID, 0);
+
+		System.out.println("Auto Init Finished");
 
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
 		autoCmd = autoChooser.getSelected();
@@ -232,10 +245,10 @@ public class Robot extends IterativeRobot {
 					} else if (startSide.equals("C")) {
 						System.out.println("from C position: " + autoFiles);
 						cmdList = new Command[]{
-								new AutoMoveIntakeElbowPos(2100),
+								//new AutoMoveIntakeElbowPos(2100),
+								new AutoMoveElevatorStage2(0.5, false),
 								new AutoDriveProfile(autoFiles),
 //								new MoveOnPath(autoFiles),
-								new AutoMoveElevatorStage2(0.5),
 								new AutoMoveIntakeElbowPos(0),
 								new AutoIntakeLinear(-.4, 500),
 								new AutoMoveIntakeElbowPos(2200)
@@ -256,7 +269,7 @@ public class Robot extends IterativeRobot {
 //								new MoveOnPath(autoFiles),
 								new AutoDriveProfile(autoFiles),
 								new AutoMoveFullElevator(1.0),
-								new AutoMoveIntakeElbowPos(1000),
+								new AutoMoveIntakeElbowPos(1500),
 								new AutoIntakeLinear(-.5, 1000),
 								new AutoMoveIntakeElbowPos(2200),
 								new AutoMoveFullElevator(-1)
@@ -265,17 +278,14 @@ public class Robot extends IterativeRobot {
 					} else {
 						System.out.println(String.format("Running %s far Scale auto from %s position", scaleSide, startSide));
 						cmdList = new Command[]{
-							/*
-
-									new AutoMoveIntakeElbowPos(2100),
-								new AutoDriveProfile(autoFiles[0], autoFiles[1]),
-								new AutoMoveElevatorStage2(1),
-								new AutoMoveElevatorStage1(1),
-								new MoveElbowToBottom(),
+						        new AutoMoveIntakeElbowPos(2100),
+								new AutoDriveProfile(autoFiles),
+								new AutoDriveDistance(-0.5, 0.0, -500, 0),
+								new AutoMoveFullElevator(1),
+								new AutoMoveIntakeElbowPos(1500),
 								new AutoIntakeLinear(-.5, 1000),
-							*/
-								new AutoDriveDistance(0.5, 0.0, 7000, 0)
 
+//								new AutoDriveDistance(0.5, 0.0, 7000, 0)
 						};
 						autoCmd = new DynamicAutoCommand(cmdList);
 					}
@@ -377,7 +387,14 @@ public class Robot extends IterativeRobot {
 
 		System.out.println("Begin Scheduler");
 
-		Scheduler.getInstance().add(new RobotDrive());
+		RobotMap.left1.setNeutralMode(NeutralMode.Coast);
+		RobotMap.left2.setNeutralMode(NeutralMode.Coast);
+		RobotMap.left3.setNeutralMode(NeutralMode.Coast);
+		RobotMap.right1.setNeutralMode(NeutralMode.Coast);
+		RobotMap.right2.setNeutralMode(NeutralMode.Coast);
+		RobotMap.right3.setNeutralMode(NeutralMode.Coast);
+
+		Scheduler.getInstance().add(new RobotDriveSpeed());
 		Scheduler.getInstance().add(new RunIntake());
 		Scheduler.getInstance().add(new RunIntakeElbow());
 		Scheduler.getInstance().add(new RunElevatorStage1());
@@ -428,7 +445,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		System.out.println("Begin Tele");
 		Scheduler.getInstance().run();
-		//sendData(false);
+		sendData(false);
 		doRumble();
 //		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
 //		 	intakeElbow.setAtBottom();

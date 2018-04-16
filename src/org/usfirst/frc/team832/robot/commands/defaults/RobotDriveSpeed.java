@@ -31,19 +31,27 @@ public class RobotDriveSpeed extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double turnPow;
-        double leftStick = 1 * Math.pow(OI.driverPad.getRawAxis(1),5); // linear
+        double leftStick = 1 * Math.pow(OI.driverPad.getRawAxis(1),1); // linear
 
         if(RobotMap.gearShiftSol.get().equals(DoubleSolenoid.Value.kReverse))
             turnPow = highSpeedTurnPow;
         else
             turnPow = lowSpeedTurnPow;
+        double rightStick = 1 * turnPow * Math.pow(OI.driverPad.getRawAxis(4), 1); // rotation
 
-        double rightStick = turnPow * Math.pow(OI.driverPad.getRawAxis(4), 3); // rotation
+
+        leftStick = Math.pow(leftStick, 2)*Math.signum(leftStick);
+        rightStick = Math.pow(rightStick, 2)*Math.signum(rightStick);
+
+
+
 
         if(OI.driverPad.getRawButton(1))
             westCoastDrive.ArcadeDriveSpeedStraight(-250);
         else
             westCoastDrive.ArcadeDriveSpeed(leftStick, rightStick);
+
+
     	
     	// Implemented by George on 3/16/2018
     	// Alternates between brake and coast depending on elevator height 

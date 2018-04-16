@@ -52,8 +52,7 @@ public class ElevatorStage2 extends Subsystem {
 	}
 	
 	public boolean isFinished() {
-		double clError = RobotMap.elevatorMotorStage2.getSelectedSensorPosition(0) - RobotMap.elevatorMotorStage2.getClosedLoopTarget(0
-		);
+		double clError = RobotMap.elevatorMotorStage2.getSelectedSensorPosition(0) - RobotMap.elevatorMotorStage2.getClosedLoopTarget(0);
 		System.out.println("Stage 2 error: " +  clError);
 		return (Math.abs(clError) <= acceptableError);
 	}
