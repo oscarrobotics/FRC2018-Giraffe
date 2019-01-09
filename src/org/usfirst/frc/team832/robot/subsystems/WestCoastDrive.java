@@ -20,30 +20,57 @@ public class WestCoastDrive extends Subsystem {
 	private final int lowSpeedRatio = 2*590;
 	private final double highSpeedkF = 0.8;
 	private final double lowSpeedkF = 1.7;
+
+	private final int leftTicks=256;
+	private final int rightTicks=256;
+
+
 	private final MotionProfileStatus leftMpStatus= new MotionProfileStatus();
 	private final MotionProfileStatus rightMpStatus = new MotionProfileStatus();
 
+	private double pastp = 0;
+	private double pastr = 0;
+	private double filtp = 0.8;
+	private double filtr = 0.0;
+
+
+
+
+
 	public void ArcadeDrive(double pow, double rot, ControlMode ctrlMode) {
 		double leftMotorSpeed, rightMotorSpeed;
-		double moveValue = pow;
-		double rotateValue = rot;
+		//lowe pass filter
+		pastp = pastp * filtp + (1 - filtp) * pow;
+		pastr = pastr * filtr + (1 - filtr) * rot;
+
+
+		double moveValue = pastp; //pow
+		double rotateValue = pastr; // rot
+
+
+		// speed compenstaed turning
+		rotateValue = Math.max(Math.sqrt(Math.abs(rotateValue*(Math.abs(moveValue))))*1.2,Math.abs(rotateValue))*Math.signum(rotateValue);
+
+
 		if (moveValue > 0.0) {
-		      if (rotateValue > 0.0) {
-		        leftMotorSpeed = moveValue - rotateValue;
-		        rightMotorSpeed = Math.max(moveValue, rotateValue);
-		      } else {
-		        leftMotorSpeed = Math.max(moveValue, -rotateValue);
-		        rightMotorSpeed = moveValue + rotateValue;
-		      }
-		    } else {
-		      if (rotateValue > 0.0) {
-		        leftMotorSpeed = -Math.max(-moveValue, rotateValue);
-		        rightMotorSpeed = moveValue + rotateValue;
-		      } else {
-		        leftMotorSpeed = moveValue - rotateValue;
-		        rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
-		      }
-		    }
+			if (rotateValue > 0.0) {
+				leftMotorSpeed = moveValue - rotateValue;
+				rightMotorSpeed = Math.max(moveValue, rotateValue);
+			} else {
+				leftMotorSpeed = Math.max(moveValue, -rotateValue);
+				rightMotorSpeed = moveValue + rotateValue;
+			}
+		} else {
+			if (rotateValue > 0.0) {
+				leftMotorSpeed = -Math.max(-moveValue, rotateValue);
+				rightMotorSpeed = moveValue + rotateValue;
+			} else {
+				leftMotorSpeed = moveValue - rotateValue;
+				rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
+			}
+		}
+
+
 		left1.set(ctrlMode, leftMotorSpeed);
 		right1.set(ctrlMode, rightMotorSpeed);
 	}
@@ -69,6 +96,12 @@ public class WestCoastDrive extends Subsystem {
 		}
 		ArcadeDrive(power, rot, ControlMode.Velocity );
 	}
+
+
+
+
+
+
 
 	public void ArcadeDriveSpeedStraight(double speed){
 	    ArcadeDrive(speed, 0, ControlMode.Velocity);
@@ -127,7 +160,7 @@ public class WestCoastDrive extends Subsystem {
 		this.left1.clearMotionProfileTrajectories();
 		TrajectoryPoint point = new TrajectoryPoint();
 
-		this.left1.changeMotionControlFramePeriod(25);
+		this.left1.changeMotionControlFramePeriod(2);
 		this.left1.configMotionProfileTrajectoryPeriod(25, 10);
 
 		for (int i = 0; i < size; i++) {
@@ -153,7 +186,7 @@ public class WestCoastDrive extends Subsystem {
 		this.right1.clearMotionProfileTrajectories();
 		TrajectoryPoint point = new TrajectoryPoint();
 
-		this.right1.changeMotionControlFramePeriod(25);
+		this.right1.changeMotionControlFramePeriod(2);
 		this.right1.configMotionProfileTrajectoryPeriod(25, 10);
 
 		for (int i = 0; i < size; i++) {

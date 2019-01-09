@@ -172,8 +172,8 @@ public class MoveOnPath extends Command {
             // For each point, fill our structure and pass it to API
             trajPointL.position = -currentPosL * (256.0 * 4.0);
             trajPointR.position = -currentPosR * (256.0 * 4.0);
-            trajPointL.velocity = velocityL * (256.0 * 4.0) / 5.0;
-            trajPointR.velocity = velocityR * (256.0 * 4.0) / 5.0;
+            trajPointL.velocity = velocityL * (256.0 * 4.0); /// 5.0;
+            trajPointR.velocity = velocityR * (256.0 * 4.0); /// 5.0;
             trajPointL.profileSlotSelect0 = RobotMap.DrivePIDID;
             trajPointR.profileSlotSelect0 = RobotMap.DrivePIDID;
 
