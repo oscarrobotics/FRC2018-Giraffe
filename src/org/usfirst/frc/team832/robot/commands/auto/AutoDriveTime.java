@@ -52,7 +52,7 @@ public class AutoDriveTime extends Command {
     @Override
     protected boolean isFinished() {
 
-        return (startTime + time)<= System.currentTimeMillis();
+        return (startTime + time) <= System.currentTimeMillis();
     }
 
 

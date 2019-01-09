@@ -1,14 +1,11 @@
 package org.usfirst.frc.team832.robot.commands.auto;
 
 import com.ctre.phoenix.motion.SetValueMotionProfile;
-import org.usfirst.frc.team832.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
-import org.usfirst.frc.team832.robot.RobotMap;
+import org.usfirst.frc.team832.robot.Robot;
 
-import java.awt.*;
 import java.io.File;
 
 public class AutoDriveProfile extends Command {
@@ -24,18 +21,19 @@ public class AutoDriveProfile extends Command {
         this.trajectory_right = Pathfinder.readFromCSV(new File(rightfile));
     }
 
-   @Override
-   protected void initialize() {
+    @Override
+    protected void initialize() {
         System.out.println("Resetting encoders");
         Robot.westCoastDrive.resetEncoders();
         System.out.println("Filling talons...");
-        Robot.westCoastDrive.startFillingLeft(Robot.pathfinderFormatToTalon(trajectory_left), trajectory_left.length());
-        Robot.westCoastDrive.startFillingRight(Robot.pathfinderFormatToTalon(trajectory_right), trajectory_right.length());
+        // TODO: Implement GeniusMotor class
+//        Robot.westCoastDrive.startFillingLeft(Robot.pathfinderFormatToTalon(trajectory_left), trajectory_left.length());
+//        Robot.westCoastDrive.startFillingRight(Robot.pathfinderFormatToTalon(trajectory_right), trajectory_right.length());
         while (Robot.westCoastDrive.getLeftMpStatus().btmBufferCnt < min_points || Robot.westCoastDrive.getRightMpStatus().btmBufferCnt < min_points) {
             Robot.westCoastDrive.periodic();
         }
         System.out.println("Talons filled (enough)!");
-   }
+    }
 
     @Override
     protected void execute() {

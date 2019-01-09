@@ -1,29 +1,28 @@
 package org.usfirst.frc.team832.robot.commands.auto;
 
-import org.usfirst.frc.team832.robot.Robot;
-
-
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team832.robot.Robot;
 
 /**
  *
  */
 public class AutoSpin extends Command {
-	protected final double angle;
+    protected final double angle;
+
     public AutoSpin(double angle) {
         this.angle = angle;
-    	requires(Robot.westCoastDrive);
+        requires(Robot.westCoastDrive);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		//Robot.gyroPID.setSetpoint(angle);
-		//Robot.gyroPID.enable();
+        //Robot.gyroPID.setSetpoint(angle);
+        //Robot.gyroPID.enable();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.westCoastDrive.AutoRotateSpeed(Robot.gyroPID.pidOut);
+        //Robot.westCoastDrive.AutoRotateSpeed(Robot.gyroPID.pidOut);
     }
 
     // Make this return true when this Command no longer needs to run execute()

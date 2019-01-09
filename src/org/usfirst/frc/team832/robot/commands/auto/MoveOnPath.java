@@ -1,8 +1,9 @@
 /**
- * 
+ *
  */
 package org.usfirst.frc.team832.robot.commands.auto;
 
+import OscarLib.Motors.OscarCANTalon;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
@@ -16,16 +17,15 @@ import jaci.pathfinder.Trajectory;
 import org.usfirst.frc.team832.robot.Constants;
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
-import org.usfirst.frc.team832.robot.func.Calcs;
 
 import java.io.File;
 
 
 public class MoveOnPath extends Command {
-	private TalonSRX left;
-	private TalonSRX right;
+    private OscarCANTalon left;
+    private OscarCANTalon right;
 
-	private final int TRAJECTORY_SIZE;
+    private final int TRAJECTORY_SIZE;
 
     private Trajectory trajectoryR, trajectoryL;
 
@@ -46,7 +46,7 @@ public class MoveOnPath extends Command {
      *
      * @param name name of the trajectory
      */
-	public MoveOnPath(String name) {
+    public MoveOnPath(String name) {
         requires(Robot.westCoastDrive);
         setName("MoveOnPath-" + name);
 
@@ -55,7 +55,7 @@ public class MoveOnPath extends Command {
         left = RobotMap.left1;
         right = RobotMap.right1;
 
-        switch(direction) {
+        switch (direction) {
             case BACKWARD:
                 dir = -1;
                 break;
@@ -67,12 +67,13 @@ public class MoveOnPath extends Command {
 
 //        trajectoryL = Pathfinder.readFromFile(new File("/home/lvuser/trajectories/" + name + "_left_detailed.traj"));
 //        trajectoryR = Pathfinder.readFromFile(new File("/home/lvuser/trajectories/" + name + "_right_detailed.traj"));
-        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/paths/" + name +  "_left_detailed.csv"));
+        trajectoryL = Pathfinder.readFromCSV(new File("/home/lvuser/paths/" + name + "_left_detailed.csv"));
         trajectoryR = Pathfinder.readFromCSV(new File("/home/lvuser/paths/" + name + "_right_detailed.csv"));
         if (trajectoryProcessor == null) {
             trajectoryProcessor = new Notifier(() -> {
-                left.processMotionProfileBuffer();
-                right.processMotionProfileBuffer();
+                // TODO: implement OscarGeniusMotor class
+//                left.processMotionProfileBuffer();
+//                right.processMotionProfileBuffer();
             });
         }
 
@@ -88,18 +89,19 @@ public class MoveOnPath extends Command {
             System.out.println(getName() + " could not be constructed!");
             end();
         }
-	}
-	
-	//Called just before this Command runs for the first time. 
-	protected void initialize() {
-	    System.out.println("MoveOnPath: Initializing...");
+    }
 
-	    // Reset command state
+    //Called just before this Command runs for the first time.
+    protected void initialize() {
+        System.out.println("MoveOnPath: Initializing...");
+
+        // Reset command state
         reset();
 
         // Change motion control frame period
-        left.changeMotionControlFramePeriod(10);
-        right.changeMotionControlFramePeriod(10);
+        // TODO: implement OscarGeniusMotor class
+//        left.changeMotionControlFramePeriod(10);
+//        right.changeMotionControlFramePeriod(10);
 
         // Fill TOP (API-level) buffer
         fillTopBuffer();
@@ -108,12 +110,13 @@ public class MoveOnPath extends Command {
         // i.e.: moving API points to RAM
         trajectoryProcessor.startPeriodic(0.005);
         System.out.println(getName() + " Initialized");
-	}
+    }
 
-	//Called repeatedly when this Command is scheduled to run.
-	protected void execute() {
-        left.getMotionProfileStatus(statusLeft);
-        right.getMotionProfileStatus(statusRight);
+    //Called repeatedly when this Command is scheduled to run.
+    protected void execute() {
+        // TODO: implement OscarGeniusMotor class
+//        left.getMotionProfileStatus(statusLeft);
+//        right.getMotionProfileStatus(statusRight);
 
         // Give a slight buffer when we process to make sure we don't bite off more than
         // we can chew or however that metaphor goes.
@@ -127,24 +130,25 @@ public class MoveOnPath extends Command {
     }
 
     @Override
-	protected boolean isFinished() {
+    protected boolean isFinished() {
         // If we're running, only finish if both talons
         // reach their last valid point
-	    return
-            isRunning &&
-            statusLeft.activePointValid &&
-            statusLeft.isLast &&
-            statusRight.activePointValid &&
-            statusRight.isLast;
-	}
+        return
+                isRunning &&
+                        statusLeft.activePointValid &&
+                        statusLeft.isLast &&
+                        statusRight.activePointValid &&
+                        statusRight.isLast;
+    }
 
     @Override
-	protected void end() {
-	    // Stop processing trajectories
+    protected void end() {
+        // Stop processing trajectories
         trajectoryProcessor.stop();
 
-		left.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, 0);
-        right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, 0);
+        // TODO: implement OscarGeniusMotor class
+//        left.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, 0);
+//        right.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, 0);
 
         Robot.westCoastDrive.stop();
 
@@ -155,7 +159,7 @@ public class MoveOnPath extends Command {
      * Fill top-level (API-level) buffer with all points
      */
     private void fillTopBuffer() {
-	    for (int i = 0; i < TRAJECTORY_SIZE; i++) {
+        for (int i = 0; i < TRAJECTORY_SIZE; i++) {
             TrajectoryPoint trajPointL = new TrajectoryPoint();
             TrajectoryPoint trajPointR = new TrajectoryPoint();
 
@@ -190,8 +194,9 @@ public class MoveOnPath extends Command {
             trajPointR.isLastPoint = isLastPointR;
 
             // Push to API level buffer
-            left.pushMotionProfileTrajectory(trajPointL);
-            right.pushMotionProfileTrajectory(trajPointR);
+            // TODO: implement OscarGeniusMotor class
+//            left.pushMotionProfileTrajectory(trajPointL);
+//            right.pushMotionProfileTrajectory(trajPointR);
         }
     }
 
@@ -207,8 +212,9 @@ public class MoveOnPath extends Command {
         Robot.westCoastDrive.resetEncoders();
 
         // Clear the trajectory buffer
-        left.clearMotionProfileTrajectories();
-        right.clearMotionProfileTrajectories();
+        // TODO: implement OscarGeniusMotor class
+//        left.clearMotionProfileTrajectories();
+//        right.clearMotionProfileTrajectories();
 
         System.out.println("Cleared trajectories; check: " + statusLeft.btmBufferCnt);
     }

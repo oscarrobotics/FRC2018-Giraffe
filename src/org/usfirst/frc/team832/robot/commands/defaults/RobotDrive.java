@@ -1,19 +1,18 @@
 package org.usfirst.frc.team832.robot.commands.defaults;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team832.robot.OI;
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.subsystems.WestCoastDrive;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
 public class RobotDrive extends Command {
 
-	final WestCoastDrive westCoastDrive = Robot.westCoastDrive;
+    final WestCoastDrive westCoastDrive = Robot.westCoastDrive;
+
     public RobotDrive() {
         requires(Robot.westCoastDrive);
     }
@@ -24,9 +23,9 @@ public class RobotDrive extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double leftStick = .7 * OI.driverPad.getRawAxis(1);
-    	double rightStick = .7 * OI.driverPad.getRawAxis(4);
-    	westCoastDrive.ArcadeDrive(leftStick, rightStick, ControlMode.PercentOutput);
+        double leftStick = .7 * OI.driverPad.getRawAxis(1);
+        double rightStick = .7 * OI.driverPad.getRawAxis(4);
+        westCoastDrive.ArcadeDrive(leftStick, rightStick, ControlMode.PercentOutput);
     }
 
     // Make this return true when this Command no longer needs to run execute()

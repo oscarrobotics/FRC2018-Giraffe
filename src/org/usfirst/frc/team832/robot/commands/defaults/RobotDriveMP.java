@@ -2,7 +2,6 @@ package org.usfirst.frc.team832.robot.commands.defaults;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team832.robot.Robot;
-import org.usfirst.frc.team832.robot.commands.auto.AutoDriveProfile;
 
 
 public class RobotDriveMP extends Command {

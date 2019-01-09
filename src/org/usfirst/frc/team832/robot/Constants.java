@@ -10,6 +10,4 @@ public class Constants {
 
     public static final double kFeetPerCount = (1.0 / 12.0) * kInchesPerCount;
     public static final double kCountsPerFoot = kCountsPerInch * 12.0;
-
-
 }
