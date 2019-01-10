@@ -24,6 +24,14 @@ hs_err_pid*
 bin/
 out/
 .idea/
+.wpilip/
+.gradle/
+!gradle/wrapper
+*.ipr
 *.iml
+*.iws
+gradlew
+gradlew.bat
+
 
 exportToHTML/
