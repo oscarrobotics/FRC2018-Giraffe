@@ -91,20 +91,20 @@ public class Robot extends IterativeRobot {
 	}
 
 	private static void sendData(boolean isDisabled) {
-		SmartDashboard.putNumber("Stage1Pos", RobotMap.elevatorMotor1.getSelectedSensorPosition(RobotMap.ElevatorStage1PIDID));
-		SmartDashboard.putNumber("Stage2Pos", RobotMap.elevatorMotor2.getSelectedSensorPosition(RobotMap.ElevatorStage2PIDID));
+		SmartDashboard.putNumber("Stage1Pos", RobotMap.elevatorMotor1.getSensorPosition());
+		SmartDashboard.putNumber("Stage2Pos", RobotMap.elevatorMotor2.getSensorPosition());
 		SmartDashboard.putNumber("Stage1Target", ElevatorStage1.targetPosition);
 		SmartDashboard.putNumber("Stage2Target", ElevatorStage2.targetPosition);
-		SmartDashboard.putNumber("Right Motor Encoder", RobotMap.right1.getSelectedSensorPosition(RobotMap.DrivePIDID));
-		SmartDashboard.putNumber("Left Motor Encoder", RobotMap.left1.getSelectedSensorPosition(RobotMap.DrivePIDID));
+		SmartDashboard.putNumber("Right Motor Encoder", RobotMap.right1.getSensorPosition());
+		SmartDashboard.putNumber("Left Motor Encoder", RobotMap.left1.getSensorPosition());
 		SmartDashboard.putNumber("Intake Elbow Target", IntakeElbow.intakeElbowTargetPos);
-		SmartDashboard.putNumber("Intake Elbow Pos", RobotMap.intakeElbow.getSelectedSensorPosition(RobotMap.IntakeElbowPIDID));
+		SmartDashboard.putNumber("Intake Elbow Pos", RobotMap.intakeElbow.getSensorPosition());
 
 		if (currentRobotMode.equals(RobotMode.TELEOP)) {
-			SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError(RobotMap.DrivePIDID));
-			SmartDashboard.putNumber("Right Error",-1*RobotMap.right1.getClosedLoopError(RobotMap.DrivePIDID));
-			SmartDashboard.putNumber("Left Target Speed",-1*RobotMap.left1.getClosedLoopTarget(RobotMap.DrivePIDID));
-			SmartDashboard.putNumber("Right Target Speed", -1*RobotMap.right1.getClosedLoopTarget(RobotMap.DrivePIDID));
+			SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError());
+			SmartDashboard.putNumber("Right Error",-1*RobotMap.right1.getClosedLoopError());
+			SmartDashboard.putNumber("Left Target Speed",-1*RobotMap.left1.getClosedLoopTarget());
+			SmartDashboard.putNumber("Right Target Speed", -1*RobotMap.right1.getClosedLoopTarget());
 		}
 		SmartDashboard.putData("GyroPID", Robot.gyroPID.getPIDController());
 		SmartDashboard.putNumber("GyroYaw", RobotMap.navx.getYaw());
@@ -149,9 +149,9 @@ public class Robot extends IterativeRobot {
 		Robot.pneumatics.shiftToLow();
 		Robot.pneumatics.closeIntake();
 		Robot.westCoastDrive.resetEncoders();
-		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
-		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
-		RobotMap.intakeElbow.setIntegralAccumulator(0.0,RobotMap.IntakeElbowPIDID,0);
+//		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
+//		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
+//		RobotMap.intakeElbow.setIntegralAccumulator(0.0,RobotMap.IntakeElbowPIDID,0);
 	    System.out.println("Global Init Done");
 	}
 
@@ -210,7 +210,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("After Elevator 1");
 		Robot.elevatorStage1.setAtBottom();
 
-		RobotMap.intakeElbow.setSelectedSensorPosition(2220, RobotMap.IntakeElbowPIDID, 0);
+		RobotMap.intakeElbow.setSensorPosition(2220);
 
 		System.out.println("Auto Init Finished");
 

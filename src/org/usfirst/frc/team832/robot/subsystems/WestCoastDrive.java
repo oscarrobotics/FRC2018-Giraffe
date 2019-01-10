@@ -23,9 +23,13 @@ public class WestCoastDrive extends Subsystem {
     private final MotionProfileStatus leftMpStatus = new MotionProfileStatus();
     private final MotionProfileStatus rightMpStatus = new MotionProfileStatus();
 
+    private double pastp = 0;
+    private double pastr = 0;
+    private double filtp = 0.8;
+    private double filtr = 0.0;
+
     public void ArcadeDrive(double pow, double rot, ControlMode ctrlMode) {
         double leftMotorSpeed, rightMotorSpeed;
-        
         //low pass filter
 		pastp = pastp * filtp + (1 - filtp) * pow;
 		pastr = pastr * filtr + (1 - filtr) * rot;
@@ -33,9 +37,9 @@ public class WestCoastDrive extends Subsystem {
 
 		double moveValue = pastp; //pow
 		double rotateValue = pastr; // rot
-        
+
         rotateValue = Math.max(Math.sqrt(Math.abs(rotateValue*(Math.abs(moveValue))))*1.2,Math.abs(rotateValue))*Math.signum(rotateValue);
-        
+
         if (moveValue > 0.0) {
             if (rotateValue > 0.0) {
                 leftMotorSpeed = moveValue - rotateValue;

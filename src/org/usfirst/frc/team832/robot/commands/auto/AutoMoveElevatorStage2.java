@@ -11,7 +11,7 @@ public class AutoMoveElevatorStage2 extends Command {
     public AutoMoveElevatorStage2(double targetInput) {
         requires(Robot.elevatorStage2);
         target = targetInput;
-        doesWait = true;
+        _doesWait = true;
     }
     
     public AutoMoveElevatorStage2(double targetInput, boolean doesWait) {
@@ -31,7 +31,7 @@ public class AutoMoveElevatorStage2 extends Command {
 
     protected boolean isFinished() {
         boolean finished = false;
-        if (Robot.elevatorStage2.isFinished() || !doesWait) {
+        if (Robot.elevatorStage2.isFinished() || !_doesWait) {
             System.out.println("Finished stage 2");
             finished = true;
         }
