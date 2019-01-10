@@ -1,6 +1,7 @@
 package org.usfirst.frc.team832.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -16,6 +17,7 @@ import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_PlaceOnSwitch;
 import org.usfirst.frc.team832.robot.commands.defaults.*;
 import org.usfirst.frc.team832.robot.func.Calcs;
 import org.usfirst.frc.team832.robot.subsystems.*;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import java.util.HashMap;
 
@@ -75,230 +77,239 @@ public class Robot extends IterativeRobot {
 //		teleDriveChooser.addDefault("Percent Output", new RobotDrive());
 //		teleDriveChooser.addDefault("Speed PID", new RobotDriveSpeed());
 
-        robotSideChooser.addObject("left", "L");
-        robotSideChooser.addDefault("center", "C");
-        robotSideChooser.addObject("right", "R");
-        SmartDashboard.putData("Robot Position", robotSideChooser);
+	
+		robotSideChooser.addObject("left", "L");
+		robotSideChooser.addDefault("center", "C");
+		robotSideChooser.addObject("right", "R");
+		SmartDashboard.putData("Robot Position", robotSideChooser);
 
-        autoOrderChooser.addDefault("SwitchOnly", "sw");
-        autoOrderChooser.addObject("ScaleOnly", "sc");
-        autoOrderChooser.addObject("Switch-Scale", "swsc"); // only difference between Switch-Scale and Scale-Switch is the final heading after the profile runs
-        autoOrderChooser.addObject("Scale-Switch", "scsw"); // SWSC will end the profile facing the Switch, then use normal commands to do Scale. Vice Versa for SCSW
-        SmartDashboard.putData(" Auto Priority", autoOrderChooser);
-    }
+		autoOrderChooser.addDefault("SwitchOnly", "sw");
+		autoOrderChooser.addObject("ScaleOnly", "sc");
+		autoOrderChooser.addObject("Switch-Scale", "swsc"); // only difference between Switch-Scale and Scale-Switch is the final heading after the profile runs
+		autoOrderChooser.addObject("Scale-Switch", "scsw"); // SWSC will end the profile facing the Switch, then use normal commands to do Scale. Vice Versa for SCSW
+		SmartDashboard.putData(" Auto Priority", autoOrderChooser);
+	}
 
-    private static void sendData(boolean isDisabled) {
-        SmartDashboard.putNumber("Stage1Pos", RobotMap.elevatorMotor1.getSensorPosition());
-        SmartDashboard.putNumber("Stage2Pos", RobotMap.elevatorMotor2.getSensorPosition());
-        SmartDashboard.putNumber("Stage1Target", ElevatorStage1.targetPosition);
-        SmartDashboard.putNumber("Stage2Target", ElevatorStage2.targetPosition);
-        SmartDashboard.putNumber("Right Motor Encoder", RobotMap.right1.getSensorPosition());
-        SmartDashboard.putNumber("Left Motor Encoder", RobotMap.left1.getSensorPosition());
-        SmartDashboard.putNumber("Intake Elbow Target", IntakeElbow.intakeElbowTargetPos);
-        SmartDashboard.putNumber("Intake Elbow Pos", RobotMap.intakeElbow.getSensorPosition());
+	private static void sendData(boolean isDisabled) {
+		SmartDashboard.putNumber("Stage1Pos", RobotMap.elevatorMotor1.getSelectedSensorPosition(RobotMap.ElevatorStage1PIDID));
+		SmartDashboard.putNumber("Stage2Pos", RobotMap.elevatorMotor2.getSelectedSensorPosition(RobotMap.ElevatorStage2PIDID));
+		SmartDashboard.putNumber("Stage1Target", ElevatorStage1.targetPosition);
+		SmartDashboard.putNumber("Stage2Target", ElevatorStage2.targetPosition);
+		SmartDashboard.putNumber("Right Motor Encoder", RobotMap.right1.getSelectedSensorPosition(RobotMap.DrivePIDID));
+		SmartDashboard.putNumber("Left Motor Encoder", RobotMap.left1.getSelectedSensorPosition(RobotMap.DrivePIDID));
+		SmartDashboard.putNumber("Intake Elbow Target", IntakeElbow.intakeElbowTargetPos);
+		SmartDashboard.putNumber("Intake Elbow Pos", RobotMap.intakeElbow.getSelectedSensorPosition(RobotMap.IntakeElbowPIDID));
 
-        if (currentRobotMode.equals(RobotMode.TELEOP)) {
-            SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError());
-            SmartDashboard.putNumber("Right Error", -1 * RobotMap.right1.getClosedLoopError());
-            SmartDashboard.putNumber("Left Target Speed", -1 * RobotMap.left1.getClosedLoopTarget());
-            SmartDashboard.putNumber("Right Target Speed", -1 * RobotMap.right1.getClosedLoopTarget());
-        }
-        SmartDashboard.putData("GyroPID", Robot.gyroPID.getPIDController());
-        SmartDashboard.putNumber("GyroYaw", RobotMap.navx.getYaw());
-        SmartDashboard.putNumber("GyroPitch", RobotMap.navx.getPitch());
-        SmartDashboard.putNumber("GyroRoll", RobotMap.navx.getRoll());
-    }
+		if (currentRobotMode.equals(RobotMode.TELEOP)) {
+			SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError(RobotMap.DrivePIDID));
+			SmartDashboard.putNumber("Right Error",-1*RobotMap.right1.getClosedLoopError(RobotMap.DrivePIDID));
+			SmartDashboard.putNumber("Left Target Speed",-1*RobotMap.left1.getClosedLoopTarget(RobotMap.DrivePIDID));
+			SmartDashboard.putNumber("Right Target Speed", -1*RobotMap.right1.getClosedLoopTarget(RobotMap.DrivePIDID));
+		}
+		SmartDashboard.putData("GyroPID", Robot.gyroPID.getPIDController());
+		SmartDashboard.putNumber("GyroYaw", RobotMap.navx.getYaw());
+		SmartDashboard.putNumber("GyroPitch", RobotMap.navx.getPitch());
+		SmartDashboard.putNumber("GyroRoll", RobotMap.navx.getRoll());
+	}
 
-    private static void doRumble() {
-        double minPitchAmount = 5, minRollAmount = 5;
-        double maxPitchAmount = 25, maxRollAmount = 25;
-        double pitchDelta, rollDelta;
+	private static void doRumble() {
+		double minPitchAmount = 5, minRollAmount = 5;
+		double maxPitchAmount = 25, maxRollAmount = 25;
+		double pitchDelta, rollDelta;
 
-        if (gyroPID.isPitchTipping(minPitchAmount)) {
-            pitchDelta = gyroPID.pitchTipAmount(minPitchAmount);
-            pitchDelta = Calcs.map(pitchDelta, 0, maxPitchAmount, 0.2, 1);
-            pitchDelta = Calcs.clip(pitchDelta, 0, 1);
-        } else
-            pitchDelta = 0;
+		if (gyroPID.isPitchTipping(minPitchAmount)) {
+			pitchDelta = gyroPID.pitchTipAmount(minPitchAmount);
+			pitchDelta = Calcs.map(pitchDelta, 0, maxPitchAmount, 0.2, 1);
+			pitchDelta = Calcs.clip(pitchDelta, 0, 1);
+		} else
+			pitchDelta = 0;
 
-        if (gyroPID.isRollTipping(minRollAmount)) {
-            rollDelta = gyroPID.rollTipAmount(minRollAmount);
-            rollDelta = Calcs.map(rollDelta, 0, maxRollAmount, 0.2, 1);
-            rollDelta = Calcs.clip(rollDelta, 0, 1);
-        } else
-            rollDelta = 0;
+		if (gyroPID.isRollTipping(minRollAmount)) {
+			rollDelta = gyroPID.rollTipAmount(minRollAmount);
+			rollDelta = Calcs.map(rollDelta, 0, maxRollAmount, 0.2, 1);
+			rollDelta = Calcs.clip(rollDelta, 0, 1);
+		} else
+			rollDelta = 0;
 
-        if (rollDelta != 0) {
-            OI.rumbleDriverPad(rollDelta, rollDelta);
-        } else {
-            OI.rumbleDriverPad(0, 0);
-        }
+		if (rollDelta != 0) {
+			OI.rumbleDriverPad(rollDelta, rollDelta);
+		} else {
+			OI.rumbleDriverPad(0, 0);
+		}
 
-        if (pitchDelta != 0) {
-            OI.rumbleDriverPad(pitchDelta, pitchDelta);
-        } else {
-            OI.rumbleDriverPad(0, 0);
-        }
-    }
+		if (pitchDelta != 0) {
+			OI.rumbleDriverPad(pitchDelta, pitchDelta);
+		} else {
+			OI.rumbleDriverPad(0, 0);
+		}
+	}
 
-    private static void globalInit() {
-        //RobotMap.navx.reset();
-        Robot.pneumatics.shiftToLow();
-        Robot.pneumatics.closeIntake();
-        Robot.westCoastDrive.resetEncoders();
-//        RobotMap.left1.setIntegralAccumulator(0.0);
-//        RobotMap.right1.setIntegralAccumulator(0.0);
-//        RobotMap.intakeElbow.setIntegralAccumulator(0.0);
-    }
+	private static void globalInit() {
+		//RobotMap.navx.reset();
+		Robot.pneumatics.shiftToLow();
+		Robot.pneumatics.closeIntake();
+		Robot.westCoastDrive.resetEncoders();
+		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
+		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
+		RobotMap.intakeElbow.setIntegralAccumulator(0.0,RobotMap.IntakeElbowPIDID,0);
+	    System.out.println("Global Init Done");
+	}
 
-    /**
-     * This function is called once each time the robot enters Disabled mode.
-     * You can use it to reset any subsystem information you want to clear when
-     * the robot is disabled.
-     */
-    @Override
-    public void disabledInit() {
-        setRobotMode(RobotMode.DISABLED);
-        RobotMap.navx.reset();
-        Robot.westCoastDrive.resetEncoders();
-        OI.rumbleDriverPad(0, 0);
-    }
+	/**
+	 * This function is called once each time the robot enters Disabled mode.
+	 * You can use it to reset any subsystem information you want to clear when
+	 * the robot is disabled.
+	 */
+	@Override
+	public void disabledInit() {
+		setRobotMode(RobotMode.DISABLED);
+		RobotMap.navx.reset();
+		Robot.westCoastDrive.resetEncoders();
+		OI.rumbleDriverPad(0, 0);
+	}
 
-    @Override
-    public void disabledPeriodic() {
-        Scheduler.getInstance().run();
-        sendData(true);
-    }
+	@Override
+	public void disabledPeriodic() {
+		Scheduler.getInstance().run();
+		sendData(true);
+	}
 
-    /**
-     * This autonomous (along with the chooser code above) shows how to select
-     * between different autonomous modes using the dashboard. The sendable
-     * chooser code works with the Java SmartDashboard. If you prefer the
-     * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-     * getString code to get the auto name from the text box below the Gyro
-     * <p>
-     * You can add additional auto modes by adding additional commands to the
-     * chooser code above (like the commented example) or additional comparisons
-     * to the switch structure below with additional strings & commands.
-     */
-    @Override
-    public void autonomousInit() {
-        setRobotMode(RobotMode.AUTONOMOUS);
-        globalInit();
-        elevatorStage2.setAtBottom();
+	/**
+	 * This autonomous (along with the chooser code above) shows how to select
+	 * between different autonomous modes using the dashboard. The sendable
+	 * chooser code works with the Java SmartDashboard. If you prefer the
+	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+	 * getString code to get the auto name from the text box below the Gyro
+	 *
+	 * You can add additional auto modes by adding additional commands to the
+	 * chooser code above (like the commented example) or additional comparisons
+	 * to the switch structure below with additional strings & commands.
+	 */
+	@Override
+	public void autonomousInit() {
+		setRobotMode(RobotMode.AUTONOMOUS);
+		globalInit();
+		elevatorStage2.setAtBottom();
+		RobotMap.left1.setNeutralMode(NeutralMode.Brake);
+		RobotMap.left2.setNeutralMode(NeutralMode.Brake);
+		RobotMap.left3.setNeutralMode(NeutralMode.Brake);
+		RobotMap.right1.setNeutralMode(NeutralMode.Brake);
+		RobotMap.right2.setNeutralMode(NeutralMode.Brake);
+		RobotMap.right3.setNeutralMode(NeutralMode.Brake);
+		System.out.println("Before Elevator 1");
+		/*
+		if (!Robot.elevatorStage1.getAtBottom()) {
+			RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.08);
+			while (true) {
+				if (Robot.elevatorStage1.getAtBottom()) {
+					break;
+				}
+			}
+		}
+		*/
+		System.out.println("After Elevator 1");
+		Robot.elevatorStage1.setAtBottom();
 
-        if (!Robot.elevatorStage1.getAtBottom()) {
-            RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.08);
-            while (true) {
-                if (Robot.elevatorStage1.getAtBottom()) {
-                    break;
-                }
-            }
-        }
+		RobotMap.intakeElbow.setSelectedSensorPosition(2220, RobotMap.IntakeElbowPIDID, 0);
 
-        Robot.elevatorStage1.setAtBottom();
+		System.out.println("Auto Init Finished");
 
-        RobotMap.intakeElbow.setSensorPosition(2220);
+		fieldData = DriverStation.getInstance().getGameSpecificMessage();
+		autoCmd = autoChooser.getSelected();
+		if (autoCmd != null && ((autoCmd instanceof AUTOMODE_BaseLine) || (autoCmd instanceof AUTOMODE_DoNothing))) {
+			autoCmd.start();
+		} else {
+			Command[] cmdList;
 
-        fieldData = DriverStation.getInstance().getGameSpecificMessage();
-        autoCmd = autoChooser.getSelected();
-        if (autoCmd != null && ((autoCmd instanceof AUTOMODE_BaseLine) || (autoCmd instanceof AUTOMODE_DoNothing))) {
-            autoCmd.start();
-        } else {
-            Command[] cmdList;
+			String switchSide = String.valueOf(fieldData.charAt(0));
+			String scaleSide = String.valueOf(fieldData.charAt(1));
+			String startSide = robotSideChooser.getSelected();
 
-            String switchSide = String.valueOf(fieldData.charAt(0));
-            String scaleSide = String.valueOf(fieldData.charAt(1));
-            String startSide = robotSideChooser.getSelected();
-
-            if (autoCmd == null) {
-                System.out.println("Defaulting to fully automatic auto");
-                // generate appropriate command
-                String autoFiles;
-                if (autoOrderChooser.getSelected().equals("sw")) { // switch only
-                    System.out.print(String.format("Running %s switch auto ", switchSide));
-                    autoFiles = Robot.autoFiles.get(startSide + switchSide);
-                    if (startSide.equals(switchSide)) {
-                        System.out.println(String.format("from %s position: ", startSide) + autoFiles);
-                        cmdList = new Command[]{
-                                new AutoMoveIntakeElbowPos(2100),
-                                new AutoDriveProfile(autoFiles),
-                                new AutoMoveElevatorStage2(0.5),
-                                new AutoMoveIntakeElbowPos(0),
-                                new AutoIntakeLinear(-.4, 500)
-                        };
-                    } else if (startSide.equals("C")) {
-                        System.out.println("from C position: " + autoFiles);
-                        cmdList = new Command[]{
-                                new AutoMoveIntakeElbowPos(2100),
-                                new AutoDriveProfile(autoFiles),
+			if (autoCmd == null) {
+				System.out.println("Defaulting to fully automatic auto");
+				// generate appropriate command
+				String autoFiles;
+				if (autoOrderChooser.getSelected().equals("sw")) { // switch only
+					System.out.print(String.format("Running %s switch auto ", switchSide));
+					autoFiles =  Robot.autoFiles.get(startSide + switchSide);
+					if (startSide.equals(switchSide)) {
+						System.out.println(String.format("from %s position: ", startSide) + autoFiles);
+						cmdList = new Command[]{
+								new AutoMoveIntakeElbowPos(2100),
+								new AutoDriveProfile(autoFiles),
+								new AutoMoveElevatorStage2(0.5),
+								new AutoMoveIntakeElbowPos(0),
+								new AutoIntakeLinear(-.4, 500)
+						};
+					} else if (startSide.equals("C")) {
+						System.out.println("from C position: " + autoFiles);
+						cmdList = new Command[]{
+								//new AutoMoveIntakeElbowPos(2100),
+								new AutoMoveElevatorStage2(0.5, false),
+								new AutoDriveProfile(autoFiles),
 //								new MoveOnPath(autoFiles),
-                                new AutoMoveElevatorStage2(0.5),
-                                new AutoMoveIntakeElbowPos(0),
-                                new AutoIntakeLinear(-.4, 500),
-                                new AutoMoveIntakeElbowPos(2200)
-                        };
-                    } else {
-                        cmdList = new Command[]{
-                                //new AutoDriveDistance(0.5, 0.0, 9000, 0) // cross base
-                        };
-                    }
-                    autoCmd = new DynamicAutoCommand(cmdList);
-                } else if (autoOrderChooser.getSelected().equals("sc")) {
-                    autoFiles = Robot.autoFiles.get(startSide + switchSide + scaleSide);
-                    System.out.println(String.format("AutoData: %s, %s, %s", startSide, switchSide, scaleSide));
-                    if (startSide.equals(scaleSide)) {
-                        System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
-                        cmdList = new Command[]{
-                                new AutoMoveIntakeElbowPos(2100),
+								new AutoMoveIntakeElbowPos(0),
+								new AutoIntakeLinear(-.4, 500),
+								new AutoMoveIntakeElbowPos(2200)
+						};
+					} else {
+						cmdList = new Command[]{
+								//new AutoDriveDistance(0.5, 0.0, 9000, 0) // cross base
+						};
+					}
+					autoCmd = new DynamicAutoCommand(cmdList);
+				} else if (autoOrderChooser.getSelected().equals("sc")) {
+					autoFiles =  Robot.autoFiles.get(startSide + switchSide + scaleSide);
+					System.out.println(String.format("AutoData: %s, %s, %s", startSide, switchSide, scaleSide));
+					if (startSide.equals(scaleSide)) {
+						System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
+						cmdList = new Command[]{
+								new AutoMoveIntakeElbowPos(2100),
 //								new MoveOnPath(autoFiles),
-                                new AutoDriveProfile(autoFiles),
-                                new AutoMoveFullElevator(1.0),
-                                new AutoMoveIntakeElbowPos(1000),
-                                new AutoIntakeLinear(-.5, 1000),
-                                new AutoMoveIntakeElbowPos(2200),
-                                new AutoMoveFullElevator(-1)
-                        };
-                        autoCmd = new DynamicAutoCommand(cmdList);
-                    } else {
-                        System.out.println(String.format("Running %s far Scale auto from %s position", scaleSide, startSide));
-                        cmdList = new Command[]{
-                                /*
+								new AutoDriveProfile(autoFiles),
+								new AutoMoveFullElevator(1.0),
+								new AutoMoveIntakeElbowPos(1500),
+								new AutoIntakeLinear(-.5, 1000),
+								new AutoMoveIntakeElbowPos(2200),
+								new AutoMoveFullElevator(-1)
+						};
+						autoCmd = new DynamicAutoCommand(cmdList);
+					} else {
+						System.out.println(String.format("Running %s far Scale auto from %s position", scaleSide, startSide));
+						cmdList = new Command[]{
+						        new AutoMoveIntakeElbowPos(2100),
+								new AutoDriveProfile(autoFiles),
+								new AutoDriveDistance(-0.5, 0.0, -500, 0),
+								new AutoMoveFullElevator(1),
+								new AutoMoveIntakeElbowPos(1500),
+								new AutoIntakeLinear(-.5, 1000),
 
-                                        new AutoMoveIntakeElbowPos(2100),
-                                    new AutoDriveProfile(autoFiles[0], autoFiles[1]),
-                                    new AutoMoveElevatorStage2(1),
-                                    new AutoMoveElevatorStage1(1),
-                                    new MoveElbowToBottom(),
-                                    new AutoIntakeLinear(-.5, 1000),
-                                */
-                                new AutoDriveDistance(0.5, 0.0, 7000, 0)
-
-                        };
-                        autoCmd = new DynamicAutoCommand(cmdList);
-                    }
-                } else if (autoOrderChooser.getSelected().equals("scsw")) {
-                    autoFiles = Robot.autoFiles.get(startSide + switchSide + scaleSide);
-                    System.out.println(String.format("AutoData: %s, %s, %s", startSide, switchSide, scaleSide));
-                    if (startSide.equals(scaleSide)) {
-                        System.out.println(String.format("Running %s Scale auto from %s position, path: %s", scaleSide, startSide, autoFiles));
-                        cmdList = new Command[]{
-                                //Normal Switch
-                                new AutoMoveIntakeElbowPos(2100),
-                                new AutoDriveProfile(autoFiles),
-                                new AutoMoveFullElevator(1.0),
-                                new AutoMoveIntakeElbowPos(0),
-                                new AutoIntakeLinear(-.5, 1000),
-                                new AutoMoveIntakeElbowPos(2200),
-                                new AutoMoveFullElevator(-1)
+//								new AutoDriveDistance(0.5, 0.0, 7000, 0)
+						};
+						autoCmd = new DynamicAutoCommand(cmdList);
+					}
+				}else if(autoOrderChooser.getSelected().equals("scsw")) {
+					autoFiles =  Robot.autoFiles.get(startSide + switchSide + scaleSide);
+					System.out.println(String.format("AutoData: %s, %s, %s", startSide, switchSide, scaleSide));
+					if (startSide.equals(scaleSide)) {
+						System.out.println(String.format("Running %s Scale auto from %s position, path: %s", scaleSide, startSide, autoFiles));
+						cmdList = new Command[]{
+								//Normal Switch
+								new AutoMoveIntakeElbowPos(2100),
+								new AutoDriveProfile(autoFiles),
+								new AutoMoveFullElevator(1.0),
+								new AutoMoveIntakeElbowPos(0),
+								new AutoIntakeLinear(-.5, 1000),
+								new AutoMoveIntakeElbowPos(2200),
+								new AutoMoveFullElevator(-1)
 
 
-                        };
-                        autoCmd = new DynamicAutoCommand(cmdList);
-                    } else {
-                        System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
-                        cmdList = new Command[]{
-                                /*
+						};
+						autoCmd = new DynamicAutoCommand(cmdList);
+					} else {
+						System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
+						cmdList = new Command[]{
+								/*
                                     new AutoMoveIntakeElbowPos(2100),
                                     new AutoDriveProfile(autoFiles[0], autoFiles[1]),
                                     new AutoMoveElevatorStage2(1),
@@ -375,6 +386,13 @@ public class Robot extends IterativeRobot {
 
         System.out.println("Begin Scheduler");
 
+        RobotMap.left1.setNeutralMode(NeutralMode.Coast);
+		RobotMap.left2.setNeutralMode(NeutralMode.Coast);
+		RobotMap.left3.setNeutralMode(NeutralMode.Coast);
+		RobotMap.right1.setNeutralMode(NeutralMode.Coast);
+		RobotMap.right2.setNeutralMode(NeutralMode.Coast);
+		RobotMap.right3.setNeutralMode(NeutralMode.Coast);
+        
         Scheduler.getInstance().add(new RobotDrive());
         Scheduler.getInstance().add(new RunIntake());
         Scheduler.getInstance().add(new RunIntakeElbow());
@@ -409,7 +427,6 @@ public class Robot extends IterativeRobot {
 //		intakeElbow.stop();
 //		intakeElbow.setAtBottom();
 //		System.out.println("Elbow Finished");
-
         //RobotMap.intakeElbow.setSensorPosition(2300, 0, 0);
 
         // This makes sure that the autonomous stops running when
@@ -426,7 +443,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         System.out.println("Begin Tele");
         Scheduler.getInstance().run();
-        //sendData(false);
+        sendData(false);
         doRumble();
 //		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
 //		 	intakeElbow.setAtBottom();

@@ -4,11 +4,20 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team832.robot.Robot;
 
 public class AutoMoveElevatorStage2 extends Command {
+
     private final double target;
+    private boolean _doesWait;
 
     public AutoMoveElevatorStage2(double targetInput) {
         requires(Robot.elevatorStage2);
         target = targetInput;
+        doesWait = true;
+    }
+    
+    public AutoMoveElevatorStage2(double targetInput, boolean doesWait) {
+        requires(Robot.elevatorStage2);
+        target = targetInput;
+        _doesWait = doesWait;
     }
 
     protected void initialize() {
@@ -22,7 +31,7 @@ public class AutoMoveElevatorStage2 extends Command {
 
     protected boolean isFinished() {
         boolean finished = false;
-        if (Robot.elevatorStage2.isFinished()) {
+        if (Robot.elevatorStage2.isFinished() || !doesWait) {
             System.out.println("Finished stage 2");
             finished = true;
         }

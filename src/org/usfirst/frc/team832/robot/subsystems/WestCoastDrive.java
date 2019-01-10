@@ -25,8 +25,17 @@ public class WestCoastDrive extends Subsystem {
 
     public void ArcadeDrive(double pow, double rot, ControlMode ctrlMode) {
         double leftMotorSpeed, rightMotorSpeed;
-        double moveValue = pow;
-        double rotateValue = rot;
+        
+        //low pass filter
+		pastp = pastp * filtp + (1 - filtp) * pow;
+		pastr = pastr * filtr + (1 - filtr) * rot;
+
+
+		double moveValue = pastp; //pow
+		double rotateValue = pastr; // rot
+        
+        rotateValue = Math.max(Math.sqrt(Math.abs(rotateValue*(Math.abs(moveValue))))*1.2,Math.abs(rotateValue))*Math.signum(rotateValue);
+        
         if (moveValue > 0.0) {
             if (rotateValue > 0.0) {
                 leftMotorSpeed = moveValue - rotateValue;
