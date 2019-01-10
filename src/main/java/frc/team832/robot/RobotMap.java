@@ -86,7 +86,7 @@ public class RobotMap {
         }
 
         // vision
-        CameraServer.getInstance().startAutomaticCapture().setResolution(640, 480);
+        //CameraServer.getInstance().startAutomaticCapture().setResolution(640, 480);
 
         // pdp
         powerDP = new PowerDistributionPanel(0);

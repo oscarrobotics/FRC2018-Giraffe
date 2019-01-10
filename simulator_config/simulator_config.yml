@@ -1,0 +1,91 @@
+!!com.snobot.simulator.config.v1.SimulatorConfigV1
+mAccelerometers:
+- mHandle: 250
+  mName: I2C NavX X Accel
+  mType: com.snobot.simulator.module_wrapper.BaseAccelerometerWrapper
+- mHandle: 251
+  mName: I2C NavX Y Accel
+  mType: com.snobot.simulator.module_wrapper.BaseAccelerometerWrapper
+- mHandle: 252
+  mName: I2C NavX Z Accel
+  mType: com.snobot.simulator.module_wrapper.BaseAccelerometerWrapper
+mAnalogIn:
+- mHandle: 0
+  mName: Analog In 0
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiAnalogInWrapper
+mAnalogOut: []
+mDefaultI2CWrappers:
+  0: NavX
+mDefaultSpiWrappers: {}
+mDigitalIO:
+- mHandle: 0
+  mName: Digital IO 0
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiDigitalIoWrapper
+- mHandle: 1
+  mName: Digital IO 1
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiDigitalIoWrapper
+- mHandle: 2
+  mName: Digital IO 2
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiDigitalIoWrapper
+- mHandle: 3
+  mName: Digital IO 3
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiDigitalIoWrapper
+mEncoders:
+- mConnectedSpeedControllerHandle: 0
+  mHandle: 0
+  mName: Encoder 0
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiEncoderWrapper
+- mConnectedSpeedControllerHandle: 1
+  mHandle: 1
+  mName: Encoder 1
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiEncoderWrapper
+mGyros:
+- mHandle: 0
+  mName: Analog Gyro
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiAnalogGyroWrapper
+- mHandle: 250
+  mName: I2C NavX Yaw
+  mType: com.snobot.simulator.module_wrapper.BaseGyroWrapper
+- mHandle: 251
+  mName: I2C NavX Pitch
+  mType: com.snobot.simulator.module_wrapper.BaseGyroWrapper
+- mHandle: 252
+  mName: I2C NavX Roll
+  mType: com.snobot.simulator.module_wrapper.BaseGyroWrapper
+mPwm:
+- mHandle: 0
+  mMotorModelConfig:
+    mGearReduction: 11.9
+    mGearboxEfficiency: 0.7
+    mHasBrake: false
+    mInverted: false
+    mMotorType: Mini CIM
+    mNumMotors: 3
+  mMotorSimConfig: !!com.snobot.simulator.motor_sim.RotationalLoadMotorSimulationConfig
+    mArmCenterOfMass: 0.0
+    mArmMass: 0.0
+    mConstantAssistTorque: 0.0
+    mOverCenterAssistTorque: 0.0
+  mName: Speed Controller 0
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiPwmWrapper
+- mHandle: 1
+  mMotorModelConfig:
+    mGearReduction: 11.9
+    mGearboxEfficiency: 0.7
+    mHasBrake: false
+    mInverted: false
+    mMotorType: Mini CIM
+    mNumMotors: 3
+  mMotorSimConfig: !!com.snobot.simulator.motor_sim.RotationalLoadMotorSimulationConfig
+    mArmCenterOfMass: 0.0
+    mArmMass: 0.0
+    mConstantAssistTorque: 0.0
+    mOverCenterAssistTorque: 0.0
+  mName: Speed Controller 1
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiPwmWrapper
+mRelays: []
+mSimulatorComponents: []
+mSolenoids:
+- mHandle: 0
+  mName: Solenoid 0
+  mType: com.snobot.simulator.module_wrapper.wpi.WpiSolenoidWrapper
