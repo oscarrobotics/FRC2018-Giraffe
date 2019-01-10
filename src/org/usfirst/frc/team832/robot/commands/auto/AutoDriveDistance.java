@@ -1,63 +1,60 @@
 package org.usfirst.frc.team832.robot.commands.auto;
 
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
-
 public class AutoDriveDistance extends Command {
 
-	protected final double power, delay, distance;
-	protected final double angle;
-	protected double leftD, rightD;
+    protected final double power, delay, distance;
+    protected final double angle;
+    protected double leftD, rightD;
 
-	public AutoDriveDistance(double power, double delay, double distance, double angleIn) {
-		this.power = -power;
-		this.delay = delay;
-		this.distance = (distance);
-		this.angle = angleIn;
-		requires(Robot.westCoastDrive);
-	}
+    public AutoDriveDistance(double power, double delay, double distance, double angleIn) {
+        this.power = -power;
+        this.delay = delay;
+        this.distance = (distance);
+        this.angle = angleIn;
+        requires(Robot.westCoastDrive);
+    }
 
-	// Called just before this Command runs the first time
-	protected void initialize() {
-		RobotMap.left1.setSelectedSensorPosition(0, RobotMap.DrivePIDID, 0);
-		RobotMap.right1.setSelectedSensorPosition(0, RobotMap.DrivePIDID, 0);
-		//Timer.delay(delay);
-		
-		//TODO: Look into this
-		//Robot.gyroPID.setSetpoint(this.angle);
-		//Robot.gyroPID.enable();
-	}
+    // Called just before this Command runs the first time
+    protected void initialize() {
+        RobotMap.left1.setSensorPosition(0);
+        RobotMap.right1.setSensorPosition(0);
+        //Timer.delay(delay);
 
-	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
+        //TODO: Look into this
+        //Robot.gyroPID.setSetpoint(this.angle);
+        //Robot.gyroPID.enable();
+    }
 
-		// Update motors
-		//Robot.westCoastDrive.ArcadeDrive(power, Robot.gyroPID.pidOut, ControlMode.PercentOutput);
-		Robot.westCoastDrive.ArcadeDriveSpeed(power, angle);
-		//Robot.westCoastDrive.TankDrive(power, power);
-	}
+    // Called repeatedly when this Command is scheduled to run
+    protected void execute() {
 
-	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
+        // Update motors
+        //Robot.westCoastDrive.ArcadeDrive(power, Robot.gyroPID.pidOut, ControlMode.PercentOutput);
+        Robot.westCoastDrive.ArcadeDriveSpeed(power, angle);
+        //Robot.westCoastDrive.TankDrive(power, power);
+    }
+
+    // Make this return true when this Command no longer needs to run execute()
+    protected boolean isFinished() {
 //		return (distance <= Math.abs(Robot.westCoastDrive.getMin()));
-		 return (Math.abs(distance) <= RobotMap.left1.getSelectedSensorPosition(RobotMap.DrivePIDID));
-		//return false; // for testing purposes only
-	}
+        return (distance <= RobotMap.left1.getSensorPosition());
+        //return false; // for testing purposes only
+    }
 
-	// Called once after isFinished returns true
-	protected void end() {
-		Robot.westCoastDrive.stop();
-	}
+    // Called once after isFinished returns true
+    protected void end() {
+        Robot.westCoastDrive.stop();
+    }
 
-	// Called when another command which requires one or more of the same
-	// subsystems is scheduled to run
-	protected void interrupted() {
-		end();
-	}
+    // Called when another command which requires one or more of the same
+    // subsystems is scheduled to run
+    protected void interrupted() {
+        end();
+    }
+
 
 }

@@ -1,8 +1,7 @@
 package org.usfirst.frc.team832.robot.commands.automodes;
 
-import org.usfirst.frc.team832.robot.commands.auto.AutoDriveDistance;
-
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.usfirst.frc.team832.robot.commands.auto.AutoDriveDistance;
 
 /**
  *

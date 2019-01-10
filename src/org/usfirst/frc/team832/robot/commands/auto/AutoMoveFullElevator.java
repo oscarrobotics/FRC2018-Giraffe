@@ -28,7 +28,8 @@ public class AutoMoveFullElevator extends Command {
         return Robot.elevatorStage2.isFinished() && Robot.elevatorStage1.isFinished();
     }
 
-    protected void end() { }
+    protected void end() {
+    }
 
     protected void interrupted() {
         end();

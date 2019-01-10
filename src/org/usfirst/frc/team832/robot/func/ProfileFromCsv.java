@@ -1,7 +1,6 @@
 package org.usfirst.frc.team832.robot.func;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -35,7 +34,7 @@ public class ProfileFromCsv {
                     lineCounter++;
                     continue;
                 }
-                for(int i = 0; i < vals.length; i++) {
+                for (int i = 0; i < vals.length; i++) {
                     readArr[lineCounter][i] = Double.parseDouble(vals[i]);
                 }
                 lineCounter++;

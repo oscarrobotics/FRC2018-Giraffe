@@ -1,8 +1,8 @@
 package org.usfirst.frc.team832.robot.commands.auto.elbow;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import org.usfirst.frc.team832.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team832.robot.Robot;
 import org.usfirst.frc.team832.robot.RobotMap;
 
 
@@ -24,20 +24,21 @@ public class MoveElbowFromStart extends Command {
     }
 
     protected void initialize() {
-        System.out.println("start elbow from pos " + RobotMap.intakeElbow.setSelectedSensorPosition(0,0,0));
+        System.out.println("start elbow from pos " + RobotMap.intakeElbow.getSensorPosition());
         if (zeroes) {
-            RobotMap.intakeElbow.setSelectedSensorPosition(0, 0, 0);
+            RobotMap.intakeElbow.setSensorPosition(0);
             startPos = 0;
         } else {
-            startPos = RobotMap.intakeElbow.getSelectedSensorPosition(0);
+            startPos = RobotMap.intakeElbow.getSensorPosition();
         }
         RobotMap.intakeElbow.set(ControlMode.Position, startPos - pos);
     }
 
-    protected void execute() {}
+    protected void execute() {
+    }
 
     protected boolean isFinished() {
-        finished = Math.abs(RobotMap.intakeElbow.getSelectedSensorPosition(0)  - RobotMap.intakeElbow.getClosedLoopTarget(0)) <= 50;
+        finished = Math.abs(RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getClosedLoopTarget()) <= 50;
         if (finished) System.out.println("finish elbow");
         return finished;
     }

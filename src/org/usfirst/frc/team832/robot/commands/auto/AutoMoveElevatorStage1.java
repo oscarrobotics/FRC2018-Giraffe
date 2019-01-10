@@ -1,36 +1,34 @@
 package org.usfirst.frc.team832.robot.commands.auto;
 
-import org.usfirst.frc.team832.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team832.robot.subsystems.ElevatorStage1;
+import org.usfirst.frc.team832.robot.Robot;
 
 public class AutoMoveElevatorStage1 extends Command {
 
-	final double target;
-	
+    final double target;
+
     public AutoMoveElevatorStage1(double targetInput) {
-    	requires(Robot.elevatorStage1);
-    	target = targetInput;
+        requires(Robot.elevatorStage1);
+        target = targetInput;
     }
 
     protected void initialize() {
-    	Robot.elevatorStage1.start();
+        Robot.elevatorStage1.start();
     }
-    
+
     protected void execute() {
-    	Robot.elevatorStage1.setPos(target);
+        Robot.elevatorStage1.setPos(target);
     }
 
     protected boolean isFinished() {
-        
-    	return Robot.elevatorStage1.isFinished();
+
+        return Robot.elevatorStage1.isFinished();
     }
 
     protected void end() {
     }
 
     protected void interrupted() {
-    	end();
+        end();
     }
 }

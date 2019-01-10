@@ -1,4 +1,3 @@
-
 package org.usfirst.frc.team832.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -12,10 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Trajectory;
 import org.usfirst.frc.team832.robot.commands.auto.*;
 import org.usfirst.frc.team832.robot.commands.auto.elbow.AutoMoveIntakeElbowPos;
-import org.usfirst.frc.team832.robot.commands.auto.elbow.MoveElbowAbsolute;
-import org.usfirst.frc.team832.robot.commands.auto.elbow.MoveElbowFromStart;
-import org.usfirst.frc.team832.robot.commands.auto.elbow.MoveElbowToBottom;
-import org.usfirst.frc.team832.robot.commands.automodes.*;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_BaseLine;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_DoNothing;
+import org.usfirst.frc.team832.robot.commands.automodes.AUTOMODE_PlaceOnSwitch;
 import org.usfirst.frc.team832.robot.commands.defaults.*;
 import org.usfirst.frc.team832.robot.func.Calcs;
 import org.usfirst.frc.team832.robot.subsystems.*;
@@ -32,53 +30,54 @@ import java.util.HashMap;
  */
 public class Robot extends IterativeRobot {
 
-	public static WestCoastDrive westCoastDrive;
-	public static Intake intake;
-	public static IntakeElbow intakeElbow;
-	public static ElevatorStage1 elevatorStage1;
-	public static ElevatorStage2 elevatorStage2;
-	public static Pneumatics pneumatics;
-	public static GyroPID gyroPID;
-	public static OI oi;
+    public static WestCoastDrive westCoastDrive;
+    public static Intake intake;
+    public static IntakeElbow intakeElbow;
+    public static ElevatorStage1 elevatorStage1;
+    public static ElevatorStage2 elevatorStage2;
+    public static Pneumatics pneumatics;
+    public static GyroPID gyroPID;
+    public static OI oi;
 
-	public static RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode, doubpre;
+    public static RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode, doubpre;
 
-	private String fieldData;
-	private static HashMap<String, String> autoFiles;
+    private String fieldData;
+    private static HashMap<String, String> autoFiles;
 
-	private Command autoCmd;
-	private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-	private final SendableChooser<Command> teleDriveChooser = new SendableChooser<>();
-	private final SendableChooser<String> robotSideChooser = new SendableChooser<>();
-	private final SendableChooser<String> autoOrderChooser = new SendableChooser<>();
+    private Command autoCmd;
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private final SendableChooser<Command> teleDriveChooser = new SendableChooser<>();
+    private final SendableChooser<String> robotSideChooser = new SendableChooser<>();
+    private final SendableChooser<String> autoOrderChooser = new SendableChooser<>();
 
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
-	@Override
-	public void robotInit() {
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    @Override
+    public void robotInit() {
 
-		RobotMap.init();
-		westCoastDrive = new WestCoastDrive();
-		intake = new Intake();
-		intakeElbow = new IntakeElbow();
-		elevatorStage1 = new ElevatorStage1();
-		elevatorStage2 = new ElevatorStage2();
-		pneumatics = new Pneumatics();
-		gyroPID = new GyroPID();
-		oi = new OI();
+        RobotMap.init();
+        westCoastDrive = new WestCoastDrive();
+        intake = new Intake();
+        intakeElbow = new IntakeElbow();
+        elevatorStage1 = new ElevatorStage1();
+        elevatorStage2 = new ElevatorStage2();
+        pneumatics = new Pneumatics();
+        gyroPID = new GyroPID();
+        oi = new OI();
 
-		fieldData = DriverStation.getInstance().getGameSpecificMessage();
-		initAutoFiles();
-		autoChooser.addObject("Base Line", new AUTOMODE_BaseLine());
-		autoChooser.addObject("Do Nothing", new AUTOMODE_DoNothing());
-		autoChooser.addDefault("SuperMegaAuto", null);
-		SmartDashboard.putData("Auto mode", autoChooser);
+        fieldData = DriverStation.getInstance().getGameSpecificMessage();
+        initAutoFiles();
+        autoChooser.addObject("Base Line", new AUTOMODE_BaseLine());
+        autoChooser.addObject("Do Nothing", new AUTOMODE_DoNothing());
+        autoChooser.addDefault("SuperMegaAuto", null);
+        SmartDashboard.putData("Auto mode", autoChooser);
 
 //		teleDriveChooser.addDefault("Percent Output", new RobotDrive());
 //		teleDriveChooser.addDefault("Speed PID", new RobotDriveSpeed());
 
+	
 		robotSideChooser.addObject("left", "L");
 		robotSideChooser.addDefault("center", "C");
 		robotSideChooser.addObject("right", "R");
@@ -318,102 +317,102 @@ public class Robot extends IterativeRobot {
                                     new MoveElbowToBottom(),
                                     new AutoIntakeLinear(-.5, 1000),
                                 */
-								new AutoDriveDistance(0.5, 0.0, 9000, 0)
+                                new AutoDriveDistance(0.5, 0.0, 9000, 0)
 
 
-						};
-						autoCmd = new DynamicAutoCommand(cmdList);
-					}
-				}else if (autoCmd instanceof AUTOMODE_PlaceOnSwitch) {
-					if (switchSide.equals(startSide)) {
-						cmdList = new Command[]{
-								// new AutoDriveDistance(power, delay, distance, angleIn);
-								// new AutoIntakeLinear();
-						};
-						autoCmd = new DynamicAutoCommand(cmdList);
-					} else {
-						autoCmd = new AutoDriveDistance(0.5, 0.0, 3000, 0); // test me!
-					}
-				} else {
-					if (!startSide.equals("C")) {
-						if (switchSide.equals(startSide)) {
-							switch (startSide) {
-								case "R":
-									cmdList = new Command[]{
-											// GAVIN MAKE THESE DO THINGS
-											//new DistanceDrive(10.0D + (55.5 / 12.0) - (33.0 / 12.0)),
-											//new AngleDrive(-90.0),
-											//new RemoveCube()
-									};
-									break;
-								case "L":
-									cmdList = new Command[]{
-											// GAVIN MAKE THESE DO THINGS
+                        };
+                        autoCmd = new DynamicAutoCommand(cmdList);
+                    }
+                } else if (autoCmd instanceof AUTOMODE_PlaceOnSwitch) {
+                    if (switchSide.equals(startSide)) {
+                        cmdList = new Command[]{
+                                // new AutoDriveDistance(power, delay, distance, angleIn);
+                                // new AutoIntakeLinear();
+                        };
+                        autoCmd = new DynamicAutoCommand(cmdList);
+                    } else {
+                        autoCmd = new AutoDriveDistance(0.5, 0.0, 3000, 0); // test me!
+                    }
+                } else {
+                    if (!startSide.equals("C")) {
+                        if (switchSide.equals(startSide)) {
+                            switch (startSide) {
+                                case "R":
+                                    cmdList = new Command[]{
+                                            // GAVIN MAKE THESE DO THINGS
+                                            //new DistanceDrive(10.0D + (55.5 / 12.0) - (33.0 / 12.0)),
+                                            //new AngleDrive(-90.0),
+                                            //new RemoveCube()
+                                    };
+                                    break;
+                                case "L":
+                                    cmdList = new Command[]{
+                                            // GAVIN MAKE THESE DO THINGS
 //										new DistanceDrive(10.0D + (55.5 / 12.0) - (33.0 / 12.0)),
 //										new AngleDrive(90.0),
 //										new RemoveCube()
-									};
-									break;
-								default:
-									cmdList = new Command[]{
-											new AutoDriveDistance(0.5, 0.0, 3000, 0) // test me!
-									};
-							}
-							autoCmd = new DynamicAutoCommand(cmdList);
-						}
-					} else {
-						autoCmd = new AutoDriveDistance(0.5, 0.0, 6000, 0); // test me!!!!!!!!!!!!!!!!!!!!!!
-					}
-				}
-				autoCmd.start();
-			}
-		}
-	}
+                                    };
+                                    break;
+                                default:
+                                    cmdList = new Command[]{
+                                            new AutoDriveDistance(0.5, 0.0, 3000, 0) // test me!
+                                    };
+                            }
+                            autoCmd = new DynamicAutoCommand(cmdList);
+                        }
+                    } else {
+                        autoCmd = new AutoDriveDistance(0.5, 0.0, 6000, 0); // test me!!!!!!!!!!!!!!!!!!!!!!
+                    }
+                }
+                autoCmd.start();
+            }
+        }
+    }
 
-	/**
-	 * This function is called periodically during autonomous
-	 */
-	@Override
-	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
-		sendData(false);
-	}
+    /**
+     * This function is called periodically during autonomous
+     */
+    @Override
+    public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+        sendData(false);
+    }
 
-	@Override
-	public void teleopInit() {
-		setRobotMode(RobotMode.TELEOP);
-		if (autoCmd != null)
-			autoCmd.cancel();
+    @Override
+    public void teleopInit() {
+        setRobotMode(RobotMode.TELEOP);
+        if (autoCmd != null)
+            autoCmd.cancel();
 
-		System.out.println("Begin Scheduler");
+        System.out.println("Begin Scheduler");
 
-		RobotMap.left1.setNeutralMode(NeutralMode.Coast);
+        RobotMap.left1.setNeutralMode(NeutralMode.Coast);
 		RobotMap.left2.setNeutralMode(NeutralMode.Coast);
 		RobotMap.left3.setNeutralMode(NeutralMode.Coast);
 		RobotMap.right1.setNeutralMode(NeutralMode.Coast);
 		RobotMap.right2.setNeutralMode(NeutralMode.Coast);
 		RobotMap.right3.setNeutralMode(NeutralMode.Coast);
+        
+        Scheduler.getInstance().add(new RobotDrive());
+        Scheduler.getInstance().add(new RunIntake());
+        Scheduler.getInstance().add(new RunIntakeElbow());
+        Scheduler.getInstance().add(new RunElevatorStage1());
+        Scheduler.getInstance().add(new RunElevatorStage2());
 
-		Scheduler.getInstance().add(new RobotDriveSpeed());
-		Scheduler.getInstance().add(new RunIntake());
-		Scheduler.getInstance().add(new RunIntakeElbow());
-		Scheduler.getInstance().add(new RunElevatorStage1());
-		Scheduler.getInstance().add(new RunElevatorStage2());
+        System.out.println("Finished Scheduler");
 
-		System.out.println("Finished Scheduler");
-
-		elevatorStage2.stop();
+        elevatorStage2.stop();
 
 //		if(doubpre.equals(RobotMode.AUTONOMOUS));
 //		else {
 //			elevatorStage2.setAtBottom();
 //			intakeElbow.setAtBottom();
 //		}
-		System.out.println("Stage 2 INITed");
+        System.out.println("Stage 2 INITed");
 
-		//RobotMap.intakeElbow.setSelectedSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
+        //RobotMap.intakeElbow.setSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
 
-		elevatorStage2.setPos(-.8);
+        elevatorStage2.setPos(-.8);
 
 //		if (!intakeElbow.getAtBottom()) {
 //			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
@@ -421,90 +420,89 @@ public class Robot extends IterativeRobot {
 //				if (intakeElbow.getAtBottom())
 //					break;
 //				else if(OI.driverPad.getStartButton());
-//					RobotMap.intakeElbow.setSelectedSensorPosition(2200, 0, 0);
+//					RobotMap.intakeElbow.setSensorPosition(2200, 0, 0);
 //					break;
 //			}
 //		}
 //		intakeElbow.stop();
 //		intakeElbow.setAtBottom();
 //		System.out.println("Elbow Finished");
+        //RobotMap.intakeElbow.setSensorPosition(2300, 0, 0);
 
-		//RobotMap.intakeElbow.setSelectedSensorPosition(2300, 0, 0);
+        // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        globalInit();
+    }
 
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		globalInit();
-	}
-
-	/**
-	 * This function is called periodically during operator control
-	 */
-	@Override
-	public void teleopPeriodic() {
-		System.out.println("Begin Tele");
-		Scheduler.getInstance().run();
-		sendData(false);
-		doRumble();
+    /**
+     * This function is called periodically during operator control
+     */
+    @Override
+    public void teleopPeriodic() {
+        System.out.println("Begin Tele");
+        Scheduler.getInstance().run();
+        sendData(false);
+        doRumble();
 //		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
 //		 	intakeElbow.setAtBottom();
 //		 }
-	}
+    }
 
-	/**
-	 * This function is called periodically during test mode
-	 */
-	@Override
-	public void testPeriodic() {
-	}
+    /**
+     * This function is called periodically during test mode
+     */
+    @Override
+    public void testPeriodic() {
+    }
 
-	private static void setRobotMode(RobotMode mode) {
-		doubpre = previousRobotMode;
-		previousRobotMode = currentRobotMode;
-		currentRobotMode = mode;
-	}
+    private static void setRobotMode(RobotMode mode) {
+        doubpre = previousRobotMode;
+        previousRobotMode = currentRobotMode;
+        currentRobotMode = mode;
+    }
 
-//TODO: MAKE THIS RIGHT!!!! We need paths generated for all possible modes
-	private static void initAutoFiles() {
-		autoFiles = new HashMap<>();
-		// format: STARTSIDE, SWITCHSIDE, SCALESIDE
+    //TODO: MAKE THIS RIGHT!!!! We need paths generated for all possible modes
+    private static void initAutoFiles() {
+        autoFiles = new HashMap<>();
+        // format: STARTSIDE, SWITCHSIDE, SCALESIDE
 
-		autoFiles.put("CL", "CenterToLeft");
+        autoFiles.put("CL", "CenterToLeft");
 
-		autoFiles.put("CR", "CenterToRight");
+        autoFiles.put("CR", "CenterToRight");
 
-		autoFiles.put("LL", "LeftSwitch");
+        autoFiles.put("LL", "LeftSwitch");
 
-		autoFiles.put("RR", "RightSwitchRight");
+        autoFiles.put("RR", "RightSwitchRight");
 
-		// scale paths
-		autoFiles.put("LLL", "LeftToLeftScale");
+        // scale paths
+        autoFiles.put("LLL", "LeftToLeftScale");
 
-		autoFiles.put("LRL", "LeftToLeftScale");
+        autoFiles.put("LRL", "LeftToLeftScale");
 
-		autoFiles.put("RRR", "RightToRightScale");
+        autoFiles.put("RRR", "RightToRightScale");
 
-		autoFiles.put("RLR", "RightToRightScale");
+        autoFiles.put("RLR", "RightToRightScale");
 
-		autoFiles.put("LLR", "LeftToRightScale");
+        autoFiles.put("LLR", "LeftToRightScale");
 
-		autoFiles.put("LRR", "LeftToRightScale");
+        autoFiles.put("LRR", "LeftToRightScale");
 
-		autoFiles.put("RRL", "RightToLeftScale");
+        autoFiles.put("RRL", "RightToLeftScale");
 
-		autoFiles.put("RLL", "RightToLeftScale");
-	}
+        autoFiles.put("RLL", "RightToLeftScale");
+    }
 
-	public static double[][] pathfinderFormatToTalon(Trajectory t) {
-		int i = 0;
-		double[][] list = new double[t.length()][3];
-		for (Trajectory.Segment s : t.segments) {
-			list[i][0] = s.position;
-			list[i][1] = s.velocity;
-			list[i][2] = s.dt;
-			i++;
-		}
-		return list;
-	}
+    public static double[][] pathfinderFormatToTalon(Trajectory t) {
+        int i = 0;
+        double[][] list = new double[t.length()][3];
+        for (Trajectory.Segment s : t.segments) {
+            list[i][0] = s.position;
+            list[i][1] = s.velocity;
+            list[i][2] = s.dt;
+            i++;
+        }
+        return list;
+    }
 }
