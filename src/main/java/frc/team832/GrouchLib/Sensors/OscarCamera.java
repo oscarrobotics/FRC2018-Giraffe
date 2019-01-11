@@ -1,4 +1,4 @@
-package OscarLib.Sensors;
+package frc.team832.GrouchLib.Sensors;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;

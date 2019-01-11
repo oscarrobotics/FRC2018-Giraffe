@@ -1,6 +1,6 @@
 package frc.team832.robot.subsystems;
 
-import OscarLib.Motors.OscarCANTalon;
+import frc.team832.GrouchLib.Motors.OscarCANTalon;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motorcontrol.ControlMode;

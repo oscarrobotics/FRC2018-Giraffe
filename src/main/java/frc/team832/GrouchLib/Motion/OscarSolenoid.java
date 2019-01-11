@@ -1,4 +1,4 @@
-package OscarLib.Motion;
+package frc.team832.GrouchLib.Motion;
 
 import edu.wpi.first.wpilibj.Solenoid;
 

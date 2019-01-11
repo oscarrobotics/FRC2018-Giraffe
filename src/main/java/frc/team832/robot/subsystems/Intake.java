@@ -1,6 +1,6 @@
 package frc.team832.robot.subsystems;
 
-import OscarLib.Motors.OscarCANVictor;
+import frc.team832.GrouchLib.Motors.OscarCANVictor;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

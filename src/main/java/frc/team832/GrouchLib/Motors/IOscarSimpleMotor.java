@@ -1,4 +1,4 @@
-package OscarLib.Motors;
+package frc.team832.GrouchLib.Motors;
 
 public interface IOscarSimpleMotor {
 

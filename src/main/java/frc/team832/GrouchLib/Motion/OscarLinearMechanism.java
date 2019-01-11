@@ -1,6 +1,6 @@
-package OscarLib.Motion;
+package frc.team832.GrouchLib.Motion;
 
-import OscarLib.Motors.IOscarSmartMotor;
+import frc.team832.GrouchLib.Motors.IOscarSmartMotor;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class OscarLinearMechanism {

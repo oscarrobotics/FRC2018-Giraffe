@@ -1,4 +1,4 @@
-package OscarLib.Sensors;
+package frc.team832.GrouchLib.Sensors;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;

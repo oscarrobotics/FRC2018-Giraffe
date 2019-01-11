@@ -1,6 +1,6 @@
-package OscarLib.Motion;
+package frc.team832.GrouchLib.Motion;
 
-import OscarLib.Motors.IOscarSimpleMotor;
+import frc.team832.GrouchLib.Motors.IOscarSimpleMotor;
 
 public class OscarSimpleMechanism {
 

@@ -1,14 +1,14 @@
 package frc.team832.robot;
 
-import OscarLib.Motion.OscarDiffDrive;
-import OscarLib.Motors.OscarCANTalon;
-import OscarLib.Motors.OscarCANVictor;
-import OscarLib.Motors.OscarSmartMotorGroup;
-import OscarLib.Sensors.OscarNavX;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import frc.team832.GrouchLib.Motion.OscarDiffDrive;
+import frc.team832.GrouchLib.Motors.OscarCANTalon;
+import frc.team832.GrouchLib.Motors.OscarCANVictor;
+import frc.team832.GrouchLib.Motors.OscarSmartMotorGroup;
+import frc.team832.GrouchLib.Sensors.OscarNavX;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
