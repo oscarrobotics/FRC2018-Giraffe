@@ -30,8 +30,7 @@ out/
 *.ipr
 *.iml
 *.iws
-gradlew
-gradlew.bat
 
+GrouchLib/
 
 exportToHTML/
