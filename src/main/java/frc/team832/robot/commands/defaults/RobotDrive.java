@@ -1,20 +1,18 @@
 package frc.team832.robot.commands.defaults;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team832.robot.OI;
-import frc.team832.robot.Robot;
-import frc.team832.robot.subsystems.WestCoastDrive;
+import frc.team832.robot.RobotMap;
 
 /**
  *
  */
 public class RobotDrive extends Command {
 
-    final WestCoastDrive westCoastDrive = Robot.westCoastDrive;
+//    final WestCoastDrive westCoastDrive = Robot.westCoastDrive;
 
     public RobotDrive() {
-        requires(Robot.westCoastDrive);
+//        requires(Robot.westCoastDrive);
     }
 
     // Called just before this Command runs the first time
@@ -25,7 +23,8 @@ public class RobotDrive extends Command {
     protected void execute() {
         double leftStick = .7 * OI.driverPad.getRawAxis(1);
         double rightStick = .7 * OI.driverPad.getRawAxis(4);
-        westCoastDrive.ArcadeDrive(leftStick, rightStick, ControlMode.PercentOutput);
+        //westCoastDrive.ArcadeDrive(leftStick, rightStick, ControlMode.PercentOutput);
+        RobotMap.diffDrive.curvatureDrive(-leftStick, rightStick, true);
     }
 
     // Make this return true when this Command no longer needs to run execute()

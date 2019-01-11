@@ -25,9 +25,9 @@ public class GyroPID extends PIDSubsystem {
         setOutputRange(-1.0, 1.0);
         getPIDController().setContinuous(false);
         setAbsoluteTolerance(1);
-        if (RobotMap.navx.isConnected() && !RobotMap.navx.isCalibrating()) {
+        //if (RobotMap.navx.isConnected() && !RobotMap.navx.isCalibrating()) {
             enable();
-        }
+        //}
 
         //drivePID.setOutputRampRate(1);
         //setSetpoint(0);
@@ -64,11 +64,11 @@ public class GyroPID extends PIDSubsystem {
     }
 
     protected double returnPIDInput() {
-        return RobotMap.navx.getAngle();
+        return RobotMap.navx.getYaw();
     }
 
     private double getError() {
-        return RobotMap.navx.getAngle() - this.getPIDController().getSetpoint();
+        return RobotMap.navx.getYaw() - this.getPIDController().getSetpoint();
     }
 
     protected void usePIDOutput(double output) {

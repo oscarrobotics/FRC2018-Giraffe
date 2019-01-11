@@ -29,8 +29,8 @@ public class OscarCANTalon implements IOscarSmartMotor {
         _talon.set(_ctrlMode, value);
     }
 
-    public void set(ControlMode mode, double value) {
-        _ctrlMode = mode;
+    public void set(ControlMode ctrlMode, double value) {
+        _ctrlMode = ctrlMode;
         _talon.set(_ctrlMode, value);
     }
 
@@ -100,6 +100,11 @@ public class OscarCANTalon implements IOscarSmartMotor {
     @Override
     public int getDeviceID() {
         return _talon.getDeviceID();
+    }
+
+    @Override
+    public int getBaseID() {
+        return _talon.getBaseID();
     }
 
     @Override

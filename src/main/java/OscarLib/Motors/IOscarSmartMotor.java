@@ -65,6 +65,8 @@ public interface IOscarSmartMotor extends IOscarSimpleMotor {
      */
     int getDeviceID();
 
+    int getBaseID();
+
     /**
      * Sets the NeutralMode of the motor. (Brake or Coast)
      *

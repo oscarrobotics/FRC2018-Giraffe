@@ -1,8 +1,8 @@
 package OscarLib.Motion;
 
-import edu.wpi.first.wpilibj.MotorSafety;
-
-public abstract class OscarDriveBase extends MotorSafety {
+public abstract class OscarDriveBase
+//        extends MotorSafety
+{
 
     public static final double kDefaultDeadband = 0.02;
     public static final double kDefaultMaxOutput = 1.0;
@@ -11,7 +11,8 @@ public abstract class OscarDriveBase extends MotorSafety {
     protected double m_maxOutput = kDefaultMaxOutput;
 
     public OscarDriveBase() {
-        setSafetyEnabled(true);
+
+//        setSafetyEnabled(true);
     }
 
     /**
@@ -39,7 +40,7 @@ public abstract class OscarDriveBase extends MotorSafety {
         m_maxOutput = maxOutput;
     }
 
-    @Override
+    //    @Override
     public abstract void stopMotor();
 
     /**

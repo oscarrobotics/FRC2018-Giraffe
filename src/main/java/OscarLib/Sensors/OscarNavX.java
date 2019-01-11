@@ -109,7 +109,7 @@ public class OscarNavX implements IOscarIMU {
     }
 
     @Override
-    public double getpitch() {
+    public double getPitch() {
         return _ahrs.getPitch();
     }
 

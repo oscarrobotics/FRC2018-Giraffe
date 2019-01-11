@@ -15,7 +15,7 @@ public interface IOscarGyro {
 
     public double getYaw();
 
-    public double getpitch();
+    public double getPitch();
 
     public double getRoll();
 
