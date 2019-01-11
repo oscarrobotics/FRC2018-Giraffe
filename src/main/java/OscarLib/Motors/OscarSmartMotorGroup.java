@@ -12,10 +12,9 @@ public class OscarSmartMotorGroup implements IOscarSmartMotor {
 
     public OscarSmartMotorGroup(IOscarSmartMotor masterMotor, IOscarSmartMotor... slaveMotors) {
         m_masterMotor = masterMotor;
-        m_slaveMotors = new IOscarSmartMotor[slaveMotors.length];
-        for (int i = 0; i < slaveMotors.length; i++) {
-            m_slaveMotors[i + 1] = slaveMotors[i];
-        }
+//        m_slaveMotors = new IOscarSmartMotor[slaveMotors.length];
+        m_slaveMotors = slaveMotors.clone();
+        follow(masterMotor);
     }
 
     @Override
@@ -70,7 +69,6 @@ public class OscarSmartMotorGroup implements IOscarSmartMotor {
 
     @Override
     public void follow(IOscarSmartMotor masterMotor) {
-        m_masterMotor.follow(masterMotor);
         for (IOscarSmartMotor slaveMotor : m_slaveMotors) {
             slaveMotor.follow(masterMotor);
         }
@@ -109,6 +107,11 @@ public class OscarSmartMotorGroup implements IOscarSmartMotor {
     @Override
     public int getDeviceID() {
         return m_masterMotor.getDeviceID();
+    }
+
+    @Override
+    public int getBaseID() {
+        return m_masterMotor.getBaseID();
     }
 
     @Override

@@ -1,11 +1,12 @@
 package OscarLib.Motion;
 
 import OscarLib.Motors.IOscarSimpleMotor;
+import OscarLib.Motors.IOscarSmartMotor;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class OscarDiffDrive extends OscarDriveBase {
     public static final double kDefaultQuickStopThreshold = 0.2;
     public static final double kDefaultQuickStopAlpha = 0.1;
-
 
     private IOscarSimpleMotor m_leftMotor;
     private IOscarSimpleMotor m_rightMotor;
@@ -17,6 +18,18 @@ public class OscarDiffDrive extends OscarDriveBase {
     public OscarDiffDrive(IOscarSimpleMotor leftMotor, IOscarSimpleMotor rightMotor) {
         m_leftMotor = leftMotor;
         m_rightMotor = rightMotor;
+
+        System.out.println("DiffDrive INIT");
+    }
+
+    public OscarDiffDrive(IOscarSmartMotor leftMotor, IOscarSmartMotor rightMotor) {
+        m_leftMotor = leftMotor;
+        m_rightMotor = rightMotor;
+
+        leftMotor.setMode(ControlMode.PercentOutput);
+        rightMotor.setMode(ControlMode.PercentOutput);
+
+        System.out.println("DiffDrive INIT");
     }
 
     /**
@@ -84,7 +97,7 @@ public class OscarDiffDrive extends OscarDriveBase {
         m_leftMotor.set(limit(leftMotorOutput) * m_maxOutput);
         m_rightMotor.set(-limit(rightMotorOutput) * m_maxOutput);
 
-        feed();
+//        feed();
     }
 
     /**
@@ -103,6 +116,9 @@ public class OscarDiffDrive extends OscarDriveBase {
      */
     @SuppressWarnings("ParameterName")
     public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
+        if (Math.abs(xSpeed) > 0.1) {
+            System.out.println("DRIVING");
+        }
         xSpeed = limit(xSpeed);
         xSpeed = applyDeadband(xSpeed, m_deadband);
 
@@ -162,7 +178,7 @@ public class OscarDiffDrive extends OscarDriveBase {
         m_leftMotor.set(leftMotorOutput * m_maxOutput);
         m_rightMotor.set(-rightMotorOutput * m_maxOutput);
 
-        feed();
+//        feed();
     }
 
     /**
@@ -203,8 +219,6 @@ public class OscarDiffDrive extends OscarDriveBase {
 
         m_leftMotor.set(leftSpeed * m_maxOutput);
         m_rightMotor.set(-rightSpeed * m_maxOutput);
-
-        feed();
     }
 
     /**
@@ -242,11 +256,5 @@ public class OscarDiffDrive extends OscarDriveBase {
     public void stopMotor() {
         m_leftMotor.stopMotor();
         m_rightMotor.stopMotor();
-        feed();
-    }
-
-    @Override
-    public String getDescription() {
-        return null;
     }
 }

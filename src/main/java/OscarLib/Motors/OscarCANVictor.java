@@ -70,11 +70,18 @@ public class OscarCANVictor implements IOscarSmartMotor {
     @Override
     public void follow(int masterMotorID) {
         _ctrlMode = ControlMode.Follower;
-        set(masterMotorID);
+        set((double) masterMotorID);
     }
 
     public void follow(IOscarSmartMotor motor) {
-        follow(motor.getDeviceID());
+        int id32 = motor.getBaseID();
+        int id24 = id32;
+        id24 >>= 16;
+        id24 = (short) id24;
+        id24 <<= 8;
+        id24 |= (id32 & 0xFF);
+        System.out.println("Slave motor " + getDeviceID() + " following " + id24);
+        follow(id24);
     }
 
     @Override
@@ -95,6 +102,11 @@ public class OscarCANVictor implements IOscarSmartMotor {
     @Override
     public int getDeviceID() {
         return _victor.getDeviceID();
+    }
+
+    @Override
+    public int getBaseID() {
+        return _victor.getBaseID();
     }
 
     @Override

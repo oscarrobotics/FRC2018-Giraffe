@@ -13,7 +13,7 @@ import frc.team832.robot.commands.auto.elbow.AutoMoveIntakeElbowPos;
 import frc.team832.robot.commands.automodes.AUTOMODE_BaseLine;
 import frc.team832.robot.commands.automodes.AUTOMODE_DoNothing;
 import frc.team832.robot.commands.automodes.AUTOMODE_PlaceOnSwitch;
-import frc.team832.robot.commands.defaults.*;
+import frc.team832.robot.commands.defaults.RobotDrive;
 import frc.team832.robot.func.Calcs;
 import frc.team832.robot.subsystems.*;
 import jaci.pathfinder.Trajectory;
@@ -103,9 +103,9 @@ public class Robot extends TimedRobot {
 
     private static void globalInit() {
         //RobotMap.navx.reset();
-        Robot.pneumatics.shiftToLow();
-        Robot.pneumatics.closeIntake();
-        Robot.westCoastDrive.resetEncoders();
+//        Robot.pneumatics.shiftToLow();
+//        Robot.pneumatics.closeIntake();
+//        Robot.westCoastDrive.resetEncoders();
 //		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
 //		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
 //		RobotMap.intakeElbow.setIntegralAccumulator(0.0,RobotMap.IntakeElbowPIDID,0);
@@ -169,36 +169,36 @@ public class Robot extends TimedRobot {
     public void robotInit() {
 
         RobotMap.init();
-        westCoastDrive = new WestCoastDrive();
-        intake = new Intake();
-        intakeElbow = new IntakeElbow();
-        elevatorStage1 = new ElevatorStage1();
-        elevatorStage2 = new ElevatorStage2();
-        pneumatics = new Pneumatics();
-        gyroPID = new GyroPID();
-        oi = new OI();
+//        westCoastDrive = new WestCoastDrive();
+//        intake = new Intake();
+//        intakeElbow = new IntakeElbow();
+//        elevatorStage1 = new ElevatorStage1();
+//        elevatorStage2 = new ElevatorStage2();
+//        pneumatics = new Pneumatics();
+//        gyroPID = new GyroPID();
+//        oi = new OI();
 
-        fieldData = DriverStation.getInstance().getGameSpecificMessage();
-        initAutoFiles();
-        autoChooser.addOption("Base Line", new AUTOMODE_BaseLine());
-        autoChooser.addOption("Do Nothing", new AUTOMODE_DoNothing());
-        autoChooser.setDefaultOption("SuperMegaAuto", null);
-        SmartDashboard.putData("Auto mode", autoChooser);
-
-//		teleDriveChooser.addDefault("Percent Output", new RobotDrive());
-//		teleDriveChooser.addDefault("Speed PID", new RobotDriveSpeed());
-
-
-        robotSideChooser.addOption("left", "L");
-        robotSideChooser.setDefaultOption("center", "C");
-        robotSideChooser.addOption("right", "R");
-        SmartDashboard.putData("Robot Position", robotSideChooser);
-
-        autoOrderChooser.setDefaultOption("SwitchOnly", "sw");
-        autoOrderChooser.addOption("ScaleOnly", "sc");
-        autoOrderChooser.addOption("Switch-Scale", "swsc"); // only difference between Switch-Scale and Scale-Switch is the final heading after the profile runs
-        autoOrderChooser.addOption("Scale-Switch", "scsw"); // SWSC will end the profile facing the Switch, then use normal commands to do Scale. Vice Versa for SCSW
-        SmartDashboard.putData(" Auto Priority", autoOrderChooser);
+        //fieldData = DriverStation.getInstance().getGameSpecificMessage();
+        //initAutoFiles();
+//        autoChooser.addOption("Base Line", new AUTOMODE_BaseLine());
+//        autoChooser.addOption("Do Nothing", new AUTOMODE_DoNothing());
+//        autoChooser.setDefaultOption("SuperMegaAuto", null);
+//        SmartDashboard.putData("Auto mode", autoChooser);
+//
+////		teleDriveChooser.addDefault("Percent Output", new RobotDrive());
+////		teleDriveChooser.addDefault("Speed PID", new RobotDriveSpeed());
+//
+//
+//        robotSideChooser.addOption("left", "L");
+//        robotSideChooser.setDefaultOption("center", "C");
+//        robotSideChooser.addOption("right", "R");
+//        SmartDashboard.putData("Robot Position", robotSideChooser);
+//
+//        autoOrderChooser.setDefaultOption("SwitchOnly", "sw");
+//        autoOrderChooser.addOption("ScaleOnly", "sc");
+//        autoOrderChooser.addOption("Switch-Scale", "swsc"); // only difference between Switch-Scale and Scale-Switch is the final heading after the profile runs
+//        autoOrderChooser.addOption("Scale-Switch", "scsw"); // SWSC will end the profile facing the Switch, then use normal commands to do Scale. Vice Versa for SCSW
+//        SmartDashboard.putData(" Auto Priority", autoOrderChooser);
     }
 
     /**
@@ -209,15 +209,19 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         setRobotMode(RobotMode.DISABLED);
-        RobotMap.navx.reset();
-        Robot.westCoastDrive.resetEncoders();
+        RobotMap.navx.zero();
+
+        RobotMap.leftGroup.setNeutralMode(NeutralMode.Coast);
+        RobotMap.rightGroup.setNeutralMode(NeutralMode.Coast);
+
+        //Robot.westCoastDrive.resetEncoders();
         OI.rumbleDriverPad(0, 0);
     }
 
     @Override
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
-        sendData(true);
+        //sendData(true);
     }
 
     /**
@@ -421,7 +425,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        sendData(false);
+        //sendData(false);
     }
 
     @Override
@@ -430,35 +434,31 @@ public class Robot extends TimedRobot {
         if (autoCmd != null)
             autoCmd.cancel();
 
-        System.out.println("Begin Scheduler");
+//        System.out.println("Begin Scheduler");
 
-        RobotMap.left1.setNeutralMode(NeutralMode.Coast);
-        RobotMap.left2.setNeutralMode(NeutralMode.Coast);
-        RobotMap.left3.setNeutralMode(NeutralMode.Coast);
-        RobotMap.right1.setNeutralMode(NeutralMode.Coast);
-        RobotMap.right2.setNeutralMode(NeutralMode.Coast);
-        RobotMap.right3.setNeutralMode(NeutralMode.Coast);
+        RobotMap.leftGroup.setNeutralMode(NeutralMode.Brake);
+        RobotMap.rightGroup.setNeutralMode(NeutralMode.Brake);
 
         Scheduler.getInstance().add(new RobotDrive());
-        Scheduler.getInstance().add(new RunIntake());
-        Scheduler.getInstance().add(new RunIntakeElbow());
-        Scheduler.getInstance().add(new RunElevatorStage1());
-        Scheduler.getInstance().add(new RunElevatorStage2());
+//        Scheduler.getInstance().add(new RunIntake());
+//        Scheduler.getInstance().add(new RunIntakeElbow());
+//        Scheduler.getInstance().add(new RunElevatorStage1());
+//        Scheduler.getInstance().add(new RunElevatorStage2());
 
-        System.out.println("Finished Scheduler");
+//        System.out.println("Finished Scheduler");
 
-        elevatorStage2.stop();
+        //elevatorStage2.stop();
 
 //		if(doubpre.equals(RobotMode.AUTONOMOUS));
 //		else {
 //			elevatorStage2.setAtBottom();
 //			intakeElbow.setAtBottom();
 //		}
-        System.out.println("Stage 2 INITed");
+//        System.out.println("Stage 2 INITed");
 
         //RobotMap.intakeElbow.setSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
 
-        elevatorStage2.setPos(-.8);
+        //elevatorStage2.setPos(-.8);
 
 //		if (!intakeElbow.getAtBottom()) {
 //			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
@@ -480,6 +480,7 @@ public class Robot extends TimedRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         globalInit();
+        System.out.println("Tele INIT");
     }
 
     /**
@@ -487,10 +488,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        System.out.println("Begin Tele");
         Scheduler.getInstance().run();
-        sendData(false);
-        doRumble();
+        //sendData(false);
+        //doRumble();
 //		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
 //		 	intakeElbow.setAtBottom();
 //		 }
