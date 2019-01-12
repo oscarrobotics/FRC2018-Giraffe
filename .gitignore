@@ -23,6 +23,7 @@ hs_err_pid*
 
 bin/
 out/
+logs/
 .idea/
 .wpilip/
 .gradle/
@@ -30,7 +31,5 @@ out/
 *.ipr
 *.iml
 *.iws
-
-GrouchLib/
 
 exportToHTML/
