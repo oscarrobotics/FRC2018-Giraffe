@@ -26,7 +26,7 @@ public class AutoDriveDistance extends Command {
 
         //TODO: Look into this
         //Robot.gyroPID.setSetpoint(this.angle);
-        //Robot.gyroPID.enable();
+        //Robot.gyroPID.enabled();
     }
 
     // Called repeatedly when this Command is scheduled to run

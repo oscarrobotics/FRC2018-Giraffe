@@ -17,7 +17,7 @@ public class AutoSpin extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
         //Robot.gyroPID.setSetpoint(angle);
-        //Robot.gyroPID.enable();
+        //Robot.gyroPID.enabled();
     }
 
     // Called repeatedly when this Command is scheduled to run

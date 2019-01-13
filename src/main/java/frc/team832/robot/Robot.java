@@ -14,6 +14,7 @@ import frc.team832.robot.commands.automodes.AUTOMODE_BaseLine;
 import frc.team832.robot.commands.automodes.AUTOMODE_DoNothing;
 import frc.team832.robot.commands.automodes.AUTOMODE_PlaceOnSwitch;
 import frc.team832.robot.commands.defaults.RobotDrive;
+import frc.team832.robot.commands.defaults.RunElevatorStage1;
 import frc.team832.robot.func.Calcs;
 import frc.team832.robot.subsystems.*;
 import jaci.pathfinder.Trajectory;
@@ -103,8 +104,8 @@ public class Robot extends TimedRobot {
 
     private static void globalInit() {
         //RobotMap.navx.reset();
-//        Robot.pneumatics.shiftToLow();
-//        Robot.pneumatics.closeIntake();
+        Robot.pneumatics.shiftToLow();
+        Robot.pneumatics.closeIntake();
 //        Robot.westCoastDrive.resetEncoders();
 //		RobotMap.left1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
 //		RobotMap.right1.setIntegralAccumulator(0.0, RobotMap.DrivePIDID, 0);
@@ -172,11 +173,11 @@ public class Robot extends TimedRobot {
 //        westCoastDrive = new WestCoastDrive();
 //        intake = new Intake();
 //        intakeElbow = new IntakeElbow();
-//        elevatorStage1 = new ElevatorStage1();
+        elevatorStage1 = new ElevatorStage1();
 //        elevatorStage2 = new ElevatorStage2();
-//        pneumatics = new Pneumatics();
+        pneumatics = new Pneumatics();
 //        gyroPID = new GyroPID();
-//        oi = new OI();
+        oi = new OI();
 
         //fieldData = DriverStation.getInstance().getGameSpecificMessage();
         //initAutoFiles();
@@ -442,7 +443,7 @@ public class Robot extends TimedRobot {
         Scheduler.getInstance().add(new RobotDrive());
 //        Scheduler.getInstance().add(new RunIntake());
 //        Scheduler.getInstance().add(new RunIntakeElbow());
-//        Scheduler.getInstance().add(new RunElevatorStage1());
+        Scheduler.getInstance().add(new RunElevatorStage1());
 //        Scheduler.getInstance().add(new RunElevatorStage2());
 
 //        System.out.println("Finished Scheduler");

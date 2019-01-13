@@ -81,7 +81,7 @@ public class MoveOnPath extends Command {
     protected void initialize() {
         System.out.println("MoveOnPath: Initializing...");
 
-        // Reset command state
+        // Reset command get
         reset();
 
         // Change motion control frame period
