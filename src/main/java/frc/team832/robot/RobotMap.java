@@ -1,6 +1,8 @@
 package frc.team832.robot;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import edu.wpi.first.wpilibj.I2C.Port;
 import frc.team832.GrouchLib.Control.*;
 import frc.team832.GrouchLib.Mechanisms.OscarLinearMechanism;
@@ -114,22 +116,22 @@ public class RobotMap {
         elevator1Group.setNeutralMode(NeutralMode.Brake);
 
         mainElevator = new OscarLinearMechanism(elevator1Group);
-
         mainElevator.addPosition(new OscarLinearMechanism.Position("BOTTOM", 0));
 
-//        leftIntake = new OscarCANVictor(leftIntakeID);
-//        rightIntake = new OscarCANVictor(rightIntakeID);
-//
-//        // elevator stage 2
-//        elevatorMotorStage2.setClosedLoopRamp(.125);
-//        elevatorMotorStage2.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
-//        elevatorMotorStage2.setSensorPhase(false);
-//        elevatorMotorStage2.setInverted(true);
-//        elevatorMotorStage2.setNeutralMode(NeutralMode.Brake);
-//
-//        //drivetrain
-//        left1.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
-//        right1.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
+        leftIntake = new OscarCANVictor(leftIntakeID);
+        rightIntake = new OscarCANVictor(rightIntakeID);
+
+        // elevator stage 2
+        elevatorMotorStage2 = new OscarCANTalon(elevatorMotorStage2ID);
+        elevatorMotorStage2.setClosedLoopRamp(.125);
+        elevatorMotorStage2.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
+        elevatorMotorStage2.setSensorPhase(false);
+        elevatorMotorStage2.setInverted(true);
+        elevatorMotorStage2.setNeutralMode(NeutralMode.Brake);
+
+        //drivetrain
+        left1.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
+        right1.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
 //
 //        //TODO: THIS IS DIFFERENT FOR THE TWO ROBOTS
 //        //TODO: REMEMBER TO CHANGE THIS
@@ -150,50 +152,41 @@ public class RobotMap {
 //        right1.configMotionCruiseVelocity(drivespeed, 0);
 //
 //
-//        left1.setClosedLoopRamp(.125);
-//        right1.setClosedLoopRamp(.125);
-//        left1.setOpenLoopRamp(.125);
-//        right1.setOpenLoopRamp(.125);
-//
-          //intake
+        left1.setClosedLoopRamp(.125);
+        right1.setClosedLoopRamp(.125);
+        left1.setOpenLoopRamp(.125);
+        right1.setOpenLoopRamp(.125);
+
 //        leftIntake.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteOscarCANTalon, LimitSwitchNormal.NormallyOpen, intakeElbowID, 0);
-//        leftIntake.setNeutralMode(NeutralMode.Coast);
-//
-//
-//        rightIntake.follow(leftIntake);
-//        rightIntake.setNeutralMode(NeutralMode.Coast);
-//        rightIntake.setInverted(true);
-//
-//
-//        //intakeElbow
-//        intakeElbow = new OscarCANTalon(intakeElbowID);
+        leftIntake.setNeutralMode(NeutralMode.Coast);
+        rightIntake.setNeutralMode(NeutralMode.Coast);
+
+        //intakeElbow
+        intakeElbow = new OscarCANTalon(intakeElbowID);
 //		  intakeElbow.configContinuousCurrentLimit(6, 0);
 //		  intakeElbow.configPeakCurrentLimit(0, 0);
 //		  intakeElbow.enableCurrentLimit(true);
-//        intakeElbow.setSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-//
-//        // pneumatics
-//        compressor = new Compressor(pcmID);
-//        compressor.setClosedLoopControl(true);
+        intakeElbow.setSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        intakeElbow.setSensorPhase(true);
+        intakeElbow.setInverted(true);
 
-//
-//        // PID
+        // PID
 //		  right1.config_kP(RobotMap.DrivePIDID, 10, 0);
 //		  right1.config_kI(RobotMap.DrivePIDID, 1, 0);
 //		  right1.config_kD(RobotMap.DrivePIDID, 1, 0);
-//
+
 //	    left1.config_kP(RobotMap.DrivePIDID, 10, 0);
 //		left1.config_kI(RobotMap.DrivePIDID, 1, 0);
 //		left1.config_kD(RobotMap.DrivePIDID, 1, 0);
-//
-////		elevatorMotor1.config_kP(RobotMap.ElevatorStage1PIDID, ElevatorStage1kP, 0);
-////		elevatorMotor1.config_kI(RobotMap.ElevatorStage1PIDID, ElevatorStage1kI, 0);
-////		elevatorMotor1.config_kD(RobotMap.ElevatorStage1PIDID, ElevatorStage1kD, 0);
+
+//		elevatorMotor1.config_kP(RobotMap.ElevatorStage1PIDID, ElevatorStage1kP, 0);
+//		elevatorMotor1.config_kI(RobotMap.ElevatorStage1PIDID, ElevatorStage1kI, 0);
+//		elevatorMotor1.config_kD(RobotMap.ElevatorStage1PIDID, ElevatorStage1kD, 0);
 //        elevatorMotor1.setAllowableClosedLoopError(0);
-////
-////		elevatorMotorStage2.config_kP(RobotMap.ElevatorStage2PIDID, ElevatorStage2kP, 0);
-////		elevatorMotorStage2.config_kI(RobotMap.ElevatorStage2PIDID, ElevatorStage2kI, 0);
-////		elevatorMotorStage2.config_kD(RobotMap.ElevatorStage2PIDID, ElevatorStage2kD, 0);
+
+//		elevatorMotorStage2.config_kP(RobotMap.ElevatorStage2PIDID, ElevatorStage2kP, 0);
+//		elevatorMotorStage2.config_kI(RobotMap.ElevatorStage2PIDID, ElevatorStage2kI, 0);
+//		elevatorMotorStage2.config_kD(RobotMap.ElevatorStage2PIDID, ElevatorStage2kD, 0);
 //        elevatorMotorStage2.setAllowableClosedLoopError(0);
     }
 }

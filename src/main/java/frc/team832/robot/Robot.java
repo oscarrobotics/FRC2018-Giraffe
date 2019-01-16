@@ -1,22 +1,21 @@
 package frc.team832.robot;
 
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.team832.robot.commands.auto.*;
-import frc.team832.robot.commands.auto.elbow.AutoMoveIntakeElbowPos;
-import frc.team832.robot.commands.automodes.AUTOMODE_BaseLine;
-import frc.team832.robot.commands.automodes.AUTOMODE_DoNothing;
-import frc.team832.robot.commands.automodes.AUTOMODE_PlaceOnSwitch;
-import frc.team832.robot.commands.defaults.RobotDrive;
-import frc.team832.robot.commands.defaults.RunElevatorStage1;
+import frc.team832.robot.commands.auto.elbow.*;
+import frc.team832.robot.commands.automodes.*;
+import frc.team832.robot.commands.defaults.*;
 import frc.team832.robot.func.Calcs;
 import frc.team832.robot.subsystems.*;
+
 import jaci.pathfinder.Trajectory;
 
 import java.util.HashMap;
@@ -103,7 +102,7 @@ public class Robot extends TimedRobot {
     }
 
     private static void globalInit() {
-        //RobotMap.navx.reset();
+        RobotMap.navx.zero();
         Robot.pneumatics.shiftToLow();
         Robot.pneumatics.closeIntake();
 //        Robot.westCoastDrive.resetEncoders();
@@ -171,10 +170,10 @@ public class Robot extends TimedRobot {
 
         RobotMap.init();
 //        westCoastDrive = new WestCoastDrive();
-//        intake = new Intake();
-//        intakeElbow = new IntakeElbow();
+        intake = new Intake();
+        intakeElbow = new IntakeElbow();
         elevatorStage1 = new ElevatorStage1();
-//        elevatorStage2 = new ElevatorStage2();
+        elevatorStage2 = new ElevatorStage2();
         pneumatics = new Pneumatics();
 //        gyroPID = new GyroPID();
         oi = new OI();
@@ -441,10 +440,10 @@ public class Robot extends TimedRobot {
         RobotMap.rightGroup.setNeutralMode(NeutralMode.Brake);
 
         Scheduler.getInstance().add(new RobotDrive());
-//        Scheduler.getInstance().add(new RunIntake());
-//        Scheduler.getInstance().add(new RunIntakeElbow());
+        Scheduler.getInstance().add(new RunIntake());
+        Scheduler.getInstance().add(new RunIntakeElbow());
         Scheduler.getInstance().add(new RunElevatorStage1());
-//        Scheduler.getInstance().add(new RunElevatorStage2());
+        Scheduler.getInstance().add(new RunElevatorStage2());
 
 //        System.out.println("Finished Scheduler");
 

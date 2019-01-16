@@ -7,10 +7,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team832.robot.RobotMap;
 
 public class Intake extends Subsystem {
-    public static final OscarCANVictor intakeMotorLeft = RobotMap.leftIntake;
-    public static final OscarCANVictor intakeMotorRight = RobotMap.rightIntake;
+    private static final OscarCANVictor intakeMotorLeft = RobotMap.leftIntake;
+    private static final OscarCANVictor intakeMotorRight = RobotMap.rightIntake;
     private final double maxSpeed = 1.0;
-    public double intakeStickX, intakeStickY;
 
     public void stop() {
         intakeMotorLeft.set(ControlMode.PercentOutput, 0);
@@ -22,9 +21,7 @@ public class Intake extends Subsystem {
     }
 
     public void IntakeWithStick(double x, double y) {
-        boolean limitSwitch = !RobotMap.intakeElbow.getReverseLimitSwitch();
-//		boolean limitSwitch = true;
-//		// deadzone
+		// deadzone
         if (Math.abs(x) < .2)
             x = 0;
         else if (x > .2 && x <= .5)
@@ -46,10 +43,6 @@ public class Intake extends Subsystem {
             y = -.5;
         else if (y < -.5)
             y = -.7;
-
-        //TODO: THIS IS ONLY NEEDED ON THE PRACTICE BOT
-        //TODO: THIS SHOULD BE COMMENTED ON THE ACTUAL BOT
-        //y = -y;
 
         SmartDashboard.putNumber("spin", x);
         SmartDashboard.putNumber("linear", y);
@@ -84,5 +77,4 @@ public class Intake extends Subsystem {
     @Override
     protected void initDefaultCommand() {
     }
-
 }

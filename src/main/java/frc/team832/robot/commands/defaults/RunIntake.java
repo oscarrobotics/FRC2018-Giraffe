@@ -18,7 +18,8 @@ public class RunIntake extends Command {
     protected void execute() {
         //TODO: find axis port
         double yValue = Robot.oi.operatorPad.getRawAxis(1);
-        double xValue = Robot.oi.operatorPad.getRawAxis(0);
+//        double xValue = Robot.oi.operatorPad.getRawAxis(0);
+        double xValue = 0; // joystick is broken
         intake.IntakeWithStick(xValue, yValue);
     }
 

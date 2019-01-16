@@ -18,16 +18,6 @@ public class RunElevatorStage1 extends Command {
     }
 
     protected void execute() {
-//		if (Robot.oi.operatorPad.getRawButton(5))
-//			Robot.elevatorStage1.setPos(1.0);
-//		else if (Robot.oi.operatorPad.getRawButton(6))
-//			Robot.elevatorStage1.setPos(0.5);
-//		else if (Robot.oi.operatorPad.getRawButton(7))
-//			Robot.elevatorStage1.setPos(-1.0);
-//		else
-//			Robot.elevatorStage1.setPos(sliderVal);
-
-
         double sliderVal = Robot.oi.operatorPad.getRawAxis(2);
         if (Robot.oi.operatorPad.getRawButton(5))
             Robot.elevatorStage1.setPos(1.0);
