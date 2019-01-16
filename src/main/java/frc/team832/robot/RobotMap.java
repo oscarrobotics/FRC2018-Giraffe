@@ -6,9 +6,13 @@ import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import edu.wpi.first.wpilibj.I2C.Port;
 import frc.team832.GrouchLib.Control.*;
 import frc.team832.GrouchLib.Mechanisms.OscarLinearMechanism;
+import frc.team832.GrouchLib.Mechanisms.OscarMechanismPosition;
 import frc.team832.GrouchLib.Motion.*;
 import frc.team832.GrouchLib.Motors.*;
 import frc.team832.GrouchLib.Sensors.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -78,6 +82,20 @@ public class RobotMap {
     private static OscarPCM pcm;
     private static OscarPDP pdp;
 
+    public enum Elevator1Position {
+        BOTTOM(0, 0),
+        SWITCH(1, 400),
+        LOW_SCALE(2, 1500),
+        HIGH_SCALE( 3, 1800);
+
+        private final int index;
+        private final int value;
+        private Elevator1Position(int index, int value) {
+            this.value = value;
+            this.index = index;
+        }
+    }
+
     public static void init() {
 
         navx = new OscarNavX(Port.kOnboard);
@@ -115,8 +133,7 @@ public class RobotMap {
         elevator1Group = new OscarSmartMotorGroup(elevatorMotor1, elevatorMotor2);
         elevator1Group.setNeutralMode(NeutralMode.Brake);
 
-        mainElevator = new OscarLinearMechanism(elevator1Group);
-        mainElevator.addPosition(new OscarLinearMechanism.Position("BOTTOM", 0));
+        mainElevator = new OscarLinearMechanism(elevator1Group, Constants.Elevator1Positions);
 
         leftIntake = new OscarCANVictor(leftIntakeID);
         rightIntake = new OscarCANVictor(rightIntakeID);

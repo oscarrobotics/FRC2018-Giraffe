@@ -445,7 +445,7 @@ public class Robot extends TimedRobot {
         Scheduler.getInstance().add(new RunElevatorStage1());
         Scheduler.getInstance().add(new RunElevatorStage2());
 
-//        System.out.println("Finished Scheduler");
+        System.out.println("Finished Scheduler");
 
         //elevatorStage2.stop();
 
