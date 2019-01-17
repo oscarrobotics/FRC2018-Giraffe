@@ -1,5 +1,6 @@
 package frc.team832.robot;
 
+import frc.team832.GrouchLib.Mechanisms.OscarMechanismComplexPosition;
 import frc.team832.GrouchLib.Mechanisms.OscarMechanismPosition;
 
 public class Constants {
@@ -21,7 +22,6 @@ public class Constants {
             new OscarMechanismPosition("SWITCH", (int) (Elevator1Max * 0.2)),
             new OscarMechanismPosition("LOW_SCALE", (int) (Elevator1Max * 0.85)),
             new OscarMechanismPosition("HIGH_SCALE", (int) (Elevator1Max * 0.95)),
-
     };
 
     public static final int Elevator2Min = 1900;
@@ -32,5 +32,10 @@ public class Constants {
             new OscarMechanismPosition("SWITCH", (int) (Elevator2Max * 0.2)),
             new OscarMechanismPosition("LOW_SCALE", (int) (Elevator2Max * 0.85)),
             new OscarMechanismPosition("HIGH_SCALE", (int) (Elevator2Max * 0.95)),
+    };
+
+    public static OscarMechanismComplexPosition[] GroupedElevatorPositions = new OscarMechanismComplexPosition[] {
+            new OscarMechanismComplexPosition("BOTTOM", Elevator1Positions[0], Elevator2Positions[0])
+
     };
 }
