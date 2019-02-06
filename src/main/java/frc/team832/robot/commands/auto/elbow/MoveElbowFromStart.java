@@ -38,7 +38,7 @@ public class MoveElbowFromStart extends Command {
     }
 
     protected boolean isFinished() {
-        finished = Math.abs(RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getClosedLoopTarget()) <= 50;
+        finished = Math.abs(RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getTargetPosition()) <= 50;
         if (finished) System.out.println("finish elbow");
         return finished;
     }

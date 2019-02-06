@@ -1,7 +1,8 @@
 package frc.team832.robot;
 
-import frc.team832.GrouchLib.Mechanisms.OscarMechanismComplexPosition;
-import frc.team832.GrouchLib.Mechanisms.OscarMechanismPosition;
+import frc.team832.GrouchLib.Mechanisms.Positions.OscarMechanismComplexPosition;
+import frc.team832.GrouchLib.Mechanisms.Positions.OscarMechanismPosition;
+import frc.team832.GrouchLib.Mechanisms.Positions.OscarMechanismPositionList;
 
 public class Constants {
     public static final double kWheelTurnsPerEncoderTurn = 1.0;
@@ -24,6 +25,8 @@ public class Constants {
             new OscarMechanismPosition("HIGH_SCALE", (int) (Elevator1Max * 0.95)),
     };
 
+    public static final OscarMechanismPositionList Elevator1PositionList = new OscarMechanismPositionList(Elevator1Positions);
+
     public static final int Elevator2Min = 1900;
     public static final double Elevator2Max = 26000 - Elevator2Min;
 
@@ -33,6 +36,8 @@ public class Constants {
             new OscarMechanismPosition("LOW_SCALE", (int) (Elevator2Max * 0.85)),
             new OscarMechanismPosition("HIGH_SCALE", (int) (Elevator2Max * 0.95)),
     };
+
+    public static final OscarMechanismPositionList Elevator2PositionList = new OscarMechanismPositionList(Elevator2Positions);
 
     public static OscarMechanismComplexPosition[] GroupedElevatorPositions = new OscarMechanismComplexPosition[] {
             new OscarMechanismComplexPosition("BOTTOM", Elevator1Positions[0], Elevator2Positions[0])

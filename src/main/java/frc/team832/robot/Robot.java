@@ -49,7 +49,6 @@ public class Robot extends TimedRobot {
 
     private static void sendData(boolean isDisabled) {
         SmartDashboard.putNumber("Stage1Pos", RobotMap.elevatorMotor1.getSensorPosition());
-        SmartDashboard.putNumber("Stage2Pos", RobotMap.elevatorMotor2.getSensorPosition());
         SmartDashboard.putNumber("Stage1Target", ElevatorStage1.targetPosition);
         SmartDashboard.putNumber("Stage2Target", ElevatorStage2.targetPosition);
         SmartDashboard.putNumber("Right Motor Encoder", RobotMap.right1.getSensorPosition());
@@ -60,8 +59,8 @@ public class Robot extends TimedRobot {
         if (currentRobotMode.equals(RobotMode.TELEOP)) {
             SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError());
             SmartDashboard.putNumber("Right Error", -1 * RobotMap.right1.getClosedLoopError());
-            SmartDashboard.putNumber("Left Target Speed", -1 * RobotMap.left1.getClosedLoopTarget());
-            SmartDashboard.putNumber("Right Target Speed", -1 * RobotMap.right1.getClosedLoopTarget());
+            SmartDashboard.putNumber("Left Target Speed", -1 * RobotMap.left1.getTargetPosition());
+            SmartDashboard.putNumber("Right Target Speed", -1 * RobotMap.right1.getTargetPosition());
         }
         SmartDashboard.putData("GyroPID", Robot.gyroPID.getPIDController());
         SmartDashboard.putNumber("GyroYaw", RobotMap.navx.getYaw());

@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import edu.wpi.first.wpilibj.I2C.Port;
 import frc.team832.GrouchLib.Control.*;
 import frc.team832.GrouchLib.Mechanisms.OscarLinearMechanism;
-import frc.team832.GrouchLib.Mechanisms.OscarMechanismPosition;
+import frc.team832.GrouchLib.Mechanisms.Positions.OscarMechanismPosition;
 import frc.team832.GrouchLib.Motion.*;
 import frc.team832.GrouchLib.Motors.*;
 import frc.team832.GrouchLib.Sensors.*;
@@ -63,7 +63,7 @@ public class RobotMap {
 
     public static OscarCANTalon elevatorMotor1;
     public static OscarCANVictor elevatorMotor2;
-    public static OscarSmartMotorGroup elevator1Group;
+    public static OscarCANSmartMotorGroup elevator1Group;
     public static OscarLinearMechanism mainElevator;
 
     public static OscarCANTalon elevatorMotorStage2;
@@ -73,7 +73,7 @@ public class RobotMap {
 
     public static OscarCANTalon right1;
     public static OscarCANVictor right2, right3;
-    public static OscarSmartMotorGroup leftGroup, rightGroup;
+    public static OscarCANSmartMotorGroup leftGroup, rightGroup;
     public static OscarDiffDrive diffDrive;
 
     public static OscarCANVictor leftIntake, rightIntake;
@@ -109,15 +109,15 @@ public class RobotMap {
         right2 = new OscarCANVictor(right2ID);
         right3 = new OscarCANVictor(right3ID);
 
-        leftGroup = new OscarSmartMotorGroup(left1, left2, left3);
-        rightGroup = new OscarSmartMotorGroup(right1, right2, right3);
+        leftGroup = new OscarCANSmartMotorGroup(left1, left2, left3);
+        rightGroup = new OscarCANSmartMotorGroup(right1, right2, right3);
 
         diffDrive = new OscarDiffDrive(leftGroup, rightGroup);
 
         pdp = new OscarPDP(pdpID);
 
         pcm = new OscarPCM(pcmID);
-        pcm.enabled(true);
+        pcm.setEnabled(true);
 
         gearShiftSol = new OscarDoubleSolenoid(pcm, 0, 1);
         intakeArmSol = new OscarDoubleSolenoid(pcm, 2, 3);
@@ -130,10 +130,10 @@ public class RobotMap {
 
         elevatorMotor2 = new OscarCANVictor(elevatorMotor2ID);
 
-        elevator1Group = new OscarSmartMotorGroup(elevatorMotor1, elevatorMotor2);
+        elevator1Group = new OscarCANSmartMotorGroup(elevatorMotor1, elevatorMotor2);
         elevator1Group.setNeutralMode(NeutralMode.Brake);
 
-        mainElevator = new OscarLinearMechanism(elevator1Group, Constants.Elevator1Positions);
+        mainElevator = new OscarLinearMechanism(elevator1Group, Constants.Elevator1PositionList);
 
         leftIntake = new OscarCANVictor(leftIntakeID);
         rightIntake = new OscarCANVictor(rightIntakeID);
@@ -188,22 +188,22 @@ public class RobotMap {
         intakeElbow.setInverted(true);
 
         // PID
-//		  right1.config_kP(RobotMap.DrivePIDID, 10, 0);
-//		  right1.config_kI(RobotMap.DrivePIDID, 1, 0);
-//		  right1.config_kD(RobotMap.DrivePIDID, 1, 0);
+//        right1.setkP(10, RobotMap.DrivePIDID);
+//		right1.setkI(1, RobotMap.DrivePIDID);
+//		right1.setkD(1, RobotMap.DrivePIDID);
+//
+//	    left1.setkP(RobotMap.DrivePIDID, 10, 0);
+//		left1.setkI(RobotMap.DrivePIDID, 1, 0);
+//		left1.setkD(RobotMap.DrivePIDID, 1, 0);
 
-//	    left1.config_kP(RobotMap.DrivePIDID, 10, 0);
-//		left1.config_kI(RobotMap.DrivePIDID, 1, 0);
-//		left1.config_kD(RobotMap.DrivePIDID, 1, 0);
+		elevatorMotor1.setkP(ElevatorStage1kP, RobotMap.ElevatorStage1PIDID);
+		elevatorMotor1.setkI(ElevatorStage1kI, RobotMap.ElevatorStage1PIDID);
+		elevatorMotor1.setkD(ElevatorStage1kD, RobotMap.ElevatorStage1PIDID);
+        elevatorMotor1.setAllowableClosedLoopError(0);
 
-//		elevatorMotor1.config_kP(RobotMap.ElevatorStage1PIDID, ElevatorStage1kP, 0);
-//		elevatorMotor1.config_kI(RobotMap.ElevatorStage1PIDID, ElevatorStage1kI, 0);
-//		elevatorMotor1.config_kD(RobotMap.ElevatorStage1PIDID, ElevatorStage1kD, 0);
-//        elevatorMotor1.setAllowableClosedLoopError(0);
-
-//		elevatorMotorStage2.config_kP(RobotMap.ElevatorStage2PIDID, ElevatorStage2kP, 0);
-//		elevatorMotorStage2.config_kI(RobotMap.ElevatorStage2PIDID, ElevatorStage2kI, 0);
-//		elevatorMotorStage2.config_kD(RobotMap.ElevatorStage2PIDID, ElevatorStage2kD, 0);
-//        elevatorMotorStage2.setAllowableClosedLoopError(0);
+		elevatorMotorStage2.setkP(ElevatorStage2kP , RobotMap.ElevatorStage2PIDID);
+		elevatorMotorStage2.setkI(ElevatorStage2kI , RobotMap.ElevatorStage2PIDID);
+		elevatorMotorStage2.setkD(ElevatorStage2kD , RobotMap.ElevatorStage2PIDID);
+        elevatorMotorStage2.setAllowableClosedLoopError(0);
     }
 }
