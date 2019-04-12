@@ -1,14 +1,14 @@
 package frc.team832.robot.subsystems;
 
-import frc.team832.GrouchLib.Motors.OscarCANVictor;
+import frc.team832.GrouchLib.Motors.CANVictor;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team832.robot.RobotMap;
 
 public class Intake extends Subsystem {
-    public static final OscarCANVictor intakeMotorLeft = RobotMap.leftIntake;
-    public static final OscarCANVictor intakeMotorRight = RobotMap.rightIntake;
+    public static final CANVictor intakeMotorLeft = RobotMap.leftIntake;
+    public static final CANVictor intakeMotorRight = RobotMap.rightIntake;
     private final double maxSpeed = 1.0;
     public double intakeStickX, intakeStickY;
 

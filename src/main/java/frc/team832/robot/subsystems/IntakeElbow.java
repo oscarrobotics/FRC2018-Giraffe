@@ -70,7 +70,7 @@ public class IntakeElbow extends Subsystem {
     }
 
     public boolean getIsFinished() {
-        int currentError = (int) (RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getClosedLoopTarget());
+        int currentError = (int) (RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getTargetPosition());
         return (Math.abs(currentError) <= acceptableError);
         //return false; Testing only
     }

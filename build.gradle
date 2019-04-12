@@ -1,8 +1,7 @@
 plugins {
     id "java"
 	id "idea"
-    id "edu.wpi.first.GradleRIO" version "2019.1.1"
-    id "com.snobot.simulator.plugin.SnobotSimulatorPlugin" version "2019-0.1.0" apply false
+    id "edu.wpi.first.GradleRIO" version "2019.4.1"
 }
 
 repositories{
@@ -12,11 +11,7 @@ repositories{
 
 def ROBOT_MAIN_CLASS = "frc.team832.robot.Main"
 
-apply plugin: com.snobot.simulator.plugin.SnobotSimulatorPlugin
-
-configurations {
-    snobotSimCompile
-}
+def includeDesktopSupport = true
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
@@ -46,12 +41,12 @@ deploy {
 // Also defines JUnit 4.
 dependencies {
     compile wpi.deps.wpilib()
+    wpi.deps.vendor.loadFrom(project(':GrouchLib'))
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     compile project(':GrouchLib')
     testCompile 'junit:junit:4.12'
-    snobotSimCompile snobotSimJava()
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

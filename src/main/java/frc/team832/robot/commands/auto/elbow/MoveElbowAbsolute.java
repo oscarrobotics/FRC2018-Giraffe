@@ -18,7 +18,8 @@ public class MoveElbowAbsolute extends Command {
 
     protected void initialize() {
         System.out.println("init elbow");
-        int absolutePosition = RobotMap.intakeElbow.getPulseWidthPosition();
+//        int absolutePosition = RobotMap.intakeElbow.getAbsolutePosition();
+        int absolutePosition = 0;
         absolutePosition &= 0xFFF;
         System.out.print("got elbow abs: " + absolutePosition);
         RobotMap.intakeElbow.setSensorPosition(absolutePosition);
@@ -32,11 +33,11 @@ public class MoveElbowAbsolute extends Command {
 
     protected boolean isFinished() {
         System.out.print("current elbow pos: " + RobotMap.intakeElbow.getSensorPosition());
-        System.out.print(", talon target: " + RobotMap.intakeElbow.getClosedLoopTarget());
+        System.out.print(", talon target: " + RobotMap.intakeElbow.getTargetPosition());
         System.out.print(", set target: " + pos);
         System.out.println(", error: " + RobotMap.intakeElbow.getClosedLoopError());
 
-        return Math.abs(RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getClosedLoopTarget()) <= 90;
+        return Math.abs(RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getTargetPosition()) <= 90;
         //return Robot.intakeElbow.getAtBottom();
     }
 

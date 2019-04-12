@@ -4,10 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.team832.robot.commands.teleop.CloseIntake;
-import frc.team832.robot.commands.teleop.ExpandIntake;
-import frc.team832.robot.commands.teleop.ShiftHigh;
-import frc.team832.robot.commands.teleop.ShiftLow;
+import frc.team832.robot.commands.teleop.*;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -16,6 +13,9 @@ import frc.team832.robot.commands.teleop.ShiftLow;
 public class OI {
     public static final XboxController driverPad = new XboxController(0);
     public final Joystick operatorPad = new Joystick(1);
+
+    // vision tracking
+    public static final JoystickButton trackTarget = new JoystickButton(driverPad, 1);
 
     //intake
     public final JoystickButton intakeElbowOverride;
@@ -30,6 +30,8 @@ public class OI {
     public final JoystickButton elevatorSwitchButton;
 
     public OI() {
+
+//        trackTarget.whileHeld(new TrackVisionTarget(10));
 
         //intake
         intakeExpand = new JoystickButton(operatorPad, 3);

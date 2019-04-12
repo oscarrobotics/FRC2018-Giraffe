@@ -29,7 +29,7 @@ public class MoveElbowFromStart extends Command {
             RobotMap.intakeElbow.setSensorPosition(0);
             startPos = 0;
         } else {
-            startPos = RobotMap.intakeElbow.getSensorPosition();
+            startPos = (int) RobotMap.intakeElbow.getSensorPosition();
         }
         RobotMap.intakeElbow.set(ControlMode.Position, startPos - pos);
     }
@@ -38,7 +38,7 @@ public class MoveElbowFromStart extends Command {
     }
 
     protected boolean isFinished() {
-        finished = Math.abs(RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getClosedLoopTarget()) <= 50;
+        finished = Math.abs(RobotMap.intakeElbow.getSensorPosition() - RobotMap.intakeElbow.getTargetPosition()) <= 50;
         if (finished) System.out.println("finish elbow");
         return finished;
     }

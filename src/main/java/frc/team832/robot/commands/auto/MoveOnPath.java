@@ -1,6 +1,6 @@
 package frc.team832.robot.commands.auto;
 
-import frc.team832.GrouchLib.Motors.OscarCANTalon;
+import frc.team832.GrouchLib.Motors.CANTalon;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
@@ -19,8 +19,8 @@ import java.io.File;
 public class MoveOnPath extends Command {
     private static Notifier trajectoryProcessor;
     private final int TRAJECTORY_SIZE;
-    private OscarCANTalon left;
-    private OscarCANTalon right;
+    private CANTalon left;
+    private CANTalon right;
     private Trajectory trajectoryR, trajectoryL;
     private MotionProfileStatus statusLeft, statusRight;
     private boolean isRunning;

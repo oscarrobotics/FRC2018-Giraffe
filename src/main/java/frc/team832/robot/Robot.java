@@ -3,11 +3,14 @@ package frc.team832.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team832.GrouchLib.Sensors.Vision.JevoisTracker;
+import frc.team832.GrouchLib.Sensors.Vision.VisionConstants;
 import frc.team832.robot.commands.auto.*;
 import frc.team832.robot.commands.auto.elbow.AutoMoveIntakeElbowPos;
 import frc.team832.robot.commands.automodes.AUTOMODE_BaseLine;
@@ -36,6 +39,7 @@ public class Robot extends TimedRobot {
     public static ElevatorStage2 elevatorStage2;
     public static Pneumatics pneumatics;
     public static GyroPID gyroPID;
+    public static Vision vision;
     public static OI oi;
 
     public static RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode, doubpre;
@@ -47,9 +51,57 @@ public class Robot extends TimedRobot {
     private String fieldData;
     private Command autoCmd;
 
+
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    @Override
+    public void robotInit() {
+        RobotMap.init();
+
+        westCoastDrive = new WestCoastDrive();
+        vision = new Vision();
+//        intake = new Intake();
+//        intakeElbow = new IntakeElbow();
+//        elevatorStage1 = new ElevatorStage1();
+//        elevatorStage2 = new ElevatorStage2();
+//        pneumatics = new Pneumatics();
+//        gyroPID = new GyroPID();
+//        oi = new OI();
+
+        //fieldData = DriverStation.getInstance().getGameSpecificMessage();
+        //initAutoFiles();
+//        autoChooser.addOption("Base Line", new AUTOMODE_BaseLine());
+//        autoChooser.addOption("Do Nothing", new AUTOMODE_DoNothing());
+//        autoChooser.setDefaultOption("SuperMegaAuto", null);
+//        SmartDashboard.putData("Auto mode", autoChooser);
+//
+////		teleDriveChooser.addDefault("Percent Output", new RobotDrive());
+////		teleDriveChooser.addDefault("Speed PID", new RobotDriveSpeed());
+//
+//
+//        robotSideChooser.addOption("left", "L");
+//        robotSideChooser.setDefaultOption("center", "C");
+//        robotSideChooser.addOption("right", "R");
+//        SmartDashboard.putData("Robot Position", robotSideChooser);
+//
+//        autoOrderChooser.setDefaultOption("SwitchOnly", "sw");
+//        autoOrderChooser.addOption("ScaleOnly", "sc");
+//        autoOrderChooser.addOption("Switch-Scale", "swsc"); // only difference between Switch-Scale and Scale-Switch is the final heading after the profile runs
+//        autoOrderChooser.addOption("Scale-Switch", "scsw"); // SWSC will end the profile facing the Switch, then use normal commands to do Scale. Vice Versa for SCSW
+//        SmartDashboard.putData(" Auto Priority", autoOrderChooser);
+    }
+
+    @Override
+    public void robotPeriodic () {
+        vision.main();
+        vision.pushData();
+    }
+
     private static void sendData(boolean isDisabled) {
         SmartDashboard.putNumber("Stage1Pos", RobotMap.elevatorMotor1.getSensorPosition());
-        SmartDashboard.putNumber("Stage2Pos", RobotMap.elevatorMotor2.getSensorPosition());
+        SmartDashboard.putNumber("Stage2Pos", RobotMap.elevatorMotorStage2.getSensorPosition());
         SmartDashboard.putNumber("Stage1Target", ElevatorStage1.targetPosition);
         SmartDashboard.putNumber("Stage2Target", ElevatorStage2.targetPosition);
         SmartDashboard.putNumber("Right Motor Encoder", RobotMap.right1.getSensorPosition());
@@ -60,8 +112,8 @@ public class Robot extends TimedRobot {
         if (currentRobotMode.equals(RobotMode.TELEOP)) {
             SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError());
             SmartDashboard.putNumber("Right Error", -1 * RobotMap.right1.getClosedLoopError());
-            SmartDashboard.putNumber("Left Target Speed", -1 * RobotMap.left1.getClosedLoopTarget());
-            SmartDashboard.putNumber("Right Target Speed", -1 * RobotMap.right1.getClosedLoopTarget());
+            SmartDashboard.putNumber("Left Target Speed", -1 * RobotMap.left1.getTargetPosition());
+            SmartDashboard.putNumber("Right Target Speed", -1 * RobotMap.right1.getTargetPosition());
         }
         SmartDashboard.putData("GyroPID", Robot.gyroPID.getPIDController());
         SmartDashboard.putNumber("GyroYaw", RobotMap.navx.getYaw());
@@ -117,8 +169,8 @@ public class Robot extends TimedRobot {
         previousRobotMode = currentRobotMode;
         currentRobotMode = mode;
     }
-
     //TODO: MAKE THIS RIGHT!!!! We need paths generated for all possible modes
+
     private static void initAutoFiles() {
         autoFiles = new HashMap<>();
         // format: STARTSIDE, SWITCHSIDE, SCALESIDE
@@ -159,46 +211,6 @@ public class Robot extends TimedRobot {
             i++;
         }
         return list;
-    }
-
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
-    @Override
-    public void robotInit() {
-
-        RobotMap.init();
-//        westCoastDrive = new WestCoastDrive();
-//        intake = new Intake();
-//        intakeElbow = new IntakeElbow();
-//        elevatorStage1 = new ElevatorStage1();
-//        elevatorStage2 = new ElevatorStage2();
-//        pneumatics = new Pneumatics();
-//        gyroPID = new GyroPID();
-//        oi = new OI();
-
-        //fieldData = DriverStation.getInstance().getGameSpecificMessage();
-        //initAutoFiles();
-//        autoChooser.addOption("Base Line", new AUTOMODE_BaseLine());
-//        autoChooser.addOption("Do Nothing", new AUTOMODE_DoNothing());
-//        autoChooser.setDefaultOption("SuperMegaAuto", null);
-//        SmartDashboard.putData("Auto mode", autoChooser);
-//
-////		teleDriveChooser.addDefault("Percent Output", new RobotDrive());
-////		teleDriveChooser.addDefault("Speed PID", new RobotDriveSpeed());
-//
-//
-//        robotSideChooser.addOption("left", "L");
-//        robotSideChooser.setDefaultOption("center", "C");
-//        robotSideChooser.addOption("right", "R");
-//        SmartDashboard.putData("Robot Position", robotSideChooser);
-//
-//        autoOrderChooser.setDefaultOption("SwitchOnly", "sw");
-//        autoOrderChooser.addOption("ScaleOnly", "sc");
-//        autoOrderChooser.addOption("Switch-Scale", "swsc"); // only difference between Switch-Scale and Scale-Switch is the final heading after the profile runs
-//        autoOrderChooser.addOption("Scale-Switch", "scsw"); // SWSC will end the profile facing the Switch, then use normal commands to do Scale. Vice Versa for SCSW
-//        SmartDashboard.putData(" Auto Priority", autoOrderChooser);
     }
 
     /**
@@ -439,7 +451,7 @@ public class Robot extends TimedRobot {
         RobotMap.leftGroup.setNeutralMode(NeutralMode.Brake);
         RobotMap.rightGroup.setNeutralMode(NeutralMode.Brake);
 
-        Scheduler.getInstance().add(new RobotDrive());
+//        Scheduler.getInstance().add(new RobotDrive());
 //        Scheduler.getInstance().add(new RunIntake());
 //        Scheduler.getInstance().add(new RunIntakeElbow());
 //        Scheduler.getInstance().add(new RunElevatorStage1());

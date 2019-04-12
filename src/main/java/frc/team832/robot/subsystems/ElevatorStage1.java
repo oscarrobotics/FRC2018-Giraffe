@@ -50,7 +50,7 @@ public class ElevatorStage1 extends Subsystem {
 
     public boolean isFinished() {
 //		int currentError = RobotMap.elevatorMotor1.getClosedLoopError(RobotMap.ElevatorStage1PIDID);
-        int currentError = (int) (RobotMap.elevatorMotor1.getClosedLoopTarget() - RobotMap.elevatorMotor1.getSensorPosition());
+        int currentError = (int) (RobotMap.elevatorMotor1.getTargetPosition() - RobotMap.elevatorMotor1.getSensorPosition());
         return (Math.abs(currentError) <= acceptableError);
     }
 

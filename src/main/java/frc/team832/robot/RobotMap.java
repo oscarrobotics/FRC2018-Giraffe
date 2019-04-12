@@ -4,11 +4,12 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import frc.team832.GrouchLib.Motion.OscarDiffDrive;
-import frc.team832.GrouchLib.Motors.OscarCANTalon;
-import frc.team832.GrouchLib.Motors.OscarCANVictor;
-import frc.team832.GrouchLib.Motors.OscarSmartMotorGroup;
-import frc.team832.GrouchLib.Sensors.OscarNavX;
+import edu.wpi.first.wpilibj.SerialPort;
+import frc.team832.GrouchLib.Motion.*;
+import frc.team832.GrouchLib.Motors.*;
+import frc.team832.GrouchLib.Sensors.*;
+import frc.team832.GrouchLib.Sensors.NavXMicro.NavXPort;
+import frc.team832.GrouchLib.Sensors.Vision.JevoisTracker;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -55,49 +56,54 @@ public class RobotMap {
     // pneumatics
     private static final int pcmID = 1;
     //navx
-    public static OscarNavX navx;
-    public static OscarCANTalon elevatorMotor1;
-    public static OscarCANVictor elevatorMotor2;
+    public static NavXMicro navx;
+    public static CANTalon elevatorMotor1;
+    public static CANVictor elevatorMotor2;
 
-    public static OscarCANTalon elevatorMotorStage2;
+    public static CANTalon elevatorMotorStage2;
 
-    public static OscarCANTalon left1;
-    public static OscarCANVictor left2, left3;
+    public static CANTalon left1;
+    public static CANVictor left2, left3;
 
-    public static OscarCANTalon right1;
-    public static OscarCANVictor right2, right3;
-    public static OscarSmartMotorGroup leftGroup, rightGroup;
-    public static OscarDiffDrive diffDrive;
+    public static CANTalon right1;
+    public static CANVictor right2, right3;
+    public static CANSmartMotorGroup leftGroup, rightGroup;
+    public static DifferentialDrive diffDrive;
 
-    public static OscarCANVictor leftIntake, rightIntake;
-    public static OscarCANTalon intakeElbow;
+    public static CANVictor leftIntake, rightIntake;
+    public static CANTalon intakeElbow;
     public static DoubleSolenoid gearShiftSol, intakeArmSol;
     private static Compressor compressor;
     private static PowerDistributionPanel powerDP;
 
+    public static JevoisTracker jevois;
+
     public static void init() {
 
-        navx = new OscarNavX(Port.kOnboard);
+        navx = new NavXMicro(NavXPort.I2C_onboard);
         navx.init();
 
-        left1 = new OscarCANTalon(left1ID);
-        left2 = new OscarCANVictor(left2ID);
-        left3 = new OscarCANVictor(left3ID);
+        jevois = new JevoisTracker(SerialPort.Port.kUSB, 115200);
+        jevois.startCameraStream();
+
+        left1 = new CANTalon(left1ID);
+        left2 = new CANVictor(left2ID);
+        left3 = new CANVictor(left3ID);
 
 //        left2.follow(left1);
 //        left3.follow(left1);
 
-        right1 = new OscarCANTalon(right1ID);
-        right2 = new OscarCANVictor(right2ID);
-        right3 = new OscarCANVictor(right3ID);
+        right1 = new CANTalon(right1ID);
+        right2 = new CANVictor(right2ID);
+        right3 = new CANVictor(right3ID);
 
 //        right2.follow(right1);
 //        right3.follow(right1);
 
-        leftGroup = new OscarSmartMotorGroup(left1, left2, left3);
-        rightGroup = new OscarSmartMotorGroup(right1, right2, right3);
+        leftGroup = new CANSmartMotorGroup(left1, left2, left3);
+        rightGroup = new CANSmartMotorGroup(right1, right2, right3);
 
-        diffDrive = new OscarDiffDrive(leftGroup, rightGroup);
+        diffDrive = new DifferentialDrive(leftGroup, rightGroup);
 
 //        leftIntake = new OscarCANVictor(leftIntakeID);
 //        rightIntake = new OscarCANVictor(rightIntakeID);
