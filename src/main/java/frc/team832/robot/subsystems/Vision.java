@@ -91,7 +91,9 @@ public class Vision extends Subsystem {
 
 	private double calculateTurnAdjust() {
 		if (hasTarget()) {
-			double val = currentTurn_kP * latestData.x_offset;
+			double xOff = latestData.x_offset;
+			double val = Math.signum(xOff)*(6*Math.log(Math.abs(xOff*.25) + 15))/50  /*currentTurn_kP * latestData.x_offset*/;
+
 			return OscarMath.clip(val, -Turn_MaxOutput, Turn_MaxOutput);
 		}
 		else { return 0; }
@@ -103,7 +105,8 @@ public class Vision extends Subsystem {
 
 	private double calculateDistAdjust() {
 		if (hasTarget()) {
-			double val = currentDist_kP * -latestData.adjustedDistance;
+			double val = -(12*Math.log(latestData.adjustedDistance*.1) + 15)/150  /*currentDist_kP * -latestData.adjustedDistance*/;
+
 			return OscarMath.clip(val, -Dist_MaxOutput, Dist_MaxOutput);
 		}
 		else { return 0; }

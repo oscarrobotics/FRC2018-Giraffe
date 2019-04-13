@@ -66,9 +66,9 @@ public class Robot extends TimedRobot {
 //        intakeElbow = new IntakeElbow();
 //        elevatorStage1 = new ElevatorStage1();
 //        elevatorStage2 = new ElevatorStage2();
-//        pneumatics = new Pneumatics();
+        pneumatics = new Pneumatics();
 //        gyroPID = new GyroPID();
-//        oi = new OI();
+        oi = new OI();
 
         //fieldData = DriverStation.getInstance().getGameSpecificMessage();
         //initAutoFiles();

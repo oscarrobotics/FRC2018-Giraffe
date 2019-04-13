@@ -18,37 +18,37 @@ public class OI {
     public static final JoystickButton trackTarget = new JoystickButton(driverPad, 1);
 
     //intake
-    public final JoystickButton intakeElbowOverride;
-    public final JoystickButton intakeExpand;
+//    public final JoystickButton intakeElbowOverride;
+//    public final JoystickButton intakeExpand;
 
     //gear shift
     public final JoystickButton gearShift;
 
     //Elevator Position Buttons
-    public final JoystickButton elevatorPickupButton;
-    public final JoystickButton elevatorScaleButton;
-    public final JoystickButton elevatorSwitchButton;
+//    public final JoystickButton elevatorPickupButton;
+//    public final JoystickButton elevatorScaleButton;
+//    public final JoystickButton elevatorSwitchButton;
 
     public OI() {
 
-//        trackTarget.whileHeld(new TrackVisionTarget(10));
+        trackTarget.whileHeld(new TrackVisionTarget(10));
 
         //intake
-        intakeExpand = new JoystickButton(operatorPad, 3);
-        intakeExpand.whenPressed(new ExpandIntake());
-        intakeExpand.whenReleased(new CloseIntake());
+//        intakeExpand = new JoystickButton(operatorPad, 3);
+//        intakeExpand.whenPressed(new ExpandIntake());
+//        intakeExpand.whenReleased(new CloseIntake());
 
-        intakeElbowOverride = new JoystickButton(driverPad, XButton.kBumperLeft.value);
+//        intakeElbowOverride = new JoystickButton(driverPad, XButton.kBumperLeft.value);
 
         //gear shift
-        gearShift = new JoystickButton(driverPad, XButton.kBumperRight.value);
+        gearShift = new JoystickButton(driverPad, 6);
         gearShift.whenPressed(new ShiftHigh());
         gearShift.whenReleased(new ShiftLow());
 
         //Elevator Position Buttons
-        elevatorPickupButton = new JoystickButton(operatorPad, 7);
-        elevatorSwitchButton = new JoystickButton(operatorPad, 6);
-        elevatorScaleButton = new JoystickButton(operatorPad, 5);
+//        elevatorPickupButton = new JoystickButton(operatorPad, 7);
+//        elevatorSwitchButton = new JoystickButton(operatorPad, 6);
+//        elevatorScaleButton = new JoystickButton(operatorPad, 5);
     }
 
     public static void rumbleDriverPad(double leftRumble, double rightRumble) {

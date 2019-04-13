@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
+import frc.team832.GrouchLib.Control.PCM;
 import frc.team832.GrouchLib.Motion.*;
 import frc.team832.GrouchLib.Motors.*;
 import frc.team832.GrouchLib.Sensors.*;
@@ -76,12 +77,16 @@ public class RobotMap {
     private static Compressor compressor;
     private static PowerDistributionPanel powerDP;
 
+    public static PCM pcm;
+
     public static JevoisTracker jevois;
 
     public static void init() {
 
         navx = new NavXMicro(NavXPort.I2C_onboard);
         navx.init();
+
+        pcm = new PCM(1);
 
         jevois = new JevoisTracker(SerialPort.Port.kUSB, 115200);
         jevois.startCameraStream();
@@ -217,7 +222,7 @@ public class RobotMap {
 //        // pneumatics
 //        compressor = new Compressor(pcmID);
 //        compressor.setClosedLoopControl(true);
-//        gearShiftSol = new DoubleSolenoid(pcmID, 0, 1);
+        gearShiftSol = new DoubleSolenoid(pcmID, 0, 1);
 //        intakeArmSol = new DoubleSolenoid(pcmID, 2, 3);
 //
 //        // PID

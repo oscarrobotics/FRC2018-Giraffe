@@ -24,11 +24,12 @@ public class TrackVisionTarget extends Command {
 		double distPow = Robot.vision.getDistAdjust();
 		double rotPow = Robot.vision.getTurnAdjust();
 
-		Robot.westCoastDrive.ArcadeDrive(distPow, rotPow, ControlMode.PercentOutput);
+		Robot.westCoastDrive.ArcadeDrive(rotPow, distPow, ControlMode.PercentOutput);
 	}
 
 	@Override
 	protected boolean isFinished () {
-		return Robot.vision.getData().adjustedDistance <= _minDist;
+//		return Robot.vision.getData().adjustedDistance <= _minDist;
+		return false;
 	}
 }
