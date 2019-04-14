@@ -1,7 +1,9 @@
 package frc.team832.robot.commands.teleop;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.command.Command;
+import frc.team832.robot.OI;
 import frc.team832.robot.Robot;
 
 public class TrackVisionTarget extends Command {
@@ -21,7 +23,7 @@ public class TrackVisionTarget extends Command {
 
 	@Override
 	protected void execute () {
-		double distPow = Robot.vision.getDistAdjust();
+		double distPow = OI.driverPad.getBButton() ? Robot.vision.getDistAdjust() : OI.driverPad.getY(GenericHID.Hand.kLeft);
 		double rotPow = Robot.vision.getTurnAdjust();
 
 		Robot.westCoastDrive.ArcadeDrive(rotPow, distPow, ControlMode.PercentOutput);

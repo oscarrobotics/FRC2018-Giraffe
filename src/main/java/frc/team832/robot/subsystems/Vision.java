@@ -11,13 +11,14 @@ import frc.team832.robot.RobotMap;
 
 public class Vision extends Subsystem {
 
-	private static final double InchesFromFront = 24;
+	private static final double InchesFromFront = 31;
+	private  static final double InchesFromCenter = -7; // left of center is positive
 
 	private static final double Turn_kP = 0.021;
 	private static final double Turn_MaxOutput = 0.25;
 
 	private static final double Dist_kP = 0.05;
-	private static final double Dist_MaxOutput = 0.3;
+	private static final double Dist_MaxOutput = 0.5;
 
 	private static final JevoisTracker jevois = RobotMap.jevois;
 	private static JevoisData latestData;
@@ -26,7 +27,8 @@ public class Vision extends Subsystem {
 	private static NetworkTableEntry hasTargetNTE;
 	private static NetworkTableEntry distanceNTE;
 	private static NetworkTableEntry adjustedDistanceNTE;
-	private static NetworkTableEntry x_offsetNTE;
+	private static NetworkTableEntry xOffsetNTE;
+	private static NetworkTableEntry adjustedXOffsetNTE;
 	private static NetworkTableEntry yawNTE;
 	private static NetworkTableEntry turnAdjustOutputNTE;
 	private static NetworkTableEntry turnAdjustkPNTE;
@@ -43,7 +45,8 @@ public class Vision extends Subsystem {
 		hasTargetNTE = visionTab.add("HasTarget", false).getEntry();
 		distanceNTE = visionTab.add("Distance", 0.0).getEntry();
 		adjustedDistanceNTE = visionTab.add("Adj. Dist", 0.0).getEntry();
-		x_offsetNTE = visionTab.add("X Offset", 0.0).getEntry();
+		xOffsetNTE = visionTab.add("X Offset", 0.0).getEntry();
+		adjustedXOffsetNTE = visionTab.add("Adj. X Offset", 0.0).getEntry();
 		yawNTE = visionTab.add("Yaw", 0.0).getEntry();
 		turnAdjustOutputNTE = visionTab.add("Turn Adj. Out", 0.0).getEntry();
 		turnAdjustkPNTE = visionTab.add("Turn Adj. kP", Turn_kP).getEntry();
@@ -56,7 +59,8 @@ public class Vision extends Subsystem {
 		if (hasTarget()) {
 			distanceNTE.setDouble(latestData.distance);
 			adjustedDistanceNTE.setDouble(latestData.adjustedDistance);
-			x_offsetNTE.setDouble(latestData.x_offset);
+			xOffsetNTE.setDouble(latestData.xOffset);
+			adjustedXOffsetNTE.setDouble(latestData.adjustedXOffset);
 			yawNTE.setDouble(latestData.yaw);
 		}
 		turnAdjustOutputNTE.setDouble(turnAdjustOutput);
@@ -91,9 +95,8 @@ public class Vision extends Subsystem {
 
 	private double calculateTurnAdjust() {
 		if (hasTarget()) {
-			double xOff = latestData.x_offset;
-			double val = Math.signum(xOff)*(6*Math.log(Math.abs(xOff*.25) + 15))/50  /*currentTurn_kP * latestData.x_offset*/;
-
+			double xOff = latestData.adjustedXOffset;
+			double val = Math.signum(xOff)*(6*Math.log(Math.abs(xOff*.25) + 15))/50  /*currentTurn_kP * latestData.xOffset*/;
 			return OscarMath.clip(val, -Turn_MaxOutput, Turn_MaxOutput);
 		}
 		else { return 0; }
@@ -106,7 +109,7 @@ public class Vision extends Subsystem {
 	private double calculateDistAdjust() {
 		if (hasTarget()) {
 			double val = -(12*Math.log(latestData.adjustedDistance*.1) + 15)/150  /*currentDist_kP * -latestData.adjustedDistance*/;
-
+			val *= 3;
 			return OscarMath.clip(val, -Dist_MaxOutput, Dist_MaxOutput);
 		}
 		else { return 0; }
@@ -127,7 +130,8 @@ public class Vision extends Subsystem {
 		try {
 			data.distance = Double.parseDouble(rawDataSplit[0]);
 			data.adjustedDistance = Math.abs(data.distance - InchesFromFront);
-			data.x_offset = Double.parseDouble(rawDataSplit[1]);
+			data.xOffset = Double.parseDouble(rawDataSplit[1]);
+			data.adjustedXOffset = data.xOffset - InchesFromCenter;
 			data.yaw = Double.parseDouble(rawDataSplit[2]);
 		} catch (Exception ex) {
 			DriverStation.reportError("Failed to parse Jevois Data!", ex.getStackTrace());
@@ -138,7 +142,8 @@ public class Vision extends Subsystem {
 	public static class JevoisData {
 		public double distance;
 		public double adjustedDistance;
-		public double x_offset;
+		public double xOffset;
+		public double adjustedXOffset;
 		public double yaw;
 	}
 
