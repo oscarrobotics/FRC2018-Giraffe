@@ -14,7 +14,7 @@ public class AutoIntakeLinear extends Command {
     private long startMillis;
 
     public AutoIntakeLinear(double powInput, double time) {
-        requires(Robot.intake);
+        // requires(Robot.intake);
         //TODO: THIS IS POSITIVE NEEDED ON THE PRACTICE BOT
         //TODO: THIS SHOULD BE NEGATIVE ON THE ACTUAL BOT
         this.pow = powInput;

@@ -1,35 +1,36 @@
 package frc.team832.robot.commands.defaults;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team832.robot.OI;
 import frc.team832.robot.Robot;
 
-public class RunElevatorStage1 extends Command {
+public class RunElevatorStage1 extends CommandBase {
 
     public RunElevatorStage1() {
-        requires(Robot.elevatorStage1);
+        addRequirements(Robot.elevatorStage1);
     }
 
-    protected void initialize() {
-        //while(Robot.currentRobotMode != RobotMode.AUTONOMOUS)
-
+    @Override
+    public void initialize() {
         Robot.elevatorStage1.stop();
-
         Robot.elevatorStage1.start();
     }
 
-    protected void execute() {
-        double sliderVal = Robot.oi.operatorPad.getRawAxis(2);
-        if (Robot.oi.operatorPad.getRawButton(5))
+    @Override
+    public void execute() {
+        double sliderVal = OI.operatorPad.getRawAxis(2);
+        if (OI.operatorPad.getGreenButton().get())
             Robot.elevatorStage1.setPos(1.0);
-        else if (Robot.oi.operatorPad.getRawButton(6))
+        else if (OI.operatorPad.getYellowButton().get())
             Robot.elevatorStage1.setPos(0.5);
-        else if (Robot.oi.operatorPad.getRawButton(7))
-            Robot.elevatorStage1.setPos(0.5);
+        else if (OI.operatorPad.getRedButton().get())
+            Robot.elevatorStage1.setPos(0.2);
         else
             Robot.elevatorStage1.setPos(sliderVal);
     }
 
-    protected boolean isFinished() {
+    @Override
+    public boolean isFinished() {
         return false;
     }
 

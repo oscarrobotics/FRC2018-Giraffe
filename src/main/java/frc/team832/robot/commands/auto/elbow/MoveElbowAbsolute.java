@@ -18,10 +18,10 @@ public class MoveElbowAbsolute extends Command {
 
     protected void initialize() {
         System.out.println("init elbow");
-        int absolutePosition = RobotMap.intakeElbow.getPulseWidthPosition();
-        absolutePosition &= 0xFFF;
+        double absolutePosition = RobotMap.intakeElbow.getSensorPosition();
+        // absolutePosition &= 0xFFF;
         System.out.print("got elbow abs: " + absolutePosition);
-        RobotMap.intakeElbow.setSensorPosition(absolutePosition);
+        // RobotMap.intakeElbow.setSensorPosition(absolutePosition);
         System.out.print(", set elbow quad: " + absolutePosition);
         RobotMap.intakeElbow.set(ControlMode.Position, pos);
         System.out.println(", set elbow target: " + pos);

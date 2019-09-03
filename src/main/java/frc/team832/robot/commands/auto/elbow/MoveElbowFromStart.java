@@ -11,7 +11,7 @@ public class MoveElbowFromStart extends Command {
     private final boolean zeroes;
     private boolean finished = false;
 
-    private int startPos;
+    private double startPos;
 
     public MoveElbowFromStart(int pos) {
         this(pos, false);

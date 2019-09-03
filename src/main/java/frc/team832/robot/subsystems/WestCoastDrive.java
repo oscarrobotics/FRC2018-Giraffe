@@ -1,6 +1,6 @@
 package frc.team832.robot.subsystems;
 
-import frc.team832.GrouchLib.Motors.OscarCANTalon;
+import frc.team832.GrouchLib.motorcontrol.CANTalon;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -10,8 +10,8 @@ import frc.team832.robot.RobotMap;
 
 public class WestCoastDrive extends Subsystem {
 
-    private final OscarCANTalon left1 = RobotMap.left1;
-    private final OscarCANTalon right1 = RobotMap.right1;
+    private final CANTalon left1 = RobotMap.left1;
+    private final CANTalon right1 = RobotMap.right1;
     private final int highSpeedRatio = 2 * 1200;
     private final int lowSpeedRatio = 2 * 590;
     private final double highSpeedkF = 0.8;
@@ -69,13 +69,13 @@ public class WestCoastDrive extends Subsystem {
         if (RobotMap.gearShiftSol.get() == Value.kReverse) {
             power = power * highSpeedRatio;
             rot = rot * highSpeedRatio;
-            left1.set_kF(0, highSpeedkF);
-            right1.set_kF(0, highSpeedkF);
+            left1.setkF(highSpeedkF);
+            right1.setkF(highSpeedkF);
         } else {
             power = power * lowSpeedRatio;
             rot = rot * lowSpeedRatio;
-            left1.set_kF(0, lowSpeedkF);
-            right1.set_kF(0, lowSpeedkF);
+            left1.setkF(lowSpeedkF);
+            right1.setkF(lowSpeedkF);
         }
         ArcadeDrive(power, rot, ControlMode.Velocity);
     }
@@ -86,7 +86,7 @@ public class WestCoastDrive extends Subsystem {
 
     @Override
     public void periodic() {
-        // TODO: implement OscarGeniusMotor class
+        // TODO: implement GeniusMotor class
 //        this.left1.processMotionProfileBuffer();
 //        this.right1.processMotionProfileBuffer();
 //
@@ -121,7 +121,7 @@ public class WestCoastDrive extends Subsystem {
         right1.set(ControlMode.MotionProfile, v.value);
     }
 
-    // TODO: implement OscarGeniusMotor class
+    // TODO: implement GeniusMotor class
 //    public void startFillingLeft(double[][] profile, int size) {
 //        this.left1.clearMotionProfileTrajectories();
 //        TrajectoryPoint point = new TrajectoryPoint();

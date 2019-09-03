@@ -1,15 +1,14 @@
 package frc.team832.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.team832.GrouchLib.Motion.OscarDoubleSolenoid;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team832.GrouchLib.motion.DoubleSolenoid;
 import frc.team832.robot.RobotMap;
 
-public class Pneumatics extends Subsystem {
+public class Pneumatics extends SubsystemBase {
 
-    public static final OscarDoubleSolenoid gearShift = RobotMap.gearShiftSol;
-    public static final OscarDoubleSolenoid intakeExpand = RobotMap.intakeArmSol;
+    public static final DoubleSolenoid gearShift = RobotMap.gearShiftSol;
+    public static final DoubleSolenoid intakeExpand = RobotMap.intakeArmSol;
     public static boolean lowGear;
 
 
@@ -30,11 +29,4 @@ public class Pneumatics extends Subsystem {
     public void closeIntake() {
         intakeExpand.reverse();
     }
-
-    @Override
-    protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
-
-    }
-
 }

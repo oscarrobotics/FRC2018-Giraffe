@@ -1,3 +1,4 @@
+/*
 package frc.team832.robot.commands.auto;
 
 import com.ctre.phoenix.motion.SetValueMotionProfile;
@@ -17,8 +18,8 @@ public class AutoDriveProfile extends Command {
         requires(Robot.westCoastDrive);
         String leftfile = "/home/lvuser/paths/" + name + "_left_detailed.csv";
         String rightfile = "/home/lvuser/paths/" + name + "_right_detailed.csv";
-        this.trajectory_left = Pathfinder.readFromCSV(new File(leftfile));
-        this.trajectory_right = Pathfinder.readFromCSV(new File(rightfile));
+        // this.trajectory_left = Pathfinder.readFromCSV(new File(leftfile));
+        // this.trajectory_right = Pathfinder.readFromCSV(new File(rightfile));
     }
 
     @Override
@@ -64,3 +65,4 @@ public class AutoDriveProfile extends Command {
 //        return trajectoryComplete;
     }
 }
+*/

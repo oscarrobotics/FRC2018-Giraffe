@@ -9,8 +9,8 @@ public class AutoMoveFullElevator extends Command {
     final double target;
 
     public AutoMoveFullElevator(double targetInput) {
-        requires(Robot.elevatorStage1);
-        requires(Robot.elevatorStage2);
+        // requires(Robot.elevatorStage1);
+        // requires(Robot.elevatorStage2);
         target = targetInput;
     }
 

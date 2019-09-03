@@ -3,7 +3,7 @@ package frc.team832.robot;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team832.robot.commands.teleop.CloseIntake;
 import frc.team832.robot.commands.teleop.ExpandIntake;
 import frc.team832.robot.commands.teleop.ShiftHigh;
@@ -15,7 +15,8 @@ import frc.team832.robot.commands.teleop.ShiftLow;
  */
 public class OI {
     public static final XboxController driverPad = new XboxController(0);
-    public final Joystick operatorPad = new Joystick(1);
+    // public final Joystick operatorPad = new Joystick(1);
+    public static final ThiccBoyController operatorPad = new ThiccBoyController(1);
 
     //intake
     public final JoystickButton intakeElbowOverride;
@@ -25,9 +26,9 @@ public class OI {
     public final JoystickButton gearShift;
 
     //Elevator Position Buttons
-    public final JoystickButton elevatorPickupButton;
-    public final JoystickButton elevatorScaleButton;
-    public final JoystickButton elevatorSwitchButton;
+    // public final JoystickButton elevatorPickupButton = operatorPad.getRedButton();
+    // public final JoystickButton elevatorScaleButton = operatorPad.getYellowButton();
+    // public final JoystickButton elevatorSwitchButton = operatorPad.getGreenButton();
 
     public OI() {
 
@@ -42,11 +43,6 @@ public class OI {
         gearShift = new JoystickButton(driverPad, XButton.kBumperRight.value);
         gearShift.whenPressed(new ShiftHigh());
         gearShift.whenReleased(new ShiftLow());
-
-        //Elevator Position Buttons
-        elevatorPickupButton = new JoystickButton(operatorPad, 7);
-        elevatorSwitchButton = new JoystickButton(operatorPad, 6);
-        elevatorScaleButton = new JoystickButton(operatorPad, 5);
     }
 
     public static void rumbleDriverPad(double leftRumble, double rightRumble) {

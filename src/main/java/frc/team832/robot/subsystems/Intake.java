@@ -1,14 +1,15 @@
 package frc.team832.robot.subsystems;
 
-import frc.team832.GrouchLib.Motors.OscarCANVictor;
+import frc.team832.GrouchLib.motorcontrol.CANVictor;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.robot.RobotMap;
 
-public class Intake extends Subsystem {
-    private static final OscarCANVictor intakeMotorLeft = RobotMap.leftIntake;
-    private static final OscarCANVictor intakeMotorRight = RobotMap.rightIntake;
+public class Intake extends SubsystemBase {
+    private static final CANVictor intakeMotorLeft = RobotMap.leftIntake;
+    private static final CANVictor intakeMotorRight = RobotMap.rightIntake;
     private final double maxSpeed = 1.0;
 
     public void stop() {
@@ -72,9 +73,5 @@ public class Intake extends Subsystem {
     private void intakeLinear(double speed) {
         intakeMotorLeft.set(ControlMode.PercentOutput, speed * maxSpeed);
         intakeMotorRight.set(ControlMode.PercentOutput, speed * maxSpeed);
-    }
-
-    @Override
-    protected void initDefaultCommand() {
     }
 }

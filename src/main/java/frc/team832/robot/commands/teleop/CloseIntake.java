@@ -1,29 +1,15 @@
 package frc.team832.robot.commands.teleop;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team832.robot.Robot;
 
-public class CloseIntake extends Command {
+public class CloseIntake extends InstantCommand {
 
     public CloseIntake() {
-        requires(Robot.pneumatics);
+        addRequirements(Robot.pneumatics);
     }
 
-    protected void execute() {
+    public void initialize() {
         Robot.pneumatics.closeIntake();
     }
-
-    protected boolean isFinished() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    protected void end() {
-
-    }
-
-    protected void inturrepted() {
-        end();
-    }
-
 }

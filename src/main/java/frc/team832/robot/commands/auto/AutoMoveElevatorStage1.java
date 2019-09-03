@@ -8,7 +8,7 @@ public class AutoMoveElevatorStage1 extends Command {
     final double target;
 
     public AutoMoveElevatorStage1(double targetInput) {
-        requires(Robot.elevatorStage1);
+        // requires(Robot.elevatorStage1);
         target = targetInput;
     }
 

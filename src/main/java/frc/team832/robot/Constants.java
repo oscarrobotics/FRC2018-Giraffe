@@ -1,8 +1,6 @@
 package frc.team832.robot;
 
-import frc.team832.GrouchLib.Mechanisms.Positions.OscarMechanismComplexPosition;
-import frc.team832.GrouchLib.Mechanisms.Positions.OscarMechanismPosition;
-import frc.team832.GrouchLib.Mechanisms.Positions.OscarMechanismPositionList;
+import frc.team832.GrouchLib.mechanisms.Positions.*;
 
 public class Constants {
     public static final double kWheelTurnsPerEncoderTurn = 1.0;
@@ -18,29 +16,29 @@ public class Constants {
     public static final int Elevator1Min = 0;
     public static final int Elevator1Max = 26500;
 
-    public static final OscarMechanismPosition[] Elevator1Positions = new OscarMechanismPosition[] {
-            new OscarMechanismPosition("BOTTOM", Elevator1Min),
-            new OscarMechanismPosition("SWITCH", (int) (Elevator1Max * 0.2)),
-            new OscarMechanismPosition("LOW_SCALE", (int) (Elevator1Max * 0.85)),
-            new OscarMechanismPosition("HIGH_SCALE", (int) (Elevator1Max * 0.95)),
+    public static final MechanismPosition[] Elevator1Positions = new MechanismPosition[] {
+            new MechanismPosition("BOTTOM", Elevator1Min),
+            new MechanismPosition("SWITCH", (int) (Elevator1Max * 0.2)),
+            new MechanismPosition("LOW_SCALE", (int) (Elevator1Max * 0.85)),
+            new MechanismPosition("HIGH_SCALE", (int) (Elevator1Max * 0.95)),
     };
 
-    public static final OscarMechanismPositionList Elevator1PositionList = new OscarMechanismPositionList(Elevator1Positions);
+    public static final MechanismPositionList Elevator1PositionList = new MechanismPositionList(Elevator1Positions);
 
     public static final int Elevator2Min = 1900;
     public static final double Elevator2Max = 26000 - Elevator2Min;
 
-    public static final OscarMechanismPosition[] Elevator2Positions = new OscarMechanismPosition[] {
-            new OscarMechanismPosition("BOTTOM", Elevator2Min),
-            new OscarMechanismPosition("SWITCH", (int) (Elevator2Max * 0.2)),
-            new OscarMechanismPosition("LOW_SCALE", (int) (Elevator2Max * 0.85)),
-            new OscarMechanismPosition("HIGH_SCALE", (int) (Elevator2Max * 0.95)),
+    public static final MechanismPosition[] Elevator2Positions = new MechanismPosition[] {
+            new MechanismPosition("BOTTOM", Elevator2Min),
+            new MechanismPosition("SWITCH", (int) (Elevator2Max * 0.2)),
+            new MechanismPosition("LOW_SCALE", (int) (Elevator2Max * 0.85)),
+            new MechanismPosition("HIGH_SCALE", (int) (Elevator2Max * 0.95)),
     };
 
-    public static final OscarMechanismPositionList Elevator2PositionList = new OscarMechanismPositionList(Elevator2Positions);
+    public static final MechanismPositionList Elevator2PositionList = new MechanismPositionList(Elevator2Positions);
 
-    public static OscarMechanismComplexPosition[] GroupedElevatorPositions = new OscarMechanismComplexPosition[] {
-            new OscarMechanismComplexPosition("BOTTOM", Elevator1Positions[0], Elevator2Positions[0])
+    public static MechanismComplexPosition[] GroupedElevatorPositions = new MechanismComplexPosition[] {
+            new MechanismComplexPosition("BOTTOM", Elevator1Positions[0], Elevator2Positions[0])
 
     };
 }

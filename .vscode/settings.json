@@ -1,0 +1,4 @@
+{
+    "wpilib.skipTests": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
+}

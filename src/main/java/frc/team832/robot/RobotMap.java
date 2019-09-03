@@ -1,15 +1,16 @@
 package frc.team832.robot;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import edu.wpi.first.wpilibj.I2C.Port;
-import frc.team832.GrouchLib.Control.*;
-import frc.team832.GrouchLib.Mechanisms.OscarLinearMechanism;
-import frc.team832.GrouchLib.Mechanisms.Positions.OscarMechanismPosition;
-import frc.team832.GrouchLib.Motion.*;
-import frc.team832.GrouchLib.Motors.*;
-import frc.team832.GrouchLib.Sensors.*;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.team832.GrouchLib.control.*;
+import frc.team832.GrouchLib.mechanisms.LinearMechanism;
+import frc.team832.GrouchLib.mechanisms.Positions.MechanismPosition;
+import frc.team832.GrouchLib.motion.*;
+import frc.team832.GrouchLib.motorcontrol.*;
+import frc.team832.GrouchLib.sensors.NavXMicro;
+import frc.team832.GrouchLib.sensors.NavXMicro.NavXPort;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,28 +60,28 @@ public class RobotMap {
     // pneumatics
     private static final int pcmID = 1;
     //navx
-    public static OscarNavX navx;
+    public static NavXMicro navx;
 
-    public static OscarCANTalon elevatorMotor1;
-    public static OscarCANVictor elevatorMotor2;
-    public static OscarCANSmartMotorGroup elevator1Group;
-    public static OscarLinearMechanism mainElevator;
+    public static CANTalon elevatorMotor1;
+    public static CANVictor elevatorMotor2;
+    public static SmartCANMC elevator1Group;
+    public static LinearMechanism mainElevator;
 
-    public static OscarCANTalon elevatorMotorStage2;
+    public static CANTalon elevatorMotorStage2;
 
-    public static OscarCANTalon left1;
-    public static OscarCANVictor left2, left3;
+    public static CANTalon left1;
+    public static CANVictor left2, left3;
 
-    public static OscarCANTalon right1;
-    public static OscarCANVictor right2, right3;
-    public static OscarCANSmartMotorGroup leftGroup, rightGroup;
-    public static OscarDiffDrive diffDrive;
+    public static CANTalon right1;
+    public static CANVictor right2, right3;
+    public static SmartCANMCGroup leftGroup, rightGroup;
+    public static SmartDifferentialDrive diffDrive;
 
-    public static OscarCANVictor leftIntake, rightIntake;
-    public static OscarCANTalon intakeElbow;
-    public static OscarDoubleSolenoid gearShiftSol, intakeArmSol;
-    private static OscarPCM pcm;
-    private static OscarPDP pdp;
+    public static CANVictor leftIntake, rightIntake;
+    public static CANTalon intakeElbow;
+    public static DoubleSolenoid gearShiftSol, intakeArmSol;
+    private static PCM pcm;
+    private static PDP pdp;
 
     public enum Elevator1Position {
         BOTTOM(0, 0),
@@ -98,57 +99,57 @@ public class RobotMap {
 
     public static void init() {
 
-        navx = new OscarNavX(Port.kOnboard);
+        navx = new NavXMicro(NavXPort.I2C_onboard);
         navx.init();
 
-        left1 = new OscarCANTalon(left1ID);
-        left2 = new OscarCANVictor(left2ID);
-        left3 = new OscarCANVictor(left3ID);
+        left1 = new CANTalon(left1ID);
+        left2 = new CANVictor(left2ID);
+        left3 = new CANVictor(left3ID);
 
-        right1 = new OscarCANTalon(right1ID);
-        right2 = new OscarCANVictor(right2ID);
-        right3 = new OscarCANVictor(right3ID);
+        right1 = new CANTalon(right1ID);
+        right2 = new CANVictor(right2ID);
+        right3 = new CANVictor(right3ID);
 
-        leftGroup = new OscarCANSmartMotorGroup(left1, left2, left3);
-        rightGroup = new OscarCANSmartMotorGroup(right1, right2, right3);
+        leftGroup = new SmartCANMCGroup(left1, left2, left3);
+        rightGroup = new SmartCANMCGroup(right1, right2, right3);
 
-        diffDrive = new OscarDiffDrive(leftGroup, rightGroup);
+        diffDrive = new SmartDifferentialDrive(leftGroup, rightGroup, 5840);
 
-        pdp = new OscarPDP(pdpID);
+        pdp = new PDP(pdpID);
 
-        pcm = new OscarPCM(pcmID);
+        pcm = new PCM(pcmID);
         pcm.setEnabled(true);
 
-        gearShiftSol = new OscarDoubleSolenoid(pcm, 0, 1);
-        intakeArmSol = new OscarDoubleSolenoid(pcm, 2, 3);
+        gearShiftSol = new DoubleSolenoid(pcm, 0, 1);
+        intakeArmSol = new DoubleSolenoid(pcm, 2, 3);
 
-        elevatorMotor1 = new OscarCANTalon(elevatorMotor1ID);
+        elevatorMotor1 = new CANTalon(elevatorMotor1ID);
         elevatorMotor1.setClosedLoopRamp(.125);
-        elevatorMotor1.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
+        elevatorMotor1.setSensorType(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
         elevatorMotor1.setSensorPhase(true);
         elevatorMotor1.setInverted(true);
 
-        elevatorMotor2 = new OscarCANVictor(elevatorMotor2ID);
+        elevatorMotor2 = new CANVictor(elevatorMotor2ID);
 
-        elevator1Group = new OscarCANSmartMotorGroup(elevatorMotor1, elevatorMotor2);
-        elevator1Group.setNeutralMode(NeutralMode.Brake);
+        elevator1Group = new SmartCANMCGroup(elevatorMotor1, elevatorMotor2);
+        elevator1Group.setNeutralMode(NeutralMode.kBrake);
 
-        mainElevator = new OscarLinearMechanism(elevator1Group, Constants.Elevator1PositionList);
+        mainElevator = new LinearMechanism(elevator1Group, Constants.Elevator1PositionList);
 
-        leftIntake = new OscarCANVictor(leftIntakeID);
-        rightIntake = new OscarCANVictor(rightIntakeID);
+        leftIntake = new CANVictor(leftIntakeID);
+        rightIntake = new CANVictor(rightIntakeID);
 
         // elevator stage 2
-        elevatorMotorStage2 = new OscarCANTalon(elevatorMotorStage2ID);
+        elevatorMotorStage2 = new CANTalon(elevatorMotorStage2ID);
         elevatorMotorStage2.setClosedLoopRamp(.125);
-        elevatorMotorStage2.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
+        elevatorMotorStage2.setSensorType(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
         elevatorMotorStage2.setSensorPhase(false);
         elevatorMotorStage2.setInverted(true);
-        elevatorMotorStage2.setNeutralMode(NeutralMode.Brake);
+        elevatorMotorStage2.setNeutralMode(NeutralMode.kBrake);
 
         //drivetrain
-        left1.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
-        right1.setSensor(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
+        left1.setSensorType(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
+        right1.setSensorType(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);
 //
 //        //TODO: THIS IS DIFFERENT FOR THE TWO ROBOTS
 //        //TODO: REMEMBER TO CHANGE THIS
@@ -174,16 +175,16 @@ public class RobotMap {
         left1.setOpenLoopRamp(.125);
         right1.setOpenLoopRamp(.125);
 
-//        leftIntake.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteOscarCANTalon, LimitSwitchNormal.NormallyOpen, intakeElbowID, 0);
-        leftIntake.setNeutralMode(NeutralMode.Coast);
-        rightIntake.setNeutralMode(NeutralMode.Coast);
+//        leftIntake.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANTalon, LimitSwitchNormal.NormallyOpen, intakeElbowID, 0);
+        leftIntake.setNeutralMode(NeutralMode.kCoast);
+        rightIntake.setNeutralMode(NeutralMode.kCoast);
 
         //intakeElbow
-        intakeElbow = new OscarCANTalon(intakeElbowID);
+        intakeElbow = new CANTalon(intakeElbowID);
 //		  intakeElbow.configContinuousCurrentLimit(6, 0);
 //		  intakeElbow.configPeakCurrentLimit(0, 0);
 //		  intakeElbow.enableCurrentLimit(true);
-        intakeElbow.setSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        intakeElbow.setSensorType(FeedbackDevice.CTRE_MagEncoder_Relative);
         intakeElbow.setSensorPhase(true);
         intakeElbow.setInverted(true);
 

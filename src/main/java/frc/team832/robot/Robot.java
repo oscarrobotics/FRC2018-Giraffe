@@ -1,11 +1,9 @@
 package frc.team832.robot;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,6 +13,8 @@ import frc.team832.robot.commands.automodes.*;
 import frc.team832.robot.commands.defaults.*;
 import frc.team832.robot.func.Calcs;
 import frc.team832.robot.subsystems.*;
+
+import frc.team832.GrouchLib.motorcontrol.NeutralMode;
 
 import jaci.pathfinder.Trajectory;
 
@@ -210,8 +210,8 @@ public class Robot extends TimedRobot {
         setRobotMode(RobotMode.DISABLED);
         RobotMap.navx.zero();
 
-        RobotMap.leftGroup.setNeutralMode(NeutralMode.Coast);
-        RobotMap.rightGroup.setNeutralMode(NeutralMode.Coast);
+        RobotMap.leftGroup.setNeutralMode(NeutralMode.kCoast);
+        RobotMap.rightGroup.setNeutralMode(NeutralMode.kCoast);
 
         //Robot.westCoastDrive.resetEncoders();
         OI.rumbleDriverPad(0, 0);
@@ -219,7 +219,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        Scheduler.getInstance().run();
+        CommandScheduler.getInstance().run();
         //sendData(true);
     }
 
@@ -234,28 +234,29 @@ public class Robot extends TimedRobot {
      * chooser code above (like the commented example) or additional comparisons
      * to the switch structure below with additional strings & commands.
      */
+    /*
     @Override
     public void autonomousInit() {
         setRobotMode(RobotMode.AUTONOMOUS);
         globalInit();
         elevatorStage2.setAtBottom();
-        RobotMap.left1.setNeutralMode(NeutralMode.Brake);
-        RobotMap.left2.setNeutralMode(NeutralMode.Brake);
-        RobotMap.left3.setNeutralMode(NeutralMode.Brake);
-        RobotMap.right1.setNeutralMode(NeutralMode.Brake);
-        RobotMap.right2.setNeutralMode(NeutralMode.Brake);
-        RobotMap.right3.setNeutralMode(NeutralMode.Brake);
+        RobotMap.left1.setNeutralMode(NeutralMode.kBrake);
+        RobotMap.left2.setNeutralMode(NeutralMode.kBrake);
+        RobotMap.left3.setNeutralMode(NeutralMode.kBrake);
+        RobotMap.right1.setNeutralMode(NeutralMode.kBrake);
+        RobotMap.right2.setNeutralMode(NeutralMode.kBrake);
+        RobotMap.right3.setNeutralMode(NeutralMode.kBrake);
         System.out.println("Before Elevator 1");
-		/*
-		if (!Robot.elevatorStage1.getAtBottom()) {
-			RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.08);
-			while (true) {
-				if (Robot.elevatorStage1.getAtBottom()) {
-					break;
-				}
-			}
-		}
-		*/
+		
+		// if (!Robot.elevatorStage1.getAtBottom()) {
+		// 	RobotMap.elevatorMotor1.set(ControlMode.PercentOutput, -.08);
+		// 	while (true) {
+		// 		if (Robot.elevatorStage1.getAtBottom()) {
+		// 			break;
+		// 		}
+		// 	}
+		// }
+		
         System.out.println("After Elevator 1");
         Robot.elevatorStage1.setAtBottom();
 
@@ -285,7 +286,7 @@ public class Robot extends TimedRobot {
                         System.out.println(String.format("from %s position: ", startSide) + autoFiles);
                         cmdList = new Command[]{
                                 new AutoMoveIntakeElbowPos(2100),
-                                new AutoDriveProfile(autoFiles),
+                                // new AutoDriveProfile(autoFiles),
                                 new AutoMoveElevatorStage2(0.5),
                                 new AutoMoveIntakeElbowPos(0),
                                 new AutoIntakeLinear(-.4, 500)
@@ -295,7 +296,7 @@ public class Robot extends TimedRobot {
                         cmdList = new Command[]{
                                 //new AutoMoveIntakeElbowPos(2100),
                                 new AutoMoveElevatorStage2(0.5, false),
-                                new AutoDriveProfile(autoFiles),
+                                // new AutoDriveProfile(autoFiles),
 //								new MoveOnPath(autoFiles),
                                 new AutoMoveIntakeElbowPos(0),
                                 new AutoIntakeLinear(-.4, 500),
@@ -315,7 +316,7 @@ public class Robot extends TimedRobot {
                         cmdList = new Command[]{
                                 new AutoMoveIntakeElbowPos(2100),
 //								new MoveOnPath(autoFiles),
-                                new AutoDriveProfile(autoFiles),
+                                // new AutoDriveProfile(autoFiles),
                                 new AutoMoveFullElevator(1.0),
                                 new AutoMoveIntakeElbowPos(1500),
                                 new AutoIntakeLinear(-.5, 1000),
@@ -327,7 +328,7 @@ public class Robot extends TimedRobot {
                         System.out.println(String.format("Running %s far Scale auto from %s position", scaleSide, startSide));
                         cmdList = new Command[]{
                                 new AutoMoveIntakeElbowPos(2100),
-                                new AutoDriveProfile(autoFiles),
+                                // new AutoDriveProfile(autoFiles),
                                 new AutoDriveDistance(-0.5, 0.0, -500, 0),
                                 new AutoMoveFullElevator(1),
                                 new AutoMoveIntakeElbowPos(1500),
@@ -345,7 +346,7 @@ public class Robot extends TimedRobot {
                         cmdList = new Command[]{
                                 //Normal Switch
                                 new AutoMoveIntakeElbowPos(2100),
-                                new AutoDriveProfile(autoFiles),
+                                // new AutoDriveProfile(autoFiles),
                                 new AutoMoveFullElevator(1.0),
                                 new AutoMoveIntakeElbowPos(0),
                                 new AutoIntakeLinear(-.5, 1000),
@@ -358,14 +359,14 @@ public class Robot extends TimedRobot {
                     } else {
                         System.out.println(String.format("Running %s Scale auto from %s position", scaleSide, startSide));
                         cmdList = new Command[]{
-                                /*
-                                    new AutoMoveIntakeElbowPos(2100),
-                                    new AutoDriveProfile(autoFiles[0], autoFiles[1]),
-                                    new AutoMoveElevatorStage2(1),
-                                    new AutoMoveElevatorStage1(1),
-                                    new MoveElbowToBottom(),
-                                    new AutoIntakeLinear(-.5, 1000),
-                                */
+                                
+                                    // new AutoMoveIntakeElbowPos(2100),
+                                    // new AutoDriveProfile(autoFiles[0], autoFiles[1]),
+                                    // new AutoMoveElevatorStage2(1),
+                                    // new AutoMoveElevatorStage1(1),
+                                    // new MoveElbowToBottom(),
+                                    // new AutoIntakeLinear(-.5, 1000),
+                                
                                 new AutoDriveDistance(0.5, 0.0, 9000, 0)
 
 
@@ -417,13 +418,14 @@ public class Robot extends TimedRobot {
             }
         }
     }
+    */
 
     /**
      * This function is called periodically during autonomous
      */
     @Override
     public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
+        CommandScheduler.getInstance().run();
         //sendData(false);
     }
 
@@ -435,14 +437,14 @@ public class Robot extends TimedRobot {
 
 //        System.out.println("Begin Scheduler");
 
-        RobotMap.leftGroup.setNeutralMode(NeutralMode.Brake);
-        RobotMap.rightGroup.setNeutralMode(NeutralMode.Brake);
+        RobotMap.leftGroup.setNeutralMode(NeutralMode.kBrake);
+        RobotMap.rightGroup.setNeutralMode(NeutralMode.kBrake);
 
-        Scheduler.getInstance().add(new RobotDrive());
-        Scheduler.getInstance().add(new RunIntake());
-        Scheduler.getInstance().add(new RunIntakeElbow());
-        Scheduler.getInstance().add(new RunElevatorStage1());
-        Scheduler.getInstance().add(new RunElevatorStage2());
+        CommandScheduler.getInstance().schedule(new RobotDrive());
+        CommandScheduler.getInstance().schedule(new RunIntake());
+        // CommandScheduler.getInstance().schedule(new RunIntakeElbow());
+        CommandScheduler.getInstance().schedule(new RunElevatorStage1());
+        // CommandScheduler.getInstance().schedule(new RunElevatorStage2());
 
         System.out.println("Finished Scheduler");
 
@@ -487,7 +489,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        Scheduler.getInstance().run();
+        CommandScheduler.getInstance().run();
         //sendData(false);
         //doRumble();
 //		 if(RobotMap.intakeElbow.getSensorCollection().isRevLimitSwitchClosed()){
