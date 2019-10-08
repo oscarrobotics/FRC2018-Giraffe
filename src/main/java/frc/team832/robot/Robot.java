@@ -48,9 +48,9 @@ public class Robot extends TimedRobot {
     private Command autoCmd;
 
     private static void sendData(boolean isDisabled) {
-        SmartDashboard.putNumber("Stage1Pos", RobotMap.elevatorMotor1.getSensorPosition());
-        SmartDashboard.putNumber("Stage1Target", ElevatorStage1.targetPosition);
-        SmartDashboard.putNumber("Stage2Target", ElevatorStage2.targetPosition);
+//        SmartDashboard.putNumber("Stage1Pos", RobotMap.elevatorMotor1.getSensorPosition());
+//        SmartDashboard.putNumber("Stage1Target", ElevatorStage1.targetPosition);
+//        SmartDashboard.putNumber("Stage2Target", ElevatorStage2.targetPosition);
         SmartDashboard.putNumber("Right Motor Encoder", RobotMap.right1.getSensorPosition());
         SmartDashboard.putNumber("Left Motor Encoder", RobotMap.left1.getSensorPosition());
         SmartDashboard.putNumber("Intake Elbow Target", IntakeElbow.intakeElbowTargetPos);
@@ -171,8 +171,8 @@ public class Robot extends TimedRobot {
 //        westCoastDrive = new WestCoastDrive();
         intake = new Intake();
         intakeElbow = new IntakeElbow();
-        elevatorStage1 = new ElevatorStage1();
-        elevatorStage2 = new ElevatorStage2();
+//        elevatorStage1 = new ElevatorStage1();
+//        elevatorStage2 = new ElevatorStage2();
         pneumatics = new Pneumatics();
 //        gyroPID = new GyroPID();
         oi = new OI();
@@ -443,7 +443,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().schedule(new RobotDrive());
         CommandScheduler.getInstance().schedule(new RunIntake());
         // CommandScheduler.getInstance().schedule(new RunIntakeElbow());
-        CommandScheduler.getInstance().schedule(new RunElevatorStage1());
+//        CommandScheduler.getInstance().schedule(new RunElevatorStage1());
         // CommandScheduler.getInstance().schedule(new RunElevatorStage2());
 
         System.out.println("Finished Scheduler");

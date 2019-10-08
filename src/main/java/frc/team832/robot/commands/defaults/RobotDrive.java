@@ -25,9 +25,10 @@ public class RobotDrive extends CommandBase {
     @Override
     public void execute() {
         double leftStick = .5 * OscarMath.signumPow(OI.driverPad.getRawAxis(1), 2);
-        double rightStick = .2 * OscarMath.signumPow(OI.driverPad.getRawAxis(2), 2);
+        double rightStick = .2 * OscarMath.signumPow(OI.driverPad.getRawAxis(4), 2);
         //westCoastDrive.ArcadeDrive(leftStick, rightStick, ControlMode.PercentOutput);
         RobotMap.diffDrive.curvatureDrive(-leftStick, rightStick, true);
+//        RobotMap.diffDrive.tankDrive(OI.driverPad.getRawAxis(1), );
     }
 
     // Make this return true when this Command no longer needs to run execute()

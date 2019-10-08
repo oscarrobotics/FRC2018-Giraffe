@@ -11,7 +11,7 @@ public class RunIntake extends CommandBase {
 
     @Override
     public void execute() {
-        double yValue = OI.operatorPad.getRawAxis(1);
+        double yValue = OI.driverPad.getRawAxis(3) - OI.driverPad.getRawAxis(2);
         double xValue = 0; // joystick is broken
         Robot.intake.IntakeWithStick(xValue, yValue);
     }

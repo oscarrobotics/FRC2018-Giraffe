@@ -33,7 +33,7 @@ public class OI {
     public OI() {
 
         //intake
-        intakeExpand = new JoystickButton(operatorPad, 3);
+        intakeExpand = new JoystickButton(driverPad, 1);
         intakeExpand.whenPressed(new ExpandIntake());
         intakeExpand.whenReleased(new CloseIntake());
 
