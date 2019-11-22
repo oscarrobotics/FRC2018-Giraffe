@@ -2,15 +2,15 @@ package frc.team832.robot;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
-import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.team832.GrouchLib.control.*;
-import frc.team832.GrouchLib.mechanisms.LinearMechanism;
-import frc.team832.GrouchLib.mechanisms.Positions.MechanismPosition;
-import frc.team832.GrouchLib.motion.*;
-import frc.team832.GrouchLib.motorcontrol.*;
-import frc.team832.GrouchLib.sensors.NavXMicro;
-import frc.team832.GrouchLib.sensors.NavXMicro.NavXPort;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.team832.lib.control.*;
+import frc.team832.lib.drive.SmartDifferentialDrive;
+import frc.team832.lib.motorcontrol.*;
+import frc.team832.lib.motorcontrol.base.SmartCANMC;
+import frc.team832.lib.motorcontrol.vendor.CANTalon;
+import frc.team832.lib.motorcontrol.vendor.CANVictor;
+import frc.team832.lib.sensors.NavXMicro;
+import frc.team832.lib.sensors.NavXMicro.NavXPort;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +65,6 @@ public class RobotMap {
     public static CANTalon elevatorMotor1;
     public static CANVictor elevatorMotor2;
     public static SmartCANMC elevator1Group;
-    public static LinearMechanism mainElevator;
 
     public static CANTalon elevatorMotorStage2;
 
@@ -120,8 +119,8 @@ public class RobotMap {
         pcm = new PCM(pcmID);
         pcm.setEnabled(true);
 
-        gearShiftSol = new DoubleSolenoid(pcm, 0, 1);
-        intakeArmSol = new DoubleSolenoid(pcm, 2, 3);
+        gearShiftSol = new DoubleSolenoid(pcm.getDeviceID(), 0, 1);
+        intakeArmSol = new DoubleSolenoid(pcm.getDeviceID(), 2, 3);
 
         elevatorMotor1 = new CANTalon(elevatorMotor1ID);
         elevatorMotor1.setClosedLoopRamp(.125);
@@ -133,8 +132,6 @@ public class RobotMap {
 
         elevator1Group = new SmartCANMCGroup(elevatorMotor1, elevatorMotor2);
         elevator1Group.setNeutralMode(NeutralMode.kBrake);
-
-        mainElevator = new LinearMechanism(elevator1Group, Constants.Elevator1PositionList);
 
         leftIntake = new CANVictor(leftIntakeID);
         rightIntake = new CANVictor(rightIntakeID);

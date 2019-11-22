@@ -2,7 +2,7 @@ package frc.team832.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.*;
-import frc.team832.GrouchLib.util.OscarMath;
+import frc.team832.lib.util.OscarMath;
 
 public class ThiccBoyController extends GenericHID {
 

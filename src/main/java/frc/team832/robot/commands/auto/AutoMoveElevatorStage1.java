@@ -17,7 +17,7 @@ public class AutoMoveElevatorStage1 extends Command {
     }
 
     protected void execute() {
-        Robot.elevatorStage1.setPos(target);
+        Robot.elevatorStage1.setPositionFromSlider(target);
     }
 
     protected boolean isFinished() {

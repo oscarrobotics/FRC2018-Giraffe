@@ -20,13 +20,13 @@ public class RunElevatorStage1 extends CommandBase {
     public void execute() {
         double sliderVal = OI.operatorPad.getRawAxis(2);
         if (OI.operatorPad.getGreenButton().get())
-            Robot.elevatorStage1.setPos(1.0);
+            Robot.elevatorStage1.setPositionFromSlider(1.0);
         else if (OI.operatorPad.getYellowButton().get())
-            Robot.elevatorStage1.setPos(0.5);
+            Robot.elevatorStage1.setPositionFromSlider(0.5);
         else if (OI.operatorPad.getRedButton().get())
-            Robot.elevatorStage1.setPos(0.2);
+            Robot.elevatorStage1.setPositionFromSlider(0.2);
         else
-            Robot.elevatorStage1.setPos(sliderVal);
+            Robot.elevatorStage1.setPositionFromSlider(sliderVal);
     }
 
     @Override

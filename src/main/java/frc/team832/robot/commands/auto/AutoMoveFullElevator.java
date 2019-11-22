@@ -1,30 +1,37 @@
 package frc.team832.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team832.robot.Constants;
 import frc.team832.robot.Robot;
+import frc.team832.robot.subsystems.ElevatorStage1;
+import frc.team832.robot.subsystems.ElevatorStage2;
 
 
-public class AutoMoveFullElevator extends Command {
+public class AutoMoveFullElevator extends CommandBase {
 
-    final double target;
+    private static Constants.ElevatorPosition elevatorTarget;
+    private static ElevatorStage1 stage1;
+    private static ElevatorStage2 stage2;
 
-    public AutoMoveFullElevator(double targetInput) {
-        // requires(Robot.elevatorStage1);
-        // requires(Robot.elevatorStage2);
-        target = targetInput;
+    public AutoMoveFullElevator(Constants.ElevatorPosition elevatorPos, ElevatorStage1 stage1, ElevatorStage2 stage2) {
+        this.stage1 = stage1;
+        this.stage2 = stage2;
+        addRequirements(stage1, stage2);
+        this.elevatorTarget = elevatorPos;
     }
 
-    protected void initialize() {
+    public void initialize() {
         Robot.elevatorStage2.start();
         Robot.elevatorStage1.start();
     }
 
-    protected void execute() {
-        Robot.elevatorStage2.setPos(target);
-        Robot.elevatorStage1.setPos(target);
+    public void execute() {
+        Robot.elevatorStage2.setPos(elevatorTarget);
+        Robot.elevatorStage1.setPos(elevatorTarget);
     }
 
-    protected boolean isFinished() {
+    public boolean isFinished() {
         return Robot.elevatorStage2.isFinished() && Robot.elevatorStage1.isFinished();
     }
 

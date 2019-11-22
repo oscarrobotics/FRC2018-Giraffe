@@ -16,13 +16,13 @@ public class RunElevatorStage2 extends Command {
     protected void execute() {
         double sliderVal = Robot.oi.operatorPad.getRawAxis(3);
         if (Robot.oi.operatorPad.getRawButton(5)) {
-            Robot.elevatorStage2.setPos(1.0);
+            Robot.elevatorStage2.setPositionFromSlider(1.0);
         } else if (Robot.oi.operatorPad.getRawButton(6)) {
-            Robot.elevatorStage2.setPos(1.0);
+            Robot.elevatorStage2.setPositionFromSlider(1.0);
         } else if (Robot.oi.operatorPad.getRawButton(7)) {
-            Robot.elevatorStage2.setPos(-1.0);
+            Robot.elevatorStage2.setPositionFromSlider(-1.0);
         } else {
-            Robot.elevatorStage2.setPos(sliderVal);
+            Robot.elevatorStage2.setPositionFromSlider(sliderVal);
         }
     }
 

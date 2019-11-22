@@ -2,7 +2,7 @@
 
 package frc.team832.robot.commands.auto;
 
-import frc.team832.GrouchLib.motorcontrol.*;
+import frc.team832.lib.motorcontrol.*;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;

@@ -1,10 +1,10 @@
 package frc.team832.robot.subsystems;
 
-import frc.team832.GrouchLib.motorcontrol.CANVictor;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team832.lib.motorcontrol.vendor.CANVictor;
 import frc.team832.robot.RobotMap;
 
 public class Intake extends SubsystemBase {

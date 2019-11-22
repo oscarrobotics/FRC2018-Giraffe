@@ -1,7 +1,7 @@
 package frc.team832.robot.commands.defaults;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team832.GrouchLib.util.OscarMath;
+import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.OI;
 import frc.team832.robot.RobotMap;
 

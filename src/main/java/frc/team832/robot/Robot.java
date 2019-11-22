@@ -14,7 +14,7 @@ import frc.team832.robot.commands.defaults.*;
 import frc.team832.robot.func.Calcs;
 import frc.team832.robot.subsystems.*;
 
-import frc.team832.GrouchLib.motorcontrol.NeutralMode;
+import frc.team832.lib.motorcontrol.NeutralMode;
 
 import jaci.pathfinder.Trajectory;
 
@@ -59,8 +59,8 @@ public class Robot extends TimedRobot {
         if (currentRobotMode.equals(RobotMode.TELEOP)) {
             SmartDashboard.putNumber("Left Error", -RobotMap.left1.getClosedLoopError());
             SmartDashboard.putNumber("Right Error", -1 * RobotMap.right1.getClosedLoopError());
-            SmartDashboard.putNumber("Left Target Speed", -1 * RobotMap.left1.getTargetPosition());
-            SmartDashboard.putNumber("Right Target Speed", -1 * RobotMap.right1.getTargetPosition());
+            SmartDashboard.putNumber("Left Target Speed", -1 * RobotMap.left1.getClosedLoopTarget());
+            SmartDashboard.putNumber("Right Target Speed", -1 * RobotMap.right1.getClosedLoopTarget());
         }
         SmartDashboard.putData("GyroPID", Robot.gyroPID.getPIDController());
         SmartDashboard.putNumber("GyroYaw", RobotMap.navx.getYaw());
@@ -168,11 +168,11 @@ public class Robot extends TimedRobot {
     public void robotInit() {
 
         RobotMap.init();
-//        westCoastDrive = new WestCoastDrive();
+        westCoastDrive = new WestCoastDrive();
         intake = new Intake();
         intakeElbow = new IntakeElbow();
-//        elevatorStage1 = new ElevatorStage1();
-//        elevatorStage2 = new ElevatorStage2();
+        elevatorStage1 = new ElevatorStage1();
+        elevatorStage2 = new ElevatorStage2();
         pneumatics = new Pneumatics();
 //        gyroPID = new GyroPID();
         oi = new OI();
@@ -459,7 +459,7 @@ public class Robot extends TimedRobot {
 
         //RobotMap.intakeElbow.setSensorPosition(0, RobotMap.IntakeElbowPIDID, 0);
 
-        //elevatorStage2.setPos(-.8);
+        //elevatorStage2.setPositionFromSlider(-.8);
 
 //		if (!intakeElbow.getAtBottom()) {
 //			RobotMap.intakeElbow.set(ControlMode.PercentOutput, -.1);
