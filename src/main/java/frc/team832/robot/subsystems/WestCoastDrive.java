@@ -1,11 +1,11 @@
 package frc.team832.robot.subsystems;
 
-import frc.team832.lib.motorcontrol.CANTalon;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.team832.lib.motorcontrol.vendor.CANTalon;
 import frc.team832.robot.RobotMap;
 
 public class WestCoastDrive extends Subsystem {

@@ -19,7 +19,7 @@ public class Constants {
 
     public enum ElevatorPosition {
         BOTTOM(Elevator1Min, Elevator2Min),
-        SWITCH(Elevator1Max * 0.2, Elevator1Max * 0.2),
+        SWITCH(Elevator1Max * 0.2, Elevator2Max * 0.2),
         LOW_SCALE(Elevator1Max * 0.85, Elevator2Max * 0.85),
         HIGH_SCALE(Elevator1Max * 0.95, Elevator2Max * 0.95);
 

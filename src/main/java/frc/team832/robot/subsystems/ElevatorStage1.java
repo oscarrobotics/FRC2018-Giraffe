@@ -15,56 +15,56 @@ public class ElevatorStage1 extends SubsystemBase {
     public static double targetPosition;
 
     public boolean getAtBottom() {
-        return !RobotMap.elevator1Group.getReverseLimitSwitch();
+        return !RobotMap.elevatorMotor1.getReverseLimitSwitch();
     }
 
     public void setAtBottom() {
-        RobotMap.elevator1Group.setSensorPosition(0);
+        RobotMap.elevatorMotor1.setSensorPosition(0);
     }
 
     public void start() {
-        RobotMap.elevator1Group.setPosition(0);
+        RobotMap.elevatorMotor1.setPosition(0);
     }
 
     public void stop() {
-        RobotMap.elevator1Group.set(0);
+        RobotMap.elevatorMotor1.set(0);
     }
 
     public void setPositionFromSlider(double sliderVal) {
         handleSafety();
         targetPosition = Math.round(Calcs.map(sliderVal, -1.0, 1.0, 0.0, 1.0) * maxEncPos);
 
-        RobotMap.elevator1Group.setPosition(targetPosition);
+        RobotMap.elevatorMotor1.setPosition(targetPosition);
     }
 
     public void setPos(Constants.ElevatorPosition position){
         handleSafety();
         double rawPos = position.getElevator1Value();
         targetPosition = Math.round(Calcs.map(rawPos, -1.0, 1.0, 0.0, 1.0) * maxEncPos);
-        RobotMap.elevator1Group.setPosition(targetPosition);
+        RobotMap.elevatorMotor1.setPosition(targetPosition);
     }
 
     private void handleSafety() {
-        RobotMap.elevator1Group.setPeakOutputReverse(-100);
-        RobotMap.elevator1Group.setNominalOutputReverse(0);
-        if(RobotMap.elevator1Group.getSensorPosition()>lowerPosThreshold){
+        RobotMap.elevatorMotor1.setPeakOutputReverse(-100);
+        RobotMap.elevatorMotor1.setNominalOutputReverse(0);
+        if(RobotMap.elevatorMotor1.getSensorPosition()>lowerPosThreshold){
 
-            RobotMap.elevator1Group.setPeakOutputReverse(-100);
+            RobotMap.elevatorMotor1.setPeakOutputReverse(-100);
         }
-        if(RobotMap.elevator1Group.getSensorPosition()<lowerPosThreshold){
-            RobotMap.elevator1Group.setPeakOutputReverse(-0.1);
+        if(RobotMap.elevatorMotor1.getSensorPosition()<lowerPosThreshold){
+            RobotMap.elevatorMotor1.setPeakOutputReverse(-0.1);
         }
 
     }
 
     public void setAutoPos(double targetPos) {
         targetPosition = targetPos;
-        RobotMap.elevator1Group.setPosition(targetPosition);
+        RobotMap.elevatorMotor1.setPosition(targetPosition);
     }
 
     public boolean isFinished() {
-//		int currentError = RobotMap.elevator1Group.getClosedLoopError(RobotMap.ElevatorStage1PIDID);
-        int currentError = (int) (RobotMap.elevator1Group.getClosedLoopTarget() - RobotMap.elevator1Group.getSensorPosition());
+//		int currentError = RobotMap.elevatorMotor1.getClosedLoopError(RobotMap.ElevatorStage1PIDID);
+        int currentError = (int) (RobotMap.elevatorMotor1.getClosedLoopTarget() - RobotMap.elevatorMotor1.getSensorPosition());
         return (Math.abs(currentError) <= acceptableError);
     }
 }

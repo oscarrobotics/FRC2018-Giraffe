@@ -64,7 +64,6 @@ public class RobotMap {
 
     public static CANTalon elevatorMotor1;
     public static CANVictor elevatorMotor2;
-    public static SmartCANMC elevator1Group;
 
     public static CANTalon elevatorMotorStage2;
 
@@ -81,20 +80,6 @@ public class RobotMap {
     public static DoubleSolenoid gearShiftSol, intakeArmSol;
     private static PCM pcm;
     private static PDP pdp;
-
-    public enum Elevator1Position {
-        BOTTOM(0, 0),
-        SWITCH(1, 400),
-        LOW_SCALE(2, 1500),
-        HIGH_SCALE( 3, 1800);
-
-        private final int index;
-        private final int value;
-        private Elevator1Position(int index, int value) {
-            this.value = value;
-            this.index = index;
-        }
-    }
 
     public static void init() {
 
@@ -129,9 +114,10 @@ public class RobotMap {
         elevatorMotor1.setInverted(true);
 
         elevatorMotor2 = new CANVictor(elevatorMotor2ID);
+        elevatorMotor2.follow(elevatorMotor1);
 
-        elevator1Group = new SmartCANMCGroup(elevatorMotor1, elevatorMotor2);
-        elevator1Group.setNeutralMode(NeutralMode.kBrake);
+        elevatorMotor1.setNeutralMode(NeutralMode.kBrake);
+        elevatorMotor1.rezeroSensor();
 
         leftIntake = new CANVictor(leftIntakeID);
         rightIntake = new CANVictor(rightIntakeID);
@@ -143,6 +129,7 @@ public class RobotMap {
         elevatorMotorStage2.setSensorPhase(false);
         elevatorMotorStage2.setInverted(true);
         elevatorMotorStage2.setNeutralMode(NeutralMode.kBrake);
+        elevatorMotorStage2.rezeroSensor();
 
         //drivetrain
         left1.setSensorType(com.ctre.phoenix.motorcontrol.FeedbackDevice.QuadEncoder);

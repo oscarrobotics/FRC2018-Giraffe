@@ -65,12 +65,12 @@ public class Intake extends SubsystemBase {
 		}*/
     }
 
-    private void intakeSpin(double speed) {
+    public void intakeSpin(double speed) {
         intakeMotorLeft.set(ControlMode.PercentOutput, speed * maxSpeed);
         intakeMotorRight.set(ControlMode.PercentOutput, -speed * maxSpeed);
     }
 
-    private void intakeLinear(double speed) {
+    public void intakeLinear(double speed) {
         intakeMotorLeft.set(ControlMode.PercentOutput, speed * maxSpeed);
         intakeMotorRight.set(ControlMode.PercentOutput, speed * maxSpeed);
     }

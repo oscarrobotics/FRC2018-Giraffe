@@ -3,6 +3,7 @@ package frc.team832.robot;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team832.robot.commands.auto.AutoMoveFullElevator;
 import frc.team832.robot.commands.teleop.CloseIntake;
@@ -11,6 +12,8 @@ import frc.team832.robot.commands.teleop.ShiftHigh;
 import frc.team832.robot.commands.teleop.ShiftLow;
 import frc.team832.robot.subsystems.ElevatorStage1;
 import frc.team832.robot.subsystems.ElevatorStage2;
+
+import static frc.team832.robot.Robot.intake;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -33,9 +36,8 @@ public class OI {
         //intake
 		stratComInterface.getArcadeBlackLeft().whenHeld(new ExpandIntake());
 		stratComInterface.getArcadeBlackLeft().whenReleased(new CloseIntake());
-//		intakeExpand = new JoystickButton(driverPad, 1);
-//      intakeExpand.whenPressed(new ExpandIntake());
-//      intakeExpand.whenReleased(new CloseIntake());
+        stratComInterface.getArcadeWhiteLeft().whenHeld(new StartEndCommand(() -> intake.intakeLinear(-1.0), intake::stop, intake));
+        stratComInterface.getArcadeWhiteRight().whenHeld(new StartEndCommand(() -> intake.intakeLinear(1.0), intake::stop, intake));
         intakeElbowOverride = new JoystickButton(driverPad, XButton.kBumperLeft.value);
 
         //gear shift
@@ -45,7 +47,7 @@ public class OI {
 
         //elevator
 		stratComInterface.getSC1().whenPressed(new AutoMoveFullElevator(Constants.ElevatorPosition.SWITCH, Robot.elevatorStage1, Robot.elevatorStage2));
-//		stratComInterface.getSC2().whenPressed();
+		stratComInterface.getSC2().whenPressed(new AutoMoveFullElevator(Constants.ElevatorPosition.SWITCH, Robot.elevatorStage1, Robot.elevatorStage2));
 //		stratComInterface.getSC3().whenPressed();
     }
 

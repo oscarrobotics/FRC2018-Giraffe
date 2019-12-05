@@ -32,7 +32,7 @@ public class ElevatorStage2 extends SubsystemBase {
     }
 
     public void setPositionFromSlider (double sliderVal) {
-        if (RobotMap.elevator1Group.getSensorPosition() >= 1900)
+        if (RobotMap.elevatorMotor1.getSensorPosition() >= 1900)
             minEncPos = 0;
         else
             minEncPos = 1900;

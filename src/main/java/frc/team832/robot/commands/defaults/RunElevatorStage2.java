@@ -1,19 +1,20 @@
 package frc.team832.robot.commands.defaults;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team832.robot.Robot;
 
-public class RunElevatorStage2 extends Command {
+public class RunElevatorStage2 extends CommandBase {
 
     public RunElevatorStage2() {
-        requires(Robot.elevatorStage2);
+        addRequirements(Robot.elevatorStage2);
     }
 
-    protected void initialize() {
+    public void initialize() {
         Robot.elevatorStage2.start();
     }
 
-    protected void execute() {
+    public void execute() {
         double sliderVal = Robot.oi.operatorPad.getRawAxis(3);
         if (Robot.oi.operatorPad.getRawButton(5)) {
             Robot.elevatorStage2.setPositionFromSlider(1.0);
@@ -27,15 +28,15 @@ public class RunElevatorStage2 extends Command {
     }
 
 
-    protected boolean isFinished() {
+    public boolean isFinished() {
         return false;
     }
 
-    protected void end() {
+    public void end() {
         Robot.elevatorStage2.stop();
     }
 
-    protected void interrupted() {
+    public void interrupted() {
         end();
     }
 }

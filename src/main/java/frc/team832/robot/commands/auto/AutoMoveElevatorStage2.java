@@ -1,35 +1,36 @@
 package frc.team832.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team832.robot.Robot;
 
-public class AutoMoveElevatorStage2 extends Command {
+public class AutoMoveElevatorStage2 extends CommandBase {
 
     private final double target;
     private boolean _doesWait;
 
     public AutoMoveElevatorStage2(double targetInput) {
-        requires(Robot.elevatorStage2);
+        addRequirements(Robot.elevatorStage2);
         target = targetInput;
         _doesWait = true;
     }
 
     public AutoMoveElevatorStage2(double targetInput, boolean doesWait) {
-        requires(Robot.elevatorStage2);
+        addRequirements(Robot.elevatorStage2);
         target = targetInput;
         _doesWait = doesWait;
     }
 
-    protected void initialize() {
+    public void initialize() {
         if (Robot.elevatorStage2.getAtBottom()) Robot.elevatorStage2.setAtBottom();
         System.out.println("Begin stage 2");
         Robot.elevatorStage2.setAutoPos(target);
     }
 
-    protected void execute() {
+    public void execute() {
     }
 
-    protected boolean isFinished() {
+    public boolean isFinished() {
         boolean finished = false;
         if (Robot.elevatorStage2.isFinished() || !_doesWait) {
             System.out.println("Finished stage 2");
@@ -38,10 +39,10 @@ public class AutoMoveElevatorStage2 extends Command {
         return finished;
     }
 
-    protected void end() {
+    public void end() {
         System.out.println("End stage 2");
     }
 
-    protected void interrupted() {
+    public void interrupted() {
     }
 }
